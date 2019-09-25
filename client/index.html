@@ -1,6 +1,18 @@
-<canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
 
-//Wills comment
+</body>
+<h1>Wacky Tanks!!</h1>
+
+
+<canvas id="ctx" width="1000" height="1000" style="border:1px solid #000000;"></canvas>
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
@@ -10,7 +22,7 @@
   var socket = io();
 
   socket.on('newPosition', function(data){
-    ctx.clearRect(0,0,500,500);
+    ctx.clearRect(0,0,1000,1000);
     for(var i = 0; i < data.length; i++){
       ctx.fillText(data[i].number, data[i].x, data[i].y);
     }
@@ -39,3 +51,4 @@
   }
 
 </script>
+</html>
