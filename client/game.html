@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!--Fonts-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine|Lacquer|Luckiest Guy|Righteous|Permanent Marker|Mogra">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Monoton&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Bungee+Inline&display=swap" rel="stylesheet">
+  <!--Links for JS, CSS, Etc.. -->
+  <link rel="stylesheet" href="./client/CSS/styles.css">
+  <link rel="stylesheet" href="./client/JS/wacky.js">
+
+  <title>Wacky Tanks</title>
+</head>
+<body>
+    <h1 id=gameTop>Wacky Tanks!!</h1>
+
+  <div id="gamePortal">
+    <!--Box that game is drawn in-->
+    <canvas id="ctx" width="1000" height="1000" style="border:1px solid #000000;"></canvas>
+  </div>
+
+  <div id="wrapper">
+      <div id="menu">
+          <p class="welcome">Welcome, <b>PLAYER NAME GOES HERE</b></p>
+          <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+          <div style="clear:both"></div>
+      </div>
+
+      <div id="chatbox"></div>
+
+      <form name="message" action="">
+          <input name="usermsg" type="text" id="usermsg" size="63" />
+          <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+      </form>
+  </div>
+
+</body>
+
+<!--Script for link to Socket Controls-->
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<!--Script for link to JS-->
+<script src="./client/JS/wacky.js"></script>
+
+<div class="copyrightTag">
+  <p>copyright&copy;2019</p>
+  <p>created by: Reality Bytes Group 1</p>
+  <h3><a href="#gameTop">Back To Top</a></h3>
+</div>
+
+</html>
