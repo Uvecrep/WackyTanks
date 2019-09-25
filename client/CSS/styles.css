@@ -3,7 +3,28 @@ body {
     font:12px arial;
     color: #222;
     text-align:center;
-    padding:35px; }
+    padding:35px;
+    background-image: url("./client/images/clipdealer_A61066086_preview.jpg");
+    background-color: #cccccc;
+  }
+/*HEADERS START*/
+  h1
+  {
+    font-size: 50px;
+    font-family: 'Luckiest Guy';
+    text-align: center;
+    color: white;
+    background: darkslategray;
+  }
+
+  h2
+  {
+    font-size: 20px;
+    text-align: center;
+    color: white;
+    background: darkslategray;
+  }
+/*HEADERS END*/
 
 /*SLIDESHOW BEGIN */
 .mySlides
@@ -66,14 +87,6 @@ a {
 
 .msgln { margin:0 0 2px 0; }
 /* CHATBOX END */
-
-h1
-{
-  font-size: 20px;
-  text-align: center;
-  color: white;
-  background: darkslategray;
-}
 
 #gamePortal
 {
