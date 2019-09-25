@@ -5,10 +5,22 @@ var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
 
+app.use(express.json());
+
 app.get('/',function(req, res){
   res.sendFile(__dirname + '/client/index.html');
 });
 app.use('/client', express.static(__dirname + '/client'));
+
+app.post('/', function(req, res){
+  // instead of print data, we could make a call out to our database to save the form data.
+  console.log(req.body);
+  res.sendFile(__dirname + '/client/game.html');
+});
+
+app.get('/game',function(req, res){
+  res.sendFile(__dirname + '/client/game.html');
+});
 
 serv.listen(process.env.PORT || 2000);//listen to port 2000
 console.log("Server started.");
