@@ -1,3 +1,6 @@
+/*var Img = {};
+var Img.player = new Image();
+Img.player.src = "/client/images/tankBaseDarkGreenPartOne.png";*/
 
 var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
@@ -5,9 +8,10 @@ ctx.font = '30px Arial';
 var socket = io();
 
 socket.on('newPosition', function(data){
-  ctx.clearRect(0,0,1000,1000);
+  ctx.clearRect(0,0,400,400);
   for(var i = 0; i < data.length; i++){
-    ctx.fillText(data[i].number, data[i].x, data[i].y);
+    ctx.fillText(data[i].number, data[i].x, data[i].y-10);
+    //ctx.drawImage(img, data[i].x, data[i].y);
   }
 });
 
