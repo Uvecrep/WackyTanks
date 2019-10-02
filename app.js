@@ -1,7 +1,3 @@
-//Ryan
-//Ian
-//Will
-
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -98,4 +94,4 @@ setInterval(function(){
     var socket = SOCKET_LIST[i];
     socket.emit('newPosition',pack);
   }
-}, 1000/25)
+}, 1000/60)
