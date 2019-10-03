@@ -58,7 +58,8 @@ a {
     margin:left;
     padding-bottom:25px;
     background:#EBF4FB;
-    width:100%;
+    height: 100%;
+    width:80%;
     border:1px solid #ACD8F0; }
 
 #loginform { padding-top:18px; }
@@ -71,7 +72,7 @@ a {
     margin-bottom:25px;
     padding:10px;
     background:#fff;
-    height:220px;
+    height:300px;
     width:98%;
     border:1px solid #ACD8F0;
     overflow:auto; }
@@ -95,11 +96,12 @@ a {
 
 #gamePortal
 {
-  align-items: center;
+  align-items: left;
   background: darkgreen;
 }
 #ctx
 {
+  width: 50%;
   background: white;
 }
 #registerButton
