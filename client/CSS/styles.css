@@ -7,6 +7,10 @@ body {
     background-image: url("./client/images/clipdealer_A61066086_preview.jpg");
     background-color: #cccccc;
   }
+  #name1,#playerName
+  {
+    font-size: 25px;
+  }
 /*HEADERS START*/
   h1
   {
@@ -102,7 +106,7 @@ a {
 {
   align-items: left;
   color: white;
-  background-color: darkgreen;
+  background-color: rgba(9, 31, 11, 1);
 }
 #loginBar
 {

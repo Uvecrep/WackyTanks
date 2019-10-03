@@ -46,28 +46,28 @@
   <!-- Creates a form -->
   <form action="/" method="post">
     <!-- Player Name -->
-    <label for="name">Player Name</label>
+    <label id="playerName" for="name">Guest Name</label>
     <input type="text" name="playerName" id="playerName">
 
-    <button>Play Now!</button>
+    <button id="playerName">Play Now!</button>
     <br>
 <!--DROPDOWN LOGIN BARS-->
-    <div class="accordion" id="accordionExample">
+<div class="accordion" id="accordionExample">
   <div class="card">
     <div id="loginBar" class="card-header">
       <h5 class="mb-0">
         <!--LOGIN BUTTON-->
-        <a id="registerButton" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+        <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLogin" aria-expanded="false" aria-controls="collapseLogin">
           Login
         </a>
         <!--REGISTER BUTTON-->
-        <a id="registerButton" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+        <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseRegister" aria-expanded="false" aria-controls="collapseRegister">
           Register
         </a>
       </h5>
     </div>
 
-    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+    <div id="collapseRegister" class="collapse" aria-labelledby="collapseRegister" data-parent="#accordionExample">
       <div class="card-body">
         <form>
 
@@ -92,23 +92,60 @@
         </form>
       </div>
     </div>
+
+    <div id="collapseLogin" class="collapse" aria-labelledby="collapseLogin" data-parent="#accordionExample">
+      <div class="card-body">
+        <form>
+
+
+
+          <!-- name -->
+          <label for="name">UserName</label>
+          <input type="text" name="name" id="name">
+          <br>
+          <br>
+          <!-- Email -->
+          <label for="Email">Password</label>
+          <input type="text" name="Email" id="Email">
+          <br>
+          <br>
+          <button>
+              <a id="text" data-text="saveInfo" href="#">Reporting for Duty!</a>
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
-
-    <br>
-    <br>
-  </form>
-  <form>
-    <h2>We Listen! Tell us what you think!</h2>
-    <!-- Feedback -->
-    <p>Feedback</p>
-    <textarea name="Description" id="" rows="10" cols="30" placeholder="Your Description"></textarea>
-    <br>
-    <br>
+</div>
+<br>
+<br>
   </form>
 
-  <button>
-      <a id="text" data-text="submitInfo" href="#">SUBMIT</a>
-  </button>
+  <div class="accordion" id="accordionExample">
+  <div class="card">
+    <div id="loginBar" class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseFeedback" aria-expanded="true" aria-controls="collapseFeedback">
+          We Listen! Tell us what you think!
+        </a>
+      </h5>
+    </div>
+
+    <div id="collapseFeedback" class="collapse" aria-labelledby="collapseFeedback" data-parent="#accordionExample">
+      <div class="card-body">
+        <form>
+          <!-- Feedback -->
+          <p>Feedback</p>
+          <textarea name="Description" id="" rows="10" cols="30" placeholder="Your Description"></textarea>
+          <br>
+          <br>
+          <button>
+              <a id="text" data-text="submitInfo" href="#">SUBMIT</a>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
 </body>
 
