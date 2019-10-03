@@ -4,30 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!---------------------------------------------------------------------------->
   <!--Fonts-->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine|Lacquer|Luckiest Guy|Righteous|Permanent Marker|Mogra">
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Monoton&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Bungee+Inline&display=swap" rel="stylesheet">
-  <!--Links for JS, CSS, Etc.. -->
+<!---------------------------------------------------------------------------->
+  <!--BootStraps-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+  </script>
+  <!---------------------------------------------------------------------------->
+  <!-- Links for JS, CSS, Etc -->
   <link rel="stylesheet" href="./client/CSS/styles.css">
   <link rel="stylesheet" href="./client/JS/wacky.js">
+  <!---------------------------------------------------------------------------->
   <title>Wacky Tanks</title>
 </head>
 <body>
-  <h1 id="home">Welcome to Wacky Tanks!!</h1>
-
-  <div class="w3-content w3-display-container">
-    <img class="mySlides" src="./client/images/army-tank-drawing-52.jpg">
-    <img class="mySlides" src="./client/images/army-tank-drawing-56.jpg">
-    <img class="mySlides" src="./client/images/tankGirl.jpg">
+  <div class="row">
+    <div class="col">
+      <div class="container-fluid">
+        <h1 id="home">Welcome to Wacky Tanks!!</h1>
+        <img class="mySlides" src="./client/images/army-tank-drawing-52.jpg">
+        <img class="mySlides" src="./client/images/army-tank-drawing-56.jpg">
+        <img class="mySlides" src="./client/images/tankGirl.jpg">
+        <h2>Sign In & Play!</h2> <!--Website Title -->
+        </div>
+    </div>
   </div>
 
   <script
     src="./client/JS/slideshow.js">
   </script>
-
-  <h2>Sign In & Play!</h2> <!--Website Title -->
   <!-- Creates a form -->
   <form action="/" method="post">
     <!-- Player Name -->
@@ -36,30 +51,49 @@
 
     <button>Play Now!</button>
     <br>
-    <br>
-  </form>
+<!--DROPDOWN LOGIN BARS-->
+    <div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <!--LOGIN BUTTON-->
+        <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Login
+        </a>
+        <!--REGISTER BUTTON-->
+        <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Register
+        </a>
+      </h5>
+    </div>
 
-  <form>
-    <h2>Get in on Updates, Events, Swag, and More!</h2>
-    <!-- name -->
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name">
-    <br>
-    <br>
-    <!-- Email -->
-    <label for="Email">Email</label>
-    <input type="text" name="Email" id="Email">
-    <br>
-    <br>
-    <!-- Phone -->
-    <label for="Phone">Phone</label>
-    <input type="number" name="Phone" id="Phone">
-    <br>
-    <br>
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+        <form>
 
-    <button>
-        <a id="text" data-text="saveInfo" href="#">Save ME!</a>
-    </button>
+          <!-- name -->
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name">
+          <br>
+          <br>
+          <!-- Email -->
+          <label for="Email">Email</label>
+          <input type="text" name="Email" id="Email">
+          <br>
+          <br>
+          <!-- Phone -->
+          <label for="Phone">Phone</label>
+          <input type="number" name="Phone" id="Phone">
+          <br>
+          <br>
+          <button>
+              <a id="text" data-text="saveInfo" href="#">Save ME!</a>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
     <br>
     <br>
   </form>
