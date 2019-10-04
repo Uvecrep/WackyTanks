@@ -54,28 +54,56 @@ a {
 
     a:hover { text-decoration:underline; }
 
-#wrapper, #loginform {
+#wrapper, #loginform
+{
     margin:left;
     padding-bottom:25px;
     background:#EBF4FB;
     height: 100%;
     width:80%;
-    border:1px solid #ACD8F0; }
-
-#loginform { padding-top:18px; }
-
-#loginform p { margin: 5px; }
-
+    border:1px solid #ACD8F0;
+}
+#chat
+{
+  padding-bottom:25px;
+  background:#EBF4FB;
+  height: 100%;
+  width:100%;
+  border:1px solid #ACD8F0;
+}
+#sendInput
+{
+  position: absolute;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  width: 80%;
+  bottom: 0px;
+}
+#box
+{
+  align-items: center;
+}
+#ctx
+{
+  width: 65%;
+  background: white;
+}
 #chatbox {
     text-align:left;
     margin:auto;
     margin-bottom:25px;
     padding:10px;
     background:#fff;
-    height:300px;
+    height:85%;
     width:98%;
     border:1px solid #ACD8F0;
-    overflow:auto; }
+    overflow:auto;
+  }
+
+#loginform { padding-top:18px; }
+
+#loginform p { margin: 5px; }
+/*for canvas and chatbox*/
 
 #usermsg {
     width:80%;
@@ -98,11 +126,6 @@ a {
 {
   align-items: left;
   background: darkgreen;
-}
-#ctx
-{
-  width: 50%;
-  background: white;
 }
 #registerButton
 {

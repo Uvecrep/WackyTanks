@@ -25,15 +25,15 @@
   <link rel="stylesheet" href="./client/CSS/styles.css">
   <link rel="stylesheet" href="./client/JS/wacky.js">
   <!---------------------------------------------------------------------------->
-  <title>Wacky Tanks</title>
 </head>
 <body>
-    <div class="container-fluid">
-      <h1 id=gameTop>Wacky Tanks!!</h1>
+  <h1 id=gameTop>Wacky Tanks!!</h1>
+    <div id="box" class="container-fluid">
+
       <div class="row">
         <canvas id="ctx" width="500" height="400" style="border:1px solid #000000;"></canvas>
         <div class="col">
-          <div id="wrapper">
+          <div id="chat" >
               <div id="menu">
                   <p class="welcome">Welcome, <b>PLAYER NAME GOES HERE</b></p>
                   <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
@@ -42,7 +42,7 @@
 
               <div id="chatbox"></div>
 
-              <form name="message" action="">
+              <form id="sendInput" name="message" action="">
                   <input name="usermsg" type="text" id="usermsg" size="63" />
                   <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
               </form>
@@ -57,7 +57,8 @@
 
 <!--Script for link to JS-->
 <script src="./client/JS/wacky.js"></script>
-
+<br>
+<br>
 <div class="copyrightTag">
   <p>Copyright &copy; 2019</p>
   <p>Created By: Reality Bytes Group 1</p>
