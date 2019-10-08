@@ -83,6 +83,8 @@ class Bullet extends Entity{
   constructor(id){
       super();
       this.id = id;
+      this.speed = 0;
+      this.damage = 0;
   }
 }
 var io = require('socket.io')(serv,{});
