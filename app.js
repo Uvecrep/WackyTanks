@@ -25,7 +25,7 @@ console.log("Server started.");
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
-var Player = function(id){
+/*var Player = function(id){
   var self = {
     x:250,
     y:250,
@@ -49,14 +49,49 @@ var Player = function(id){
   }
   return self;
 }
-
+*/
+class Entity{
+  constructor(){
+    this.x = 250;
+    this.y = 250;
+    this.rot = 0;
+    this.maxSpd = 10;
+   }
+}
+class Player extends Entity{
+  constructor(id) {
+    super();
+    this.id = id;
+    this.number = " "+ Math.floor(10*Math.random());
+    this.pressingRight = false;
+    this.pressingLeft = false;
+    this.pressingUp = false;
+    this.pressingDown = false;
+  }
+  updatePosition(){
+    if(this.pressingRight)
+      this.x += this.maxSpd;
+    if(this.pressingLeft)
+      this.x -= this.maxSpd;
+    if(this.pressingUp)
+      this.y -= this.maxSpd;
+    if(this.pressingDown)
+      this.y += this.maxSpd;
+  }
+}
+class Bullet extends Entity{
+  constructor(id){
+      super();
+      this.id = id;
+  }
+}
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
 
-  var player = Player(socket.id);
+  var player = new Player(socket.id);
   PLAYER_LIST[socket.id] = player;
 
   socket.on('disconnect', function(){
