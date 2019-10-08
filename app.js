@@ -56,7 +56,34 @@ class Entity{
     this.y = 250;
     this.rot = 0;
     this.maxSpd = 10;
+
    }
+   getPosX(){
+     return this.x;
+   }
+   getPosY(){
+     return this.y;
+   }
+   getRot(){
+     return this.rot;
+   }
+   getMaxSpd(){
+     return this.maxSpd;
+   }
+   setRot(nRotation)
+   {
+     this.rot = nRotation;
+   }
+   setMaxSpd(nSpeed){
+     this.maxSpd = nSpeed;
+   }
+   getDistance(x1,y1,x2,y2){
+     let xDist = x2 - x1;
+     let yDist = y2 - y1;
+
+     return Math.sqrt(Math.pow(xDist,2) + Math.pow(yDist,2));
+   }
+
 }
 class Player extends Entity{
   constructor(id) {
@@ -68,6 +95,7 @@ class Player extends Entity{
     this.pressingUp = false;
     this.pressingDown = false;
   }
+  
   updatePosition(){
     if(this.pressingRight)
       this.x += this.maxSpd;
@@ -78,6 +106,7 @@ class Player extends Entity{
     if(this.pressingDown)
       this.y += this.maxSpd;
   }
+
 }
 class Bullet extends Entity{
   constructor(id){
