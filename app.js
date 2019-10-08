@@ -95,7 +95,7 @@ class Player extends Entity{
     this.pressingUp = false;
     this.pressingDown = false;
   }
-  
+
   updatePosition(){
     if(this.pressingRight)
       this.x += this.maxSpd;
