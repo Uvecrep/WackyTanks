@@ -7,6 +7,10 @@ body {
     background-image: url("./client/images/clipdealer_A61066086_preview.jpg");
     background-color: #cccccc;
   }
+  #name1,#playerName
+  {
+    font-size: 25px;
+  }
 /*HEADERS START*/
   h1
   {
@@ -31,6 +35,7 @@ body {
 {
   display:none;
   height: 300px;
+  padding: 0px;
   width:100%;
 }
 /*SLIDESHOW END */
@@ -49,27 +54,56 @@ a {
 
     a:hover { text-decoration:underline; }
 
-#wrapper, #loginform {
+#wrapper, #loginform
+{
     margin:left;
     padding-bottom:25px;
     background:#EBF4FB;
-    width:100%;
-    border:1px solid #ACD8F0; }
-
-#loginform { padding-top:18px; }
-
-#loginform p { margin: 5px; }
-
+    height: 100%;
+    width:80%;
+    border:1px solid #ACD8F0;
+}
+#chat
+{
+  padding-bottom:25px;
+  background:#EBF4FB;
+  height: 100%;
+  width:100%;
+  border:1px solid #ACD8F0;
+}
+#sendInput
+{
+  position: absolute;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  width: 80%;
+  bottom: 0px;
+}
+#box
+{
+  align-items: center;
+}
+#ctx
+{
+  width: 65%;
+  background: white;
+}
 #chatbox {
     text-align:left;
     margin:auto;
     margin-bottom:25px;
     padding:10px;
     background:#fff;
-    height:220px;
+    height:85%;
     width:98%;
     border:1px solid #ACD8F0;
-    overflow:auto; }
+    overflow:auto;
+  }
+
+#loginform { padding-top:18px; }
+
+#loginform p { margin: 5px; }
+/*for canvas and chatbox*/
 
 #usermsg {
     width:80%;
@@ -90,10 +124,16 @@ a {
 
 #gamePortal
 {
-  align-items: center;
+  align-items: left;
   background: darkgreen;
 }
-#ctx
+#registerButton
 {
-  background: white;
+  align-items: left;
+  color: white;
+  background-color: rgba(9, 31, 11, 1);
+}
+#loginBar
+{
+  background-color: darkgreen;
 }
