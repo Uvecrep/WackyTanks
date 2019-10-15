@@ -86,7 +86,9 @@ a {
 #ctx
 {
   width: 65%;
+  height: 40%;
   background: white;
+  border:1px solid #000000;
 }
 #chatbox {
     text-align:left;
