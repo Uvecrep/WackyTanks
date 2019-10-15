@@ -127,6 +127,7 @@ class Bullet extends Entity{
       this.damage = 1;
       this.lifeSpan = 100;
       this.isDead = false;
+      setInterval(update,40);
   }
   getDmg(){
     return this.damage;
@@ -150,7 +151,7 @@ class Bullet extends Entity{
       for (var key in PLAYER_LIST){
         let dist = key.getDistance(key.x,key.y,this.x,this.y);
         if (dist == 0){
-          key.setHealth((key.getHealth()-1));
+          key.setHealth((key.getHealth()-this.damage));
           this.isDead = true;
           break;
         }
@@ -160,7 +161,6 @@ class Bullet extends Entity{
       delete BULLET_LIST[this.id];
     }
   }
-  setInterval(update,40);
 }
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
