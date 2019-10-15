@@ -6,7 +6,7 @@ var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
 var socket = io();
-
+//Canvas window //
 socket.on('newPosition', function(data){
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
   for(var i = 0; i < data.length; i++){
