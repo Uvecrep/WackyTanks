@@ -1,13 +1,19 @@
+//var Img = {};
+//var Img.player = new Image();
+//Img.player.src = "/client/images/tankBaseDarkGreenPartOne.png";
 
 var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
 var socket = io();
-
+//Canvas window //
 socket.on('newPosition', function(data){
-  ctx.clearRect(0,0,1000,1000);
+  ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
   for(var i = 0; i < data.length; i++){
-    ctx.fillText(data[i].number, data[i].x, data[i].y);
+    ctx.fillStyle = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+    ctx.fillRect(data[i].x, data[i].y, 16, 18);
+    ctx.fillText("player", data[i].x-32, data[i].y-30);
+    //ctx.drawImage(Img.player.src, data[i].x, data[i].y);
   }
 });
 
