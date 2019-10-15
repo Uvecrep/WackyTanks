@@ -144,7 +144,10 @@ a {
   display: inline-block;
   cursor: pointer;
 }
-
+#myPopup
+{
+  text-size-adjust: 35px;
+}
 /* The actual popup (appears on top) */
 .popup .popuptext {
   visibility: hidden;
