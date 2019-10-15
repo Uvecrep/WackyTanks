@@ -1,6 +1,178 @@
-h1
+/* CSS Document */
+body {
+    font:12px arial;
+    color: #222;
+    text-align:center;
+    padding:35px;
+    background-image: url("./client/images/clipdealer_A61066086_preview.jpg");
+    background-color: #cccccc;
+  }
+  #name1,#playerName
+  {
+    font-size: 25px;
+  }
+/*HEADERS START*/
+  h1
+  {
+    font-size: 50px;
+    font-family: 'Luckiest Guy';
+    text-align: center;
+    color: white;
+    background: darkslategray;
+  }
+
+  h2
+  {
+    font-size: 20px;
+    text-align: center;
+    color: white;
+    background: darkslategray;
+  }
+/*HEADERS END*/
+
+/*SLIDESHOW BEGIN */
+.mySlides
 {
-  font-size: 16px;
-  color: darkblue;
-  background: darkslategray;
+  display:none;
+  height: 300px;
+  padding: 0px;
+  width:100%;
 }
+/*SLIDESHOW END */
+
+/* CHATBOX BEGIN */
+
+form, p, span {
+    margin:0;
+    padding:0; }
+
+input { font:12px arial; }
+
+a {
+    color:#0000FF;
+    text-decoration:none; }
+
+    a:hover { text-decoration:underline; }
+
+#wrapper, #loginform
+{
+    margin:left;
+    padding-bottom:25px;
+    background:#EBF4FB;
+    height: 100%;
+    width:80%;
+    border:1px solid #ACD8F0;
+}
+#chat
+{
+  padding-bottom:25px;
+  background:#EBF4FB;
+  height: 100%;
+  width:100%;
+  border:1px solid #ACD8F0;
+}
+#sendInput
+{
+  position: absolute;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  width: 80%;
+  bottom: 0px;
+}
+#box
+{
+  align-items: center;
+}
+#ctx
+{
+  width: 65%;
+  background: white;
+}
+#chatbox {
+    text-align:left;
+    margin:auto;
+    margin-bottom:25px;
+    padding:10px;
+    background:#fff;
+    height:85%;
+    width:98%;
+    border:1px solid #ACD8F0;
+    overflow:auto;
+  }
+
+#loginform { padding-top:18px; }
+
+#loginform p { margin: 5px; }
+/*for canvas and chatbox*/
+
+#usermsg {
+    width:80%;
+    border:1px solid #ACD8F0; }
+
+#submit { width: 60px; }
+
+.error { color: #ff0000; }
+
+#menu { padding:12.5px 25px 12.5px 25px; }
+
+.welcome { float:left; }
+
+.logout { float:right; }
+
+.msgln { margin:0 0 2px 0; }
+/* CHATBOX END */
+
+#gamePortal
+{
+  align-items: left;
+  background: darkgreen;
+}
+#registerButton
+{
+  align-items: left;
+  color: white;
+  background-color: rgba(9, 31, 11, 1);
+}
+#loginBar
+{
+  background-color: darkgreen;
+}
+/* ------------------------------------------------------------------------*/
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* ------------------------------------------------------------------------*/
