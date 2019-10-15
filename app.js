@@ -24,7 +24,7 @@ console.log("Server started.");
 
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
-
+var BULLET_LIST = {};
 /*var Player = function(id){
   var self = {
     x:250,
@@ -88,14 +88,15 @@ class Entity{
 class Player extends Entity{
   constructor(id) {
     super();
+    this.health = 10;
     this.id = id;
     this.number = " "+ Math.floor(10*Math.random());
     this.pressingRight = false;
     this.pressingLeft = false;
     this.pressingUp = false;
     this.pressingDown = false;
+    this.attackSpeed = 1;
   }
-
   updatePosition(){
     if(this.pressingRight)
       this.x += this.maxSpd;
@@ -106,15 +107,58 @@ class Player extends Entity{
     if(this.pressingDown)
       this.y += this.maxSpd;
   }
+  Fire(){
 
+  }
+  getHealth(){
+    return this.health;
+  }
+  setHealth(n_health){
+    this.health = n_health;
+  }
 }
 class Bullet extends Entity{
   constructor(id){
       super();
       this.id = id;
       this.speed = 0;
-      this.damage = 0;
+      this.damage = 1;
+      this.lifeSpan = 100;
+      this.isDead = false;
   }
+  getDmg(){
+    return this.damage;
+  }
+  setDmg(n_dmg){
+    this.damage = n_dmg;
+  }
+  setSpd(angle){
+    angle = (angle/180 * Math.PI)
+  }
+  setSpawn(x,y){
+
+  }
+  update(){
+    this.LifeSpan -= 1;
+    if (this.lifeSpan <= 0)
+    {
+      this.isDead = true;
+    }
+    if(this.isDead == false){
+      for (var key in PLAYER_LIST){
+        let dist = key.getDistance(key.x,key.y,this.x,this.y);
+        if (dist == 0){
+          key.setHealth((key.getHealth()-1));
+          this.isDead = true;
+          break;
+        }
+      }
+    }
+    if(this.isDead){
+      delete BULLET_LIST[this.id];
+    }
+  }
+  setInterval(update,40);
 }
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
