@@ -28,17 +28,59 @@
 </head>
 
 <body>
-  <!-- Trigger/Open The Modal -->
+
+  <h1 id=gameTop>Wacky Tanks!!</h1>
+
+<!--POPUP BEGIN -->
+<!-- Trigger/Open The Modal -->
 <button id="myBtn">Leader Board Top 5!</button>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
 
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
-  </div>
+<!-- Modal content -->
+<div class="modal-content">
+  <span class="close">&times;</span>
+  <p>Some text in the Modal..</p>
+  <table class = "popuptext" id = "myPopup">
+    <br>
+    <tr>
+      <th>Name</th>
+      <th>Country</th>
+      <th>Score</th>
+    </tr>
+    <tr>
+      <td>Alfreds Futterkiste</td>
+      <td>Maria Anders</td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <td>Centro comercial Moctezuma</td>
+      <td>Francisco Chang</td>
+      <td>Mexico</td>
+    </tr>
+    <tr>
+      <td>Ernst Handel</td>
+      <td>Roland Mendel</td>
+      <td>Austria</td>
+    </tr>
+    <tr>
+      <td>Island Trading</td>
+      <td>Helen Bennett</td>
+      <td>UK</td>
+    </tr>
+    <tr>
+      <td>Laughing Bacchus Winecellars</td>
+      <td>Yoshi Tannamuri</td>
+      <td>Canada</td>
+    </tr>
+    <tr>
+      <td>Magazzini Alimentari Riuniti</td>
+      <td>Giovanni Rovelli</td>
+      <td>Italy</td>
+    </tr>
+  </table>
+</div>
 
 </div>
 
@@ -65,24 +107,14 @@ modal.style.display = "none";
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
 if (event.target == modal) {
-  modal.style.display = "none";
+modal.style.display = "none";
 }
 }
 </script>
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
 
 
 
-
-  <h1 id=gameTop>Wacky Tanks!!</h1>
-
-<!--POPUP BEGIN -->
   <div class="row popup" onclick="myFunction()">
     <h2>Top 5 Leaders!
       <br>
