@@ -27,6 +27,8 @@ console.log("Server started.");
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
+var t;//shoot variable
+
 /*var Player = function(id){
   var self = {
     x:250,
@@ -107,7 +109,9 @@ class Player extends Entity{
       this.y -= this.maxSpd;
     if(this.pressingDown)
       this.y += this.maxSpd;
-  }
+    if(this.shooting)
+      t = setInterval( function() { this.Fire(); }, 1000);
+    }
 
 }
 class Bullet extends Entity{
@@ -142,6 +146,11 @@ io.sockets.on('connection', function(socket){
       player.pressingUp = data.state;
     else if(data.inputId === 'down')
       player.pressingDown = data.state;
+    else if(data.inputId === 'shoot'){
+      player.shooting = data.state;
+      if(player.shooting === false)
+        clearInterval(t);
+    }
   });
 
     console.log('Player connection');

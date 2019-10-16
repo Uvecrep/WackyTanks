@@ -26,6 +26,8 @@ document.onkeydown = function(event){
     socket.emit('keyPress', {inputId:'left', state:true});
   else if(event.keyCode === 87)
     socket.emit('keyPress', {inputId:'up', state:true});
+  else if(event.keyCode === 32)
+    socket.emit('keyPress', {inputId:'shoot', state:true});
 }
 
 document.onkeyup = function(event){
@@ -37,4 +39,6 @@ document.onkeyup = function(event){
     socket.emit('keyPress', {inputId:'left', state:false});
   else if(event.keyCode === 87)
     socket.emit('keyPress', {inputId:'up', state:false});
+  else if(event.keyCode === 32)
+    socket.emit('keyPress', {inputId:'shoot', state:false});
 }
