@@ -1,3 +1,5 @@
+//hello
+
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -25,7 +27,7 @@ console.log("Server started.");
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
-var Player = function(id){
+/*var Player = function(id){
   var self = {
     x:250,
     y:250,
@@ -49,14 +51,80 @@ var Player = function(id){
   }
   return self;
 }
+*/
+class Entity{
+  constructor(){
+    this.x = 250;
+    this.y = 250;
+    this.rot = 0;
+    this.maxSpd = 10;
 
+   }
+   getPosX(){
+     return this.x;
+   }
+   getPosY(){
+     return this.y;
+   }
+   getRot(){
+     return this.rot;
+   }
+   getMaxSpd(){
+     return this.maxSpd;
+   }
+   setRot(nRotation)
+   {
+     this.rot = nRotation;
+   }
+   setMaxSpd(nSpeed){
+     this.maxSpd = nSpeed;
+   }
+   getDistance(x1,y1,x2,y2){
+     let xDist = x2 - x1;
+     let yDist = y2 - y1;
+
+     return Math.sqrt(Math.pow(xDist,2) + Math.pow(yDist,2));
+   }
+
+}
+class Player extends Entity{
+  constructor(id) {
+    super();
+    this.id = id;
+    this.number = " "+ Math.floor(10*Math.random());
+    this.pressingRight = false;
+    this.pressingLeft = false;
+    this.pressingUp = false;
+    this.pressingDown = false;
+  }
+
+  updatePosition(){
+    if(this.pressingRight)
+      this.x += this.maxSpd;
+    if(this.pressingLeft)
+      this.x -= this.maxSpd;
+    if(this.pressingUp)
+      this.y -= this.maxSpd;
+    if(this.pressingDown)
+      this.y += this.maxSpd;
+  }
+
+}
+class Bullet extends Entity{
+  constructor(id){
+      super();
+      this.id = id;
+      this.speed = 0;
+      this.damage = 0;
+  }
+}
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
 
-  var player = Player(socket.id);
+  var player = new Player(socket.id);
   PLAYER_LIST[socket.id] = player;
 
   socket.on('disconnect', function(){
