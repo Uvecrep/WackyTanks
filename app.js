@@ -27,31 +27,8 @@ console.log("Server started.");
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 var BULLET_LIST = {};
-/*var Player = function(id){
-  var self = {
-    x:250,
-    y:250,
-    id:id,
-    number:"" + Math.floor(10 * Math.random()),
-    pressingRight:false,
-    pressingLeft:false,
-    pressingUp:false,
-    pressingDown:false,
-    maxSpd:10
-  }
-  self.updatePosition = function(){
-    if(self.pressingRight)
-      self.x += self.maxSpd;
-    if(self.pressingLeft)
-      self.x -= self.maxSpd;
-    if(self.pressingUp)
-      self.y -= self.maxSpd;
-    if(self.pressingDown)
-      self.y += self.maxSpd;
-  }
-  return self;
-}
-*/
+
+
 class Entity{
   constructor(){
     this.x = 250;
@@ -92,12 +69,13 @@ class Player extends Entity{
     super();
     this.health = 10;
     this.id = id;
-    this.number = " "+ Math.floor(10*Math.random());
+    this.number = " " + Math.floor(10*Math.random());
     this.pressingRight = false;
     this.pressingLeft = false;
     this.pressingUp = false;
     this.pressingDown = false;
     this.attackSpeed = 1;
+    //setInterval(update,40);
   }
   updatePosition(){
     if(this.pressingRight)
@@ -110,7 +88,9 @@ class Player extends Entity{
       this.y += this.maxSpd;
   }
   Fire(){
-
+    var bulletID = Math.random();
+    var bullet = new Bullet(bulletID,this);
+    BULLET_LIST[bulletID] = bullet;
   }
   getHealth(){
     return this.health;
@@ -118,9 +98,29 @@ class Player extends Entity{
   setHealth(n_health){
     this.health = n_health;
   }
+  /*
+  update(){
+    for (key in BULLET_LIST)
+    {
+      if(getDistance(key.x,key.y,this.x,this.y) == 0 && key.parent != this)
+      {
+        this.setHealth(getHealth - key.damage);
+        key.setisDead(true);
+        break;
+      }
+    }
+    if(key.getisDead() == true){
+      delete BULLET_LIST[key.getid()];
+    }
+    if(this.health <= 0)
+    {
+      delete PLAYER_LIST[this.id];
+    }
+  }
+  */
 }
 class Bullet extends Entity{
-  constructor(id){
+  constructor(id,parent){
       super();
       this.id = id;
       this.speed = 0;
@@ -128,6 +128,7 @@ class Bullet extends Entity{
       this.lifeSpan = 100;
       this.isDead = false;
       setInterval(update,40);
+      this.parent = parent;
   }
   getDmg(){
     return this.damage;
@@ -135,11 +136,17 @@ class Bullet extends Entity{
   setDmg(n_dmg){
     this.damage = n_dmg;
   }
-  setSpd(angle){
+  settoRad(angle){
     angle = (angle/180 * Math.PI)
   }
-  setSpawn(x,y){
-
+  setisDead(dead){
+    this.isDead = dead;
+  }
+  getisDead(){
+    return this.isDead;
+  }
+  getID(){
+    return this.id;
   }
   update(){
     this.LifeSpan -= 1;
@@ -147,19 +154,11 @@ class Bullet extends Entity{
     {
       this.isDead = true;
     }
-    if(this.isDead == false){
-      for (var key in PLAYER_LIST){
-        let dist = key.getDistance(key.x,key.y,this.x,this.y);
-        if (dist == 0){
-          key.setHealth((key.getHealth()-this.damage));
-          this.isDead = true;
-          break;
-        }
-      }
-    }
     if(this.isDead){
       delete BULLET_LIST[this.id];
     }
+    this.x += cos(this.settoRad(this.parent.rot)) * this.maxSpd;
+    this.y += sin(this.settoRad(this.parent.rot)) * this.maxSpd;
   }
 }
 var io = require('socket.io')(serv,{});
