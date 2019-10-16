@@ -56,8 +56,12 @@ class Entity{
   constructor(){
     this.x = 250;
     this.y = 250;
+    this.width = 0;
+    this.height = 0;
     this.rot = 0;
-    this.maxSpd = 10;
+    this.maxSpd = 3;
+    this.rotSpd = 2;
+
 
    }
    getPosX(){
@@ -96,17 +100,30 @@ class Player extends Entity{
     this.pressingLeft = false;
     this.pressingUp = false;
     this.pressingDown = false;
+    this.height = 50;
+    this.width = 30;
+    this.rad = 0;
+
+
   }
 
   updatePosition(){
     if(this.pressingRight)
-      this.x += this.maxSpd;
+      this.rot += this.rotSpd;
     if(this.pressingLeft)
-      this.x -= this.maxSpd;
-    if(this.pressingUp)
-      this.y -= this.maxSpd;
-    if(this.pressingDown)
-      this.y += this.maxSpd;
+      this.rot -= this.rotSpd;
+    if(this.pressingUp){
+      this.rad = ((this.rot + 90) * Math.PI) / 180;
+      this.y -= (this.maxSpd * Math.sin(this.rad));
+      this.x -= (this.maxSpd * Math.cos(this.rad));
+      //console.log("moving forward");
+    }
+    if(this.pressingDown){
+      this.rad = ((this.rot + 90) * Math.PI) / 180;
+      this.y += (this.maxSpd * Math.sin(this.rad));
+      this.x += (this.maxSpd * Math.cos(this.rad));
+      //console.log("moving backward");
+    }
   }
 
 }
@@ -155,6 +172,9 @@ setInterval(function(){
     pack.push({
       x:player.x,
       y:player.y,
+      rot:player.rot,
+      width:player.width,
+      height:player.height,
       number:player.number
     });
   }

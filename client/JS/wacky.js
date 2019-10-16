@@ -10,10 +10,26 @@ var socket = io();
 socket.on('newPosition', function(data){
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
   for(var i = 0; i < data.length; i++){
-    ctx.fillStyle = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
-    ctx.fillRect(data[i].x, data[i].y, 16, 18);
-    ctx.fillText("player", data[i].x-32, data[i].y-30);
-    //ctx.drawImage(Img.player.src, data[i].x, data[i].y);
+    ctx.fillStyle = 'red';
+    //ctx.fillRect(data[i].x, data[i].y, 30, 50);
+
+    ctx.save();
+    var rad = (data[i].rot * Math.PI) / 180;
+
+    ctx.translate(
+    data[i].x + data[i].width / 2,
+    data[i].y + data[i].height / 2
+    );
+
+    ctx.rotate(rad);
+
+    ctx.fillRect(
+      (data[i].width / 2) * -1,
+      (data[i].height / 2) * -1,
+       data[i].width,
+       data[i].height
+    );
+    ctx.restore();
   }
 });
 
