@@ -147,7 +147,7 @@ class Bullet extends Entity{
     angle = (angle/180 * Math.PI)
   }
   update(){
-    this.LifeSpan -= 1;
+    this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
       this.isDead = true;
