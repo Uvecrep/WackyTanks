@@ -1,5 +1,4 @@
 //User Side
-var socket = io();
 
 //var Img = {};
 //var Img.player = new Image();
@@ -8,6 +7,7 @@ var socket = io();
 var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
+var socket = io();
 //Canvas window //
 socket.on('newPosition', function(data){
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//celars canvas
@@ -122,15 +122,4 @@ document.onkeyup = function(event){
     socket.emit('keyPress', {inputId:'cannonRight', state:false});//stops cannon rotation to the right
   else if(event.keyCode === 37)
     socket.emit('keyPress', {inputId:'cannonLeft', state:false});//stops cannon rotation to the left
-}
-
-//TextBox
-socket.on("addMsg", function(data){
-  document.getElementById("chatbox").innerHTML += "<div>"+data+"</div>";
-});
-
-document.getElementById("sendInput").onsubmit = function(e){
-  e.preventDefault();
-  socket.emit("sendMsgToServer", document.getElementById("usermsg").value);
-  document.getElementById("usermsg").value = '';
 }
