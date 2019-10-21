@@ -1,4 +1,4 @@
-//hello
+//Server Side
 
 var express = require('express');
 var app = express();
@@ -54,13 +54,13 @@ var PLAYER_LIST = {};
 */
 class Entity{
   constructor(){
-    this.x = 250;
-    this.y = 250;
-    this.width = 0;
-    this.height = 0;
-    this.rot = 0;
-    this.maxSpd = 3;
-    this.rotSpd = 2;
+    this.x = 250;//position
+    this.y = 250;//position
+    this.width = 0;//sizing
+    this.height = 0;//sizing
+    this.rot = 0;//angle of rotation
+    this.maxSpd = 3;//movement speed
+    this.rotSpd = 2;//rotation speed
 
 
    }
@@ -96,33 +96,45 @@ class Player extends Entity{
     super();
     this.id = id;
     this.number = " "+ Math.floor(10*Math.random());
-    this.pressingRight = false;
+    this.pressingRight = false;//variables to handle user input
     this.pressingLeft = false;
     this.pressingUp = false;
     this.pressingDown = false;
-    this.height = 50;
-    this.width = 30;
-    this.rad = 0;
+    this.rotatingCannonLeft = false;
+    this.rotatingCannonRight = false;
 
 
+    this.height = 50;//sizing of tank
+    this.width = 30;//sizing of tank
+    this.rad = 0;//tank's intial angle of rotation
+
+
+    this.cannonWidth = 5;//sizing of cannon
+    this.cannonHeight = 40;//sizing of cannon
+    this.cannonAngle = 180;//cannon's angle of rotation
+    this.cannonSpeed = 2;//cannon's rotation speed
   }
 
   updatePosition(){
-    if(this.pressingRight)
-      this.rot += this.rotSpd;
-    if(this.pressingLeft)
-      this.rot -= this.rotSpd;
-    if(this.pressingUp){
-      this.rad = ((this.rot + 90) * Math.PI) / 180;
-      this.y -= (this.maxSpd * Math.sin(this.rad));
-      this.x -= (this.maxSpd * Math.cos(this.rad));
-      //console.log("moving forward");
+    if(this.pressingRight)//rotate to the right
+      this.rot += this.rotSpd;//updates direction of tank
+    if(this.pressingLeft)//rotate to the left
+      this.rot -= this.rotSpd;//updates rotation angle
+    if(this.pressingUp){//move forward
+      this.rad = ((this.rot + 90) * Math.PI) / 180;//angle of rotation + 90 degrees and converted to radians
+      this.y -= (this.maxSpd * Math.sin(this.rad));//updating y position (y = max speed * sin(rotation angle))
+      this.x -= (this.maxSpd * Math.cos(this.rad));//updating x position (x = max speed * cos(rotation angle))
     }
-    if(this.pressingDown){
-      this.rad = ((this.rot + 90) * Math.PI) / 180;
-      this.y += (this.maxSpd * Math.sin(this.rad));
-      this.x += (this.maxSpd * Math.cos(this.rad));
-      //console.log("moving backward");
+    if(this.pressingDown){//move backward
+      this.rad = ((this.rot + 90) * Math.PI) / 180;//angle of rotation + 90 degrees and converted to radians
+      this.y += (this.maxSpd * Math.sin(this.rad));//updating y position (y speed = max speed * sin(rotation angle))
+      this.x += (this.maxSpd * Math.cos(this.rad));//updating x position (x speed = max speed * cos(rotation angle))
+    }
+    if (this.rotatingCannonRight){//rotate cannon to right
+      this.cannonAngle += this.cannonSpeed;//updating cannon's angle of rotation
+    }
+    if (this.rotatingCannonLeft){//rotate cannon to left
+      this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
   }
 
@@ -159,6 +171,10 @@ io.sockets.on('connection', function(socket){
       player.pressingUp = data.state;
     else if(data.inputId === 'down')
       player.pressingDown = data.state;
+    else if(data.inputId === 'cannonRight')
+      player.rotatingCannonRight = data.state;
+    else if(data.inputId === 'cannonLeft')
+      player.rotatingCannonLeft = data.state;
   });
 
     console.log('Player connection');
@@ -175,7 +191,11 @@ setInterval(function(){
       rot:player.rot,
       width:player.width,
       height:player.height,
-      number:player.number
+      number:player.number,
+      cannonAngle:player.cannonAngle,
+      cannonWidth:player.cannonWidth,
+      cannonHeight:player.cannonHeight
+
     });
   }
   for (var i in SOCKET_LIST){

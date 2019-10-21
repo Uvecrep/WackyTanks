@@ -1,3 +1,5 @@
+//User Side
+
 //var Img = {};
 //var Img.player = new Image();
 //Img.player.src = "/client/images/tankBaseDarkGreenPartOne.png";
@@ -8,40 +10,74 @@ ctx.font = '30px Arial';
 var socket = io();
 
 socket.on('newPosition', function(data){
-  ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
-  for(var i = 0; i < data.length; i++){
+  ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//celars canvas
+  for(var i = 0; i < data.length; i++){//drawing all objects passed in through data array
     ctx.fillStyle = 'red';
     //ctx.fillRect(data[i].x, data[i].y, 30, 50);
 
-    ctx.save();
-    var rad = (data[i].rot * Math.PI) / 180;
+    ctx.save();//need to save canvas before drawing rotated objects, this part draws the tank body
+    var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
 
-    ctx.translate(
+    ctx.translate(//moving the canvas to the center of the object
     data[i].x + data[i].width / 2,
     data[i].y + data[i].height / 2
     );
 
-    ctx.rotate(rad);
+    ctx.rotate(rad);//rotating canvas to correct position
 
-    ctx.fillRect(
+    ctx.fillRect(//drawing the actual tank body
       (data[i].width / 2) * -1,
       (data[i].height / 2) * -1,
        data[i].width,
        data[i].height
     );
     ctx.restore();
+
+    ctx.save();//Now we draw the cannon part of each Player
+    var cRad = (data[i].cannonAngle * Math.PI) / 180;
+
+    ctx.translate(//moving the canvas to the center of the tank
+      (data[i].x + data[i].width / 2),
+      (data[i].y + data[i].height / 2)
+    );
+
+    ctx.rotate(cRad);//rotating canvas to correct position
+
+    ctx.fillStyle = "orange";//cannon is orange
+
+    ctx.fillRect(//drawing the actual tank body
+      (data[i].cannonWidth / 2) * -1,//determines axis of rotation, if x and y are 0 axis is bottom left corner of cannon
+      0,//this determines where the axis of rotating is on the cannon
+      data[i].cannonWidth,//width of cannon
+      data[i].cannonHeight//height of cannon
+    );
+    ctx.restore();//returing canvas to previus position
+
+    var topCannonRadius = 10;//radius of circle on top of tank
+
+    ctx.fillStyle = "orange";//circle is orange
+
+    ctx.beginPath();
+    ctx.arc(data[i].x + data[i].width / 2, data[i].y + data[i].height / 2, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
+    ctx.fill();//filling circle
+
+
   }
 });
 
 document.onkeydown = function(event){
   if(event.keyCode === 68)
-    socket.emit('keyPress', {inputId:'right', state:true});
+    socket.emit('keyPress', {inputId:'right', state:true});//rotates tank to the right
   else if(event.keyCode === 83)
-    socket.emit('keyPress', {inputId:'down', state:true});
+    socket.emit('keyPress', {inputId:'down', state:true});//moves tank backward
   else if(event.keyCode === 65)
-    socket.emit('keyPress', {inputId:'left', state:true});
+    socket.emit('keyPress', {inputId:'left', state:true});//rotates tank to the left
   else if(event.keyCode === 87)
-    socket.emit('keyPress', {inputId:'up', state:true});
+    socket.emit('keyPress', {inputId:'up', state:true});//moves tank forward
+  else if(event.keyCode === 39)
+    socket.emit('keyPress', {inputId:'cannonRight', state:true});//rotates cannon to the right
+  else if(event.keyCode === 37)
+    socket.emit('keyPress', {inputId:'cannonLeft', state:true});//rotates cannon to the left
 }
 
 document.onkeyup = function(event){
@@ -53,4 +89,8 @@ document.onkeyup = function(event){
     socket.emit('keyPress', {inputId:'left', state:false});
   else if(event.keyCode === 87)
     socket.emit('keyPress', {inputId:'up', state:false});
+  else if(event.keyCode === 39)
+    socket.emit('keyPress', {inputId:'cannonRight', state:false});//stops cannon rotation to the right
+  else if(event.keyCode === 37)
+    socket.emit('keyPress', {inputId:'cannonLeft', state:false});//stops cannon rotation to the left
 }
