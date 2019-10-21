@@ -24,6 +24,7 @@ app.get('/game',function(req, res){
 serv.listen(process.env.PORT || 2000);//listen to port 2000
 console.log("Server started.");
 
+
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 var BULLET_LIST = {};
@@ -38,27 +39,6 @@ class Entity{
     this.rot = 0;//angle of rotation
     this.maxSpd = 3;//movement speed
     this.rotSpd = 2;//rotation speed
-
-
-   }
-   getPosX(){
-     return this.x;
-   }
-   getPosY(){
-     return this.y;
-   }
-   getRot(){
-     return this.rot;
-   }
-   getMaxSpd(){
-     return this.maxSpd;
-   }
-   setRot(nRotation)
-   {
-     this.rot = nRotation;
-   }
-   setMaxSpd(nSpeed){
-     this.maxSpd = nSpeed;
    }
    getDistance(x1,y1,x2,y2){
      let xDist = x2 - x1;
@@ -81,6 +61,7 @@ class Player extends Entity{
     this.pressingDown = false;
     this.rotatingCannonLeft = false;
     this.rotatingCannonRight = false;
+    this.shooting = false;
 
 
     this.height = 50;//sizing of tank
@@ -92,13 +73,7 @@ class Player extends Entity{
     this.cannonHeight = 40;//sizing of cannon
     this.cannonAngle = 180;//cannon's angle of rotation
     this.cannonSpeed = 2;//cannon's rotation speed
-    // this.number = " " + Math.floor(10*Math.random());
-    // this.pressingRight = false;
-    // this.pressingLeft = false;
-    // this.pressingUp = false;
-    // this.pressingDown = false;
     this.attackSpeed = 1;
-    //setInterval(update,40);
   }
   updatePosition(){
     if(this.pressingRight)//rotate to the right
@@ -121,21 +96,20 @@ class Player extends Entity{
     if (this.rotatingCannonLeft){//rotate cannon to left
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
+    let timer = setInterval(function() {
+      if (this.shooting)
+        Fire();
+      else
+        clearInterval(timer);
+    }, this.attackSpeed*1000);
   }
   Fire(){
     var bulletID = Math.random();
     var bullet = new Bullet(bulletID,this);
     BULLET_LIST[bulletID] = bullet;
   }
-  getHealth(){
-    return this.health;
-  }
-  setHealth(n_health){
-    this.health = n_health;
-  }
-  /*
   update(){
-    for (key in BULLET_LIST)
+    for (var key in BULLET_LIST)
     {
       if(getDistance(key.x,key.y,this.x,this.y) == 0 && key.parent != this)
       {
@@ -145,14 +119,13 @@ class Player extends Entity{
       }
     }
     if(key.getisDead() == true){
-      delete BULLET_LIST[key.getid()];
+      delete BULLET_LIST[key];
     }
     if(this.health <= 0)
     {
       delete PLAYER_LIST[this.id];
     }
   }
-  */
 }
 
 class Bullet extends Entity{
@@ -163,26 +136,14 @@ class Bullet extends Entity{
       this.damage = 1;
       this.lifeSpan = 100;
       this.isDead = false;
-      setInterval(update,40);
+      //setInterval(update,40);
       this.parent = parent;
-  }
-  getDmg(){
-    return this.damage;
-  }
-  setDmg(n_dmg){
-    this.damage = n_dmg;
+
+      this.width = 5;
+      this.height = 5;
   }
   settoRad(angle){
     angle = (angle/180 * Math.PI)
-  }
-  setisDead(dead){
-    this.isDead = dead;
-  }
-  getisDead(){
-    return this.isDead;
-  }
-  getID(){
-    return this.id;
   }
   update(){
     this.LifeSpan -= 1;
@@ -207,6 +168,11 @@ io.sockets.on('connection', function(socket){
   PLAYER_LIST[socket.id] = player;
 
   socket.on('disconnect', function(){
+    for(var i in BULLET_LIST){
+      if (BULLET_LIST[i].parent === PLAYER_LIST[socket.id]){
+        delete BULLET_LIST[i];
+      }
+    }
     delete SOCKET_LIST[socket.id];
     delete PLAYER_LIST[socket.id];
     console.log("Player disconnection");
@@ -221,21 +187,24 @@ io.sockets.on('connection', function(socket){
       player.pressingUp = data.state;
     else if(data.inputId === 'down')
       player.pressingDown = data.state;
+    else if(data.inputId === 'shoot')
+      player.shooting = data.state;
     else if(data.inputId === 'cannonRight')
       player.rotatingCannonRight = data.state;
     else if(data.inputId === 'cannonLeft')
       player.rotatingCannonLeft = data.state;
   });
-
     console.log('Player connection');
 });
 
 setInterval(function(){
   var pack = [];
+  var bulletPack = [];
   for(var i in PLAYER_LIST){
     var player = PLAYER_LIST[i];
     player.updatePosition();
     pack.push({
+      id: i,
       x:player.x,
       y:player.y,
       rot:player.rot,
@@ -248,8 +217,20 @@ setInterval(function(){
 
     });
   }
+  for(var i in BULLET_LIST){
+    var bullet = BULLET_LIST[i];
+    bullet.update();
+    bulletPack.push({
+      x:bullet.x,
+      y:bullet.y,
+      rot:bullet.rot,
+      width:bullet.width,
+      height:bullet.height
+    });
+  }
   for (var i in SOCKET_LIST){
     var socket = SOCKET_LIST[i];
     socket.emit('newPosition',pack);
+    socket.emit('drawBullets',bulletPack);
   }
 }, 1000/60)

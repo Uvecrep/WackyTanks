@@ -65,6 +65,31 @@ socket.on('newPosition', function(data){
   }
 });
 
+socket.on('drawBullets', function(data){
+  for(var i = 0; i < data.length; i++){//drawing all bullets passed in through data array
+    ctx.fillStyle = 'black';
+    //ctx.fillRect(data[i].x, data[i].y, 30, 50);
+
+    ctx.save();//need to save canvas before drawing rotated objects, this part draws the bullet
+    var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
+
+    ctx.translate(//moving the canvas to the center of the object
+    data[i].x + data[i].width / 2,
+    data[i].y + data[i].height / 2
+    );
+
+    ctx.rotate(rad);//rotating canvas to correct position
+
+    ctx.fillRect(//drawing the bullet
+      (data[i].width / 2) * -1,
+      (data[i].height / 2) * -1,
+       data[i].width,
+       data[i].height
+    );
+    ctx.restore();
+  }
+});
+
 document.onkeydown = function(event){
   if(event.keyCode === 68)
     socket.emit('keyPress', {inputId:'right', state:true});//rotates tank to the right
@@ -73,10 +98,9 @@ document.onkeydown = function(event){
   else if(event.keyCode === 65)
     socket.emit('keyPress', {inputId:'left', state:true});//rotates tank to the left
   else if(event.keyCode === 87)
-    socket.emit('keyPress', {inputId:'up', state:true});
-  else if(event.keyCode === 32)
-    socket.emit('keyPress', {inputId:'shoot', state:true});
     socket.emit('keyPress', {inputId:'up', state:true});//moves tank forward
+  else if(event.keyCode === 32)
+    socket.emit('keyPress', {inputId:'shoot', state:true});//shoots
   else if(event.keyCode === 39)
     socket.emit('keyPress', {inputId:'cannonRight', state:true});//rotates cannon to the right
   else if(event.keyCode === 37)
