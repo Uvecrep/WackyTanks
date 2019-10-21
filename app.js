@@ -75,6 +75,7 @@ class Player extends Entity{
     this.cannonSpeed = 2;//cannon's rotation speed
     this.attackSpeed = 1;
   }
+
   updatePosition(){
     if(this.pressingRight)//rotate to the right
       this.rot += this.rotSpd;//updates direction of tank
@@ -96,12 +97,9 @@ class Player extends Entity{
     if (this.rotatingCannonLeft){//rotate cannon to left
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
-    let timer = setInterval(function() {
-      if (this.shooting)
-        Fire();
-      else
-        clearInterval(timer);
-    }, this.attackSpeed*1000);
+    if (this.shooting){
+      this.Fire();
+    }
   }
   Fire(){
     var bulletID = Math.random();
@@ -154,8 +152,8 @@ class Bullet extends Entity{
     if(this.isDead){
       delete BULLET_LIST[this.id];
     }
-    this.x += cos(this.settoRad(this.parent.rot)) * this.maxSpd;
-    this.y += sin(this.settoRad(this.parent.rot)) * this.maxSpd;
+    this.x += Math.cos(this.settoRad(this.parent.rot)) * this.maxSpd;
+    this.y += Math.sin(this.settoRad(this.parent.rot)) * this.maxSpd;
   }
 }
 var io = require('socket.io')(serv,{});
@@ -176,6 +174,13 @@ io.sockets.on('connection', function(socket){
     delete SOCKET_LIST[socket.id];
     delete PLAYER_LIST[socket.id];
     console.log("Player disconnection");
+  });
+
+  socket.on('sendMsgToServer', function(data){
+    var playerName = ("" + socket.id).slice(2,7);
+    for (var i in SOCKET_LIST){
+      SOCKET_LIST[i].emit('addMsg', playerName + ': ' + data);
+    }
   });
 
   socket.on('keyPress', function(data){
