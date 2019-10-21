@@ -91,11 +91,11 @@ class Player extends Entity{
     this.cannonHeight = 40;//sizing of cannon
     this.cannonAngle = 180;//cannon's angle of rotation
     this.cannonSpeed = 2;//cannon's rotation speed
-    this.number = " " + Math.floor(10*Math.random());
-    this.pressingRight = false;
-    this.pressingLeft = false;
-    this.pressingUp = false;
-    this.pressingDown = false;
+    // this.number = " " + Math.floor(10*Math.random());
+    // this.pressingRight = false;
+    // this.pressingLeft = false;
+    // this.pressingUp = false;
+    // this.pressingDown = false;
     this.attackSpeed = 1;
     //setInterval(update,40);
   }
