@@ -105,6 +105,7 @@ class Player extends Entity{
     var bulletID = Math.random();
     var bullet = new Bullet(bulletID,this);
     BULLET_LIST[bulletID] = bullet;
+    console.log("Bullet Created");
   }
   update(){
     for (var key in BULLET_LIST)
@@ -134,6 +135,8 @@ class Bullet extends Entity{
       this.damage = 1;
       this.lifeSpan = 100;
       this.isDead = false;
+      this.x = parent.x;
+      this.y = parent.y;
       //setInterval(update,40);
       this.parent = parent;
 
@@ -144,16 +147,17 @@ class Bullet extends Entity{
     angle = (angle/180 * Math.PI)
   }
   update(){
-    this.LifeSpan -= 1;
+    this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
       this.isDead = true;
     }
     if(this.isDead){
       delete BULLET_LIST[this.id];
+      console.log("Bullet Deleted");
     }
-    this.x += Math.cos(this.settoRad(this.parent.rot)) * this.maxSpd;
-    this.y += Math.sin(this.settoRad(this.parent.rot)) * this.maxSpd;
+    //this.x += Math.cos(this.settoRad(this.parent.rot)) * this.maxSpd;
+    //this.y += Math.sin(this.settoRad(this.parent.rot)) * this.maxSpd;
   }
 }
 var io = require('socket.io')(serv,{});
