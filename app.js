@@ -74,9 +74,12 @@ class Player extends Entity{
     this.cannonAngle = 180;//cannon's angle of rotation
     this.cannonSpeed = 2;//cannon's rotation speed
     this.attackSpeed = 1;
+
+    this.framecount = 0;
   }
 
   updatePosition(){
+    this.framecount++;
     if(this.pressingRight)//rotate to the right
       this.rot += this.rotSpd;//updates direction of tank
     if(this.pressingLeft)//rotate to the left
@@ -98,7 +101,10 @@ class Player extends Entity{
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
     if (this.shooting){
-      this.Fire();
+      if(this.framecount % 50 == 0)
+      {
+        this.Fire();
+      }
     }
   }
   Fire(){
@@ -111,7 +117,7 @@ class Player extends Entity{
     {
       if(getDistance(key.x,key.y,this.x,this.y) == 0 && key.parent != this)
       {
-        this.setHealth(getHealth - key.damage);
+        this.setHealth(this.getHealth - key.damage);
         key.setisDead(true);
         break;
       }
