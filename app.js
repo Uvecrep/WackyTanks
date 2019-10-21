@@ -136,8 +136,7 @@ class Bullet extends Entity{
       this.isDead = false;
       this.x = parent.x;
       this.y = parent.y;
-      this.rot = parent.cannonAngle;
-      //setInterval(update,40);
+      this.rot = parent.cannonAngle+90;
       this.parent = parent;
 
       this.width = 5;
@@ -155,12 +154,13 @@ class Bullet extends Entity{
     if(this.isDead){
       delete BULLET_LIST[this.id];
     }
-    //console.log(this.rot);
-    this.x -= (Math.cos(this.rot) * this.maxSpd);
-    this.y -= (Math.sin(this.rot) * this.maxSpd);
-    //console.log(this.x);
+    this.x += (Math.cos((this.rot * Math.PI) / 180) * this.maxSpd);
+    this.y += (Math.sin((this.rot * Math.PI) / 180) * this.maxSpd);
   }
 }
+
+(this.rot * Math.PI) / 180
+
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 
