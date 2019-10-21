@@ -1,4 +1,4 @@
-//hello
+//Server Side
 
 var express = require('express');
 var app = express();
@@ -26,38 +26,19 @@ console.log("Server started.");
 
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
+var BULLET_LIST = {};
 
-/*var Player = function(id){
-  var self = {
-    x:250,
-    y:250,
-    id:id,
-    number:"" + Math.floor(10 * Math.random()),
-    pressingRight:false,
-    pressingLeft:false,
-    pressingUp:false,
-    pressingDown:false,
-    maxSpd:1
-  }
-  self.updatePosition = function(){
-    if(self.pressingRight)
-      self.x += self.maxSpd;
-    if(self.pressingLeft)
-      self.x -= self.maxSpd;
-    if(self.pressingUp)
-      self.y -= self.maxSpd;
-    if(self.pressingDown)
-      self.y += self.maxSpd;
-  }
-  return self;
-}
-*/
+
 class Entity{
   constructor(){
-    this.x = 250;
-    this.y = 250;
-    this.rot = 0;
-    this.maxSpd = 10;
+    this.x = 250;//position
+    this.y = 250;//position
+    this.width = 0;//sizing
+    this.height = 0;//sizing
+    this.rot = 0;//angle of rotation
+    this.maxSpd = 3;//movement speed
+    this.rotSpd = 2;//rotation speed
+
 
    }
    getPosX(){
@@ -91,32 +72,129 @@ class Entity{
 class Player extends Entity{
   constructor(id) {
     super();
+    this.health = 10;
     this.id = id;
     this.number = " "+ Math.floor(10*Math.random());
-    this.pressingRight = false;
+    this.pressingRight = false;//variables to handle user input
     this.pressingLeft = false;
     this.pressingUp = false;
     this.pressingDown = false;
-  }
+    this.rotatingCannonLeft = false;
+    this.rotatingCannonRight = false;
 
-  updatePosition(){
-    if(this.pressingRight)
-      this.x += this.maxSpd;
-    if(this.pressingLeft)
-      this.x -= this.maxSpd;
-    if(this.pressingUp)
-      this.y -= this.maxSpd;
-    if(this.pressingDown)
-      this.y += this.maxSpd;
+
+    this.height = 50;//sizing of tank
+    this.width = 30;//sizing of tank
+    this.rad = 0;//tank's intial angle of rotation
+
+
+    this.cannonWidth = 5;//sizing of cannon
+    this.cannonHeight = 40;//sizing of cannon
+    this.cannonAngle = 180;//cannon's angle of rotation
+    this.cannonSpeed = 2;//cannon's rotation speed
+    // this.number = " " + Math.floor(10*Math.random());
+    // this.pressingRight = false;
+    // this.pressingLeft = false;
+    // this.pressingUp = false;
+    // this.pressingDown = false;
+    this.attackSpeed = 1;
+    //setInterval(update,40);
   }
+  updatePosition(){
+    if(this.pressingRight)//rotate to the right
+      this.rot += this.rotSpd;//updates direction of tank
+    if(this.pressingLeft)//rotate to the left
+      this.rot -= this.rotSpd;//updates rotation angle
+    if(this.pressingUp){//move forward
+      this.rad = ((this.rot + 90) * Math.PI) / 180;//angle of rotation + 90 degrees and converted to radians
+      this.y -= (this.maxSpd * Math.sin(this.rad));//updating y position (y = max speed * sin(rotation angle))
+      this.x -= (this.maxSpd * Math.cos(this.rad));//updating x position (x = max speed * cos(rotation angle))
+    }
+    if(this.pressingDown){//move backward
+      this.rad = ((this.rot + 90) * Math.PI) / 180;//angle of rotation + 90 degrees and converted to radians
+      this.y += (this.maxSpd * Math.sin(this.rad));//updating y position (y speed = max speed * sin(rotation angle))
+      this.x += (this.maxSpd * Math.cos(this.rad));//updating x position (x speed = max speed * cos(rotation angle))
+    }
+    if (this.rotatingCannonRight){//rotate cannon to right
+      this.cannonAngle += this.cannonSpeed;//updating cannon's angle of rotation
+    }
+    if (this.rotatingCannonLeft){//rotate cannon to left
+      this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
+    }
+  }
+  Fire(){
+    var bulletID = Math.random();
+    var bullet = new Bullet(bulletID,this);
+    BULLET_LIST[bulletID] = bullet;
+  }
+  getHealth(){
+    return this.health;
+  }
+  setHealth(n_health){
+    this.health = n_health;
+  }
+  /*
+  update(){
+    for (key in BULLET_LIST)
+    {
+      if(getDistance(key.x,key.y,this.x,this.y) == 0 && key.parent != this)
+      {
+        this.setHealth(getHealth - key.damage);
+        key.setisDead(true);
+        break;
+      }
+    }
+    if(key.getisDead() == true){
+      delete BULLET_LIST[key.getid()];
+    }
+    if(this.health <= 0)
+    {
+      delete PLAYER_LIST[this.id];
+    }
+  }
+  */
 }
 
 class Bullet extends Entity{
-  constructor(id){
+  constructor(id,parent){
       super();
       this.id = id;
       this.speed = 0;
-      this.damage = 0;
+      this.damage = 1;
+      this.lifeSpan = 100;
+      this.isDead = false;
+      setInterval(update,40);
+      this.parent = parent;
+  }
+  getDmg(){
+    return this.damage;
+  }
+  setDmg(n_dmg){
+    this.damage = n_dmg;
+  }
+  settoRad(angle){
+    angle = (angle/180 * Math.PI)
+  }
+  setisDead(dead){
+    this.isDead = dead;
+  }
+  getisDead(){
+    return this.isDead;
+  }
+  getID(){
+    return this.id;
+  }
+  update(){
+    this.LifeSpan -= 1;
+    if (this.lifeSpan <= 0)
+    {
+      this.isDead = true;
+    }
+    if(this.isDead){
+      delete BULLET_LIST[this.id];
+    }
+    this.x += cos(this.settoRad(this.parent.rot)) * this.maxSpd;
+    this.y += sin(this.settoRad(this.parent.rot)) * this.maxSpd;
   }
 }
 var io = require('socket.io')(serv,{});
@@ -143,6 +221,10 @@ io.sockets.on('connection', function(socket){
       player.pressingUp = data.state;
     else if(data.inputId === 'down')
       player.pressingDown = data.state;
+    else if(data.inputId === 'cannonRight')
+      player.rotatingCannonRight = data.state;
+    else if(data.inputId === 'cannonLeft')
+      player.rotatingCannonLeft = data.state;
   });
 
     console.log('Player connection');
@@ -156,7 +238,14 @@ setInterval(function(){
     pack.push({
       x:player.x,
       y:player.y,
-      number:player.number
+      rot:player.rot,
+      width:player.width,
+      height:player.height,
+      number:player.number,
+      cannonAngle:player.cannonAngle,
+      cannonWidth:player.cannonWidth,
+      cannonHeight:player.cannonHeight
+
     });
   }
   for (var i in SOCKET_LIST){
