@@ -111,7 +111,7 @@ class Player extends Entity{
     {
       if(getDistance(key.x,key.y,this.x,this.y) == 0 && key.parent != this)
       {
-        this.setHealth(getHealth - key.damage);
+        this.setHealth(this.getHealth - key.damage);
         key.setisDead(true);
         break;
       }
