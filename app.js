@@ -130,14 +130,14 @@ class Bullet extends Entity{
   constructor(id,parent){
       super();
       this.id = id;
+      this.parent = parent;
       this.speed = 0;
       this.damage = 1;
       this.lifeSpan = 100;
       this.isDead = false;
-      this.x = parent.x;
-      this.y = parent.y;
       this.rot = parent.cannonAngle+90;
-      this.parent = parent;
+      this.x = parent.x + (parent.width / 2) + (Math.cos((this.rot * Math.PI) / 180) * parent.cannonHeight);
+      this.y = parent.y + (parent.height / 2) + (Math.sin((this.rot * Math.PI) / 180) * parent.cannonHeight);
 
       this.width = 5;
       this.height = 5;
