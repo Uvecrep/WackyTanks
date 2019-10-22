@@ -136,6 +136,7 @@ class Player extends Entity{
       {
         this.Fire();
         this.firstShot = false;
+        this.framecount = 0;
       }
     }
     else if(this.shooting == false)
