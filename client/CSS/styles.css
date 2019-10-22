@@ -112,6 +112,8 @@ a:hover { text-decoration:underline; }
 
 #loginform p { margin: 5px; }
 
+#unsuccessful {color: 'red;'}
+
 /*for canvas and chatbox*/
 
 #usermsg {

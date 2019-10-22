@@ -95,24 +95,18 @@
     <!-- Login Button Inputs -->
     <div id="collapseLogin" class="collapse" aria-labelledby="collapseLogin" data-parent="#accordionExample">
       <div class="card-body">
-        <form action="insert_Login.php">
-
-
-
-          <!-- name -->
-          <label for="name">UserName</label>
-          <input type="text" name="name" id="UserName">
-          <br>
-          <br>
-          <!-- Email -->
-          <label for="Email">Password</label>
-          <input type="text" name="Email" id="Password">
-          <br>
-          <br>
-          <button>
-              <a id="SaveLogin" data-text="saveInfo" href="#">Reporting for Duty!</a>
-          </button>
-        </form>
+        <!-- name -->
+        <label for="name">UserName</label>
+        <input type="text" name="name" id="UserName"></input>
+        <br>
+        <br>
+        <!-- Email -->
+        <label for="password">Password</label>
+        <input type="password" name="password" id="Password"></input>
+        <br>
+        <p id="unsuccessful"> </p>
+        <br>
+        <button id="SaveLogin">Reporting for Duty!</button>
       </div>
     </div>
   </div>
@@ -146,7 +140,6 @@
       </div>
     </div>
   </div>
-
 </body>
 
 <br>
@@ -154,7 +147,7 @@
 <div class="copyrightTag">
   <p>Copyright &copy; 2019</p>
   <p>Created By: Reality Bytes Group 1</p>
-  <h3><a href="#home">Back To Top</a></h3>
+  <!-- <h3><a href="#home">Back To Top</a></h3> -->
 </div>
 
 </html>
