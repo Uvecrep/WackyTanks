@@ -40,11 +40,20 @@ class Entity{
     this.maxSpd = 3;//movement speed
     this.rotSpd = 2;//rotation speed
    }
-   getDistance(x1,y1,x2,y2){
+   getDistance(o1,o2){
+     /*
      let xDist = x2 - x1;
      let yDist = y2 - y1;
 
      return Math.sqrt(Math.pow(xDist,2) + Math.pow(yDist,2));
+     */
+     if(o1.y > (o2.y + o2.height) || (o1.x + o1.width) < o2.x || (o1.y + o1.height) < o2.y || o1.x > (o2.x+o2.width))
+     {
+       return false;
+     }
+     else{
+       return true;
+     }
    }
 
 }
@@ -101,10 +110,14 @@ class Player extends Entity{
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
     if (this.shooting){
-      if(this.framecount % 50 == 0)
+      if(this.framecount % 50 == 0 || this.framecount <= 10)
       {
         this.Fire();
       }
+    }
+    else if(this.shooting == false)
+    {
+      this.framecount == 0;
     }
   }
   Fire(){
@@ -113,23 +126,25 @@ class Player extends Entity{
     BULLET_LIST[bulletID] = bullet;
   }
   update(){
-    for (var key in BULLET_LIST)
-    {
-      if(getDistance(key.x,key.y,this.x,this.y) == 0 && key.parent != this)
+    //if(BULLET_LIST.length > 0){
+      for (var key in BULLET_LIST)
       {
-        this.setHealth(this.getHealth - key.damage);
-        key.setisDead(true);
-        break;
+        if(this.getDistance(this,BULLET_LIST[key]) == true && BULLET_LIST[key].parent != this)
+        {
+          //console.log("hit");
+          BULLET_LIST[key].isDead == true;
+
+          this.health = this.health - BULLET_LIST[key].damage;
+          delete BULLET_LIST[key];
+          break;
+        }
+      }
+      if(this.health <= 0)
+      {
+        delete PLAYER_LIST[this.id];
       }
     }
-    if(key.getisDead() == true){
-      delete BULLET_LIST[key];
-    }
-    if(this.health <= 0)
-    {
-      delete PLAYER_LIST[this.id];
-    }
-  }
+  //}
 }
 
 class Bullet extends Entity{
@@ -219,6 +234,7 @@ setInterval(function(){
   for(var i in PLAYER_LIST){
     var player = PLAYER_LIST[i];
     player.updatePosition();
+    player.update();
     pack.push({
       id: i,
       x:player.x,
