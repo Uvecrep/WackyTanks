@@ -42,13 +42,8 @@ class Entity{
     this.maxSpd = 3;//movement speed
     this.rotSpd = 2;//rotation speed
    }
+   /*
    getDistance(o1,o2){
-     /*
-     let xDist = x2 - x1;
-     let yDist = y2 - y1;
-
-     return Math.sqrt(Math.pow(xDist,2) + Math.pow(yDist,2));
-     */
      if(o1.y > (o2.y + o2.height) || (o1.x + o1.width) < o2.x || (o1.y + o1.height) < o2.y || o1.x > (o2.x+o2.width))
      {
        return false;
@@ -56,6 +51,29 @@ class Entity{
      else{
        return true;
      }
+   }
+   */
+   getDistance(player,bullet){
+      let dx = Math.cos((player.rot * Math.PI)/180 );
+      let dy = Math.sin((player.rot* Math.PI)/180 );
+
+      let d = dx * dx - dy * -dy;
+      let ix = dx / d;
+      let iy = -dy / d;
+
+      let invX = ((-dy * player.y) - (dx * player.x)) / d;
+      let invY =(-(dx * player.y) - (dy * player.x)) / d;
+
+      let bx = (bullet.x * ix) - (bullet.y * iy) + invX;
+      let by = (bullet.x * iy) + (bullet.y * ix) + invY;
+
+      if( bx > (-player.width/2) && bx < (player.width/2) && by > (-player.height/2) && by < (player.height/2))
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
    }
 
 }
@@ -74,7 +92,7 @@ class Player extends Entity{
     this.rotatingCannonLeft = false;
     this.rotatingCannonRight = false;
     this.shooting = false;
-
+    this.firstShot = true;
 
     this.height = 50;//sizing of tank
     this.width = 30;//sizing of tank
@@ -92,6 +110,7 @@ class Player extends Entity{
 
   updatePosition(){
     this.framecount++;
+
     if(this.pressingRight)//rotate to the right
       this.rot += this.rotSpd;//updates direction of tank
     if(this.pressingLeft)//rotate to the left
@@ -113,14 +132,16 @@ class Player extends Entity{
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
     if (this.shooting){
-      if(this.framecount % 50 == 0 || this.framecount <= 10)
+      if(this.framecount % 50 == 0 || this.firstShot == true)
       {
         this.Fire();
+        this.firstShot = false;
       }
     }
     else if(this.shooting == false)
     {
       this.framecount == 0;
+      this.firstShot = true;
     }
   }
 
@@ -185,10 +206,10 @@ class Bullet extends Entity{
     }
     this.x += (Math.cos((this.rot * Math.PI) / 180) * this.maxSpd);
     this.y += (Math.sin((this.rot * Math.PI) / 180) * this.maxSpd);
+    //   }
   }
 }
 
-//   }
 io.sockets.on('connection', function(socket){
 
   socket.id = Math.random();
