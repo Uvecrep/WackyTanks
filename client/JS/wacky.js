@@ -10,19 +10,19 @@ ctx.font = '30px Arial';
 var socket = io();
 
 //LOGIN
-document.getElementById('SaveLogin').onclick = function(){
-  socket.emit('signIn',
-  {username:document.getElementById('UserName').value,
-  password:document.getElementById('Password').value});
-}
-
-socket.on('signInResponse', function(data){
-  if(data.success){
-    //let into game only on successful login
-  }else{
-    document.getElementById('unsuccessful').innerHTML = "Login Unsuccessful";
-  }
-});
+// document.getElementById('SaveLogin').onclick = function(){
+//   socket.emit('signIn',
+//   {username:document.getElementById('UserName').value,
+//   password:document.getElementById('Password').value});
+// }
+//
+// socket.on('signInResponse', function(data){
+//   if(data.success){
+//     //let into game only on successful login
+//   }else{
+//     document.getElementById('unsuccessful').innerHTML = "Login Unsuccessful";
+//   }
+// });
 
 //TextBox
 socket.on("addMsg", function(data){

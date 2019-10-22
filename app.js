@@ -179,15 +179,18 @@ io.sockets.on('connection', function(socket){
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
 
-  socket.on('signIn', function(data){
-    if(data.username === 'admin' && password === 'password'){
-      var player = new Player(socket.id);
-      PLAYER_LIST[socket.id] = player;
-      socket.emit('signInResponse', {success:true});
-    }else{
-      socket.emit('signInResponse', {success:false});
-    }
-  });
+  // socket.on('signIn', function(data){
+  //   if(data.username === 'admin' && password === 'password'){
+  //     var player = new Player(socket.id);
+  //     PLAYER_LIST[socket.id] = player;
+  //     socket.emit('signInResponse', {success:true});
+  //   }else{
+  //     socket.emit('signInResponse', {success:false});
+  //   }
+  // });
+
+  var player = new Player(socket.id);
+  PLAYER_LIST[socket.id] = player;
 
   socket.on('disconnect', function(){
     for(var i in BULLET_LIST){
