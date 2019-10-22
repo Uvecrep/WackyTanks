@@ -3,6 +3,7 @@
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
+var io = require('socket.io')(serv,{});
 
 app.use(express.json());
 
@@ -31,6 +32,7 @@ var BULLET_LIST = {};
 
 
 class Entity{
+
   constructor(){
     this.x = 250;//position
     this.y = 250;//position
@@ -59,6 +61,7 @@ class Entity{
 }
 
 class Player extends Entity{
+
   constructor(id) {
     super();
     this.health = 10;
@@ -120,11 +123,13 @@ class Player extends Entity{
       this.framecount == 0;
     }
   }
+
   Fire(){
     var bulletID = Math.random();
     var bullet = new Bullet(bulletID,this);
     BULLET_LIST[bulletID] = bullet;
   }
+
   update(){
     //if(BULLET_LIST.length > 0){
       for (var key in BULLET_LIST)
@@ -148,6 +153,7 @@ class Player extends Entity{
 }
 
 class Bullet extends Entity{
+
   constructor(id,parent){
       super();
       this.id = id;
@@ -163,9 +169,11 @@ class Bullet extends Entity{
       this.width = 5;
       this.height = 5;
   }
+
   settoRad(angle){
     angle = (angle/180 * Math.PI)
   }
+
   update(){
     this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
@@ -180,13 +188,20 @@ class Bullet extends Entity{
   }
 }
 
-(this.rot * Math.PI) / 180
-
-var io = require('socket.io')(serv,{});
+//   }
 io.sockets.on('connection', function(socket){
 
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
+
+  // socket.on('signIn', function(data){
+  //   if(data.username === 'admin' && password === 'password'){
+  //     var player = new Player(socket.id);
+  //     PLAYER_LIST[socket.id] = player;
+  //     socket.emit('signInResponse', {success:true});
+  //   }else{
+  //     socket.emit('signInResponse', {success:false});
+  // });
 
   var player = new Player(socket.id);
   PLAYER_LIST[socket.id] = player;
@@ -225,12 +240,18 @@ io.sockets.on('connection', function(socket){
     else if(data.inputId === 'cannonLeft')
       player.rotatingCannonLeft = data.state;
   });
-    console.log('Player connection');
+
+  console.log('Player connection');
+  var playerName = ("" + socket.id).slice(2,7);
+  for (var i in SOCKET_LIST){
+    SOCKET_LIST[i].emit('addMsg', playerName + ' has joined the game.');
+  }
 });
 
 setInterval(function(){
   var pack = [];
   var bulletPack = [];
+
   for(var i in PLAYER_LIST){
     var player = PLAYER_LIST[i];
     player.updatePosition();
@@ -249,6 +270,7 @@ setInterval(function(){
 
     });
   }
+
   for(var i in BULLET_LIST){
     var bullet = BULLET_LIST[i];
     bullet.update();
@@ -260,9 +282,10 @@ setInterval(function(){
       height:bullet.height
     });
   }
+
   for (var i in SOCKET_LIST){
     var socket = SOCKET_LIST[i];
     socket.emit('newPosition',pack);
     socket.emit('drawBullets',bulletPack);
   }
-}, 1000/60)
+}, 1000/60);

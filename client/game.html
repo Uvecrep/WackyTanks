@@ -30,6 +30,7 @@
 <body>
 
   <!--<h1 id=gameTop>Wacky Tanks!!</h1>-->
+  <div id='SaveLogin'></div>
 
 <!--POPUP BEGIN -->
 <!-- Trigger/Open The Modal -->
@@ -119,19 +120,19 @@
         <canvas id="ctx" width="500" height="400" style="border:1px solid #000000;"></canvas>
         <div class="col">
           <div id="chat" >
-              <div id="menu">
+              <!-- <div id="menu">
                   <p class="welcome">Welcome, <b>PLAYER NAME GOES HERE</b></p>
                   <p class="logout" action=""><a id="exit" href="#">Exit Chat</a></p>
                   <div style="clear:both"></div>
-              </div>
+              </div> -->
 
               <div id="chatbox">
-                <div>Welcome, <b>PLAYER NAME GOES HERE</b></div>
+                <!-- <div>Welcome, <b>PLAYER NAME GOES HERE</b></div> -->
               </div>
 
               <form id="sendInput">
-                  <input id="usermsg" type="text" />
-                  <input type="submit" id="submitmsg" />
+                  <input id="usermsg" type="text" autocomplete="off" />
+                  <input id="submitmsg" type="submit" />
               </form>
           </div>
         </div>

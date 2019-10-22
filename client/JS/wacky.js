@@ -8,6 +8,33 @@ var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
 var socket = io();
+
+//LOGIN
+// document.getElementById('SaveLogin').onclick = function(){
+//   socket.emit('signIn',
+//   {username:document.getElementById('UserName').value,
+//   password:document.getElementById('Password').value});
+// }
+//
+// socket.on('signInResponse', function(data){
+//   if(data.success){
+//     //let into game only on successful login
+//   }else{
+//     document.getElementById('unsuccessful').innerHTML = "Login Unsuccessful";
+//   }
+// });
+
+//TextBox
+socket.on("addMsg", function(data){
+  document.getElementById("chatbox").innerHTML += "<div>"+data+"</div>";
+});
+
+document.getElementById("sendInput").onsubmit = function(e){
+  e.preventDefault();
+  socket.emit("sendMsgToServer", document.getElementById("usermsg").value);
+  document.getElementById("usermsg").value = '';
+}
+
 //Canvas window //
 socket.on('newPosition', function(data){
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//celars canvas
