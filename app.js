@@ -43,17 +43,7 @@ class Entity{
     this.rotSpd = 2;//rotation speed
    }
    /*
-   getDistance(o1,o2){
-     if(o1.y > (o2.y + o2.height) || (o1.x + o1.width) < o2.x || (o1.y + o1.height) < o2.y || o1.x > (o2.x+o2.width))
-     {
-       return false;
-     }
-     else{
-       return true;
-     }
-   }
-   */
-   /*
+
    getDistance(player,bullet){
 
     var innerAngle = (((Math.PI/2) - Math.tan(Math.abs(bullet.y-player.y)/Math.abs(bullet.x-player.x))) - (player.rot * (Math.PI/180)));
@@ -71,7 +61,7 @@ class Entity{
     //
     // var bulletNewX = xDist;
     // var bulletNewY = d;
-    */ 
+
    getDistance(player,bullet){
       let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
       let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
@@ -110,6 +100,22 @@ class Entity{
  //    }
  // }
 }
+}
+   */
+   getDistance(player,bullet){
+      let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
+      let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
+
+      let radii_sum = 30;
+      if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
+   }
+
 }
 
 class Player extends Entity{
@@ -195,17 +201,18 @@ class Player extends Entity{
         if(colliding == true && BULLET_LIST[key].parent != this)
         {
           //console.log("hit");
-          // BULLET_LIST[key].isDead == true;
+          BULLET_LIST[key].isDead == true;
 
           this.health = this.health - BULLET_LIST[key].damage;
           delete BULLET_LIST[key];
+          break;
         }
       }
       if(this.health <= 0)
       {
         delete PLAYER_LIST[this.id];
       }
-  }
+    }
   //}
 }
 
