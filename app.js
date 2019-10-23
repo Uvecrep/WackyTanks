@@ -53,6 +53,7 @@ class Entity{
      }
    }
    */
+   /*
    getDistance(player,bullet){
       let dx = Math.cos((player.rot * Math.PI)/180 );
       let dy = Math.sin((player.rot* Math.PI)/180 );
@@ -75,7 +76,20 @@ class Entity{
         return false;
       }
    }
+   */
+   getDistance(player,bullet){
+      let xdist = player.x - bullet.x;
+      let ydist = player.y - bullet.y;
 
+      let radii_sum = player.height + bullet.height;
+
+      if( Math.sqrt((xdist * xdist) + (ydist * ydist)) <= radii_sum/2){
+        return true;
+      }
+      else{
+        return false;
+      }
+   }
 }
 
 class Player extends Entity{
@@ -153,6 +167,7 @@ class Player extends Entity{
   }
 
   update(){
+
     //if(BULLET_LIST.length > 0){
       for (var key in BULLET_LIST)
       {
