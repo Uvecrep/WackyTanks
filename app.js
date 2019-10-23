@@ -54,28 +54,47 @@ class Entity{
    }
    */
    getDistance(player,bullet){
-      let dx = Math.cos((player.rot * Math.PI)/180 );
-      let dy = Math.sin((player.rot* Math.PI)/180 );
 
-      let d = dx * dx - dy * -dy;
-      let ix = dx / d;
-      let iy = -dy / d;
+    var innerAngle = (((Math.PI/2) - Math.tan(Math.abs(bullet.y-player.y)/Math.abs(bullet.x-player.x))) - (player.rot * (Math.PI/180)));
+    var d = (Math.sqrt(Math.pow(bullet.x-player.x, 2) + Math.pow(bullet.y-player.y, 2)));
+    var xDist = ((2 * d) * Math.sin(innerAngle/2));
 
-      let invX = ((-dy * player.y) - (dx * player.x)) / d;
-      let invY =(-(dx * player.y) - (dy * player.x)) / d;
+    console.log("angle is", innerAngle);
+    console.log("d is", d);
+    console.log("xDist is", xDist);
 
-      let bx = (bullet.x * ix) - (bullet.y * iy) + invX;
-      let by = (bullet.x * iy) + (bullet.y * ix) + invY;
+    // var top = -player.height;
+    // var bot = player.height;
+    // var left = -player.width;
+    // var right = player.width;
+    //
+    // var bulletNewX = xDist;
+    // var bulletNewY = d;
 
-      if( bx > (-player.width/2) && bx < (player.width/2) && by > (-player.height/2) && by < (player.height/2))
-      {
-        return true;
-      }
-      else{
-        return false;
-      }
-   }
-
+    if( d <= player.height && xDist <= player.width){
+      return true;
+    }
+    return false;
+ //    let dx = Math.cos((player.rot * Math.PI)/180 );
+ //    let dy = Math.sin((player.rot* Math.PI)/180 );
+ //    let d = dx ** dx - dy * -dy;
+ //    let ix = dx / d;
+ //    let iy = -dy / d;
+ //
+ //    let invX = ((-dy * player.y) - (dx * player.x)) / d;
+ //    let invY =(-(dx * player.y) - (dy * player.x)) / d;
+ //    let bx = (bullet.x * ix) - (bullet.y * iy) + invX;
+ //    let by = (bullet.x * iy) + (bullet.y * ix) + invY;
+ //
+ //    if( bx > (-player.width/2) && bx < (player.width/2) && by > (-player.height/2) && by < (player.height/2))
+ //    {
+ //      return true;
+ //    }
+ //    else{
+ //      return false;
+ //    }
+ // }
+}
 }
 
 class Player extends Entity{
@@ -159,18 +178,17 @@ class Player extends Entity{
         if(this.getDistance(this,BULLET_LIST[key]) == true && BULLET_LIST[key].parent != this)
         {
           //console.log("hit");
-          BULLET_LIST[key].isDead == true;
+          // BULLET_LIST[key].isDead == true;
 
           this.health = this.health - BULLET_LIST[key].damage;
           delete BULLET_LIST[key];
-          break;
         }
       }
       if(this.health <= 0)
       {
         delete PLAYER_LIST[this.id];
       }
-    }
+  }
   //}
 }
 
