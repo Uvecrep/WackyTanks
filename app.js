@@ -53,6 +53,7 @@ class Entity{
      }
    }
    */
+   /*
    getDistance(player,bullet){
 
     var innerAngle = (((Math.PI/2) - Math.tan(Math.abs(bullet.y-player.y)/Math.abs(bullet.x-player.x))) - (player.rot * (Math.PI/180)));
@@ -70,6 +71,20 @@ class Entity{
     //
     // var bulletNewX = xDist;
     // var bulletNewY = d;
+    */ 
+   getDistance(player,bullet){
+      let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
+      let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
+
+      let radii_sum = 30;
+      if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
+   }
 
     if( d <= player.height && xDist <= player.width){
       return true;
@@ -172,10 +187,12 @@ class Player extends Entity{
   }
 
   update(){
+
     //if(BULLET_LIST.length > 0){
       for (var key in BULLET_LIST)
       {
-        if(this.getDistance(this,BULLET_LIST[key]) == true && BULLET_LIST[key].parent != this)
+        let colliding = this.getDistance(this,BULLET_LIST[key]);
+        if(colliding == true && BULLET_LIST[key].parent != this)
         {
           //console.log("hit");
           // BULLET_LIST[key].isDead == true;
