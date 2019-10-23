@@ -42,33 +42,13 @@ class Entity{
     this.maxSpd = 3;//movement speed
     this.rotSpd = 2;//rotation speed
    }
-   /*
-   getDistance(o1,o2){
-     if(o1.y > (o2.y + o2.height) || (o1.x + o1.width) < o2.x || (o1.y + o1.height) < o2.y || o1.x > (o2.x+o2.width))
-     {
-       return false;
-     }
-     else{
-       return true;
-     }
-   }
-   */
-   /*
+
    getDistance(player,bullet){
-      let dx = Math.cos((player.rot * Math.PI)/180 );
-      let dy = Math.sin((player.rot* Math.PI)/180 );
+      let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
+      let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
 
-      let d = dx * dx - dy * -dy;
-      let ix = dx / d;
-      let iy = -dy / d;
-
-      let invX = ((-dy * player.y) - (dx * player.x)) / d;
-      let invY =(-(dx * player.y) - (dy * player.x)) / d;
-
-      let bx = (bullet.x * ix) - (bullet.y * iy) + invX;
-      let by = (bullet.x * iy) + (bullet.y * ix) + invY;
-
-      if( bx > (-player.width/2) && bx < (player.width/2) && by > (-player.height/2) && by < (player.height/2))
+      let radii_sum = 30;
+      if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
       {
         return true;
       }
@@ -76,20 +56,7 @@ class Entity{
         return false;
       }
    }
-   */
-   getDistance(player,bullet){
-      let xdist = player.x - bullet.x;
-      let ydist = player.y - bullet.y;
 
-      let radii_sum = player.height + bullet.height;
-
-      if( Math.sqrt((xdist * xdist) + (ydist * ydist)) <= radii_sum/2){
-        return true;
-      }
-      else{
-        return false;
-      }
-   }
 }
 
 class Player extends Entity{
@@ -171,7 +138,8 @@ class Player extends Entity{
     //if(BULLET_LIST.length > 0){
       for (var key in BULLET_LIST)
       {
-        if(this.getDistance(this,BULLET_LIST[key]) == true && BULLET_LIST[key].parent != this)
+        let colliding = this.getDistance(this,BULLET_LIST[key]);
+        if(colliding == true && BULLET_LIST[key].parent != this)
         {
           //console.log("hit");
           BULLET_LIST[key].isDead == true;
