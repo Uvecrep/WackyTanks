@@ -42,66 +42,9 @@ class Entity{
     this.maxSpd = 3;//movement speed
     this.rotSpd = 2;//rotation speed
    }
-   /*
 
-   getDistance(player,bullet){
 
-    var innerAngle = (((Math.PI/2) - Math.tan(Math.abs(bullet.y-player.y)/Math.abs(bullet.x-player.x))) - (player.rot * (Math.PI/180)));
-    var d = (Math.sqrt(Math.pow(bullet.x-player.x, 2) + Math.pow(bullet.y-player.y, 2)));
-    var xDist = ((2 * d) * Math.sin(innerAngle/2));
 
-    console.log("angle is", innerAngle);
-    console.log("d is", d);
-    console.log("xDist is", xDist);
-
-    // var top = -player.height;
-    // var bot = player.height;
-    // var left = -player.width;
-    // var right = player.width;
-    //
-    // var bulletNewX = xDist;
-    // var bulletNewY = d;
-
-   getDistance(player,bullet){
-      let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
-      let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
-
-      let radii_sum = 30;
-      if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
-      {
-        return true;
-      }
-      else{
-        return false;
-      }
-   }
-
-    if( d <= player.height && xDist <= player.width){
-      return true;
-    }
-    return false;
- //    let dx = Math.cos((player.rot * Math.PI)/180 );
- //    let dy = Math.sin((player.rot* Math.PI)/180 );
- //    let d = dx ** dx - dy * -dy;
- //    let ix = dx / d;
- //    let iy = -dy / d;
- //
- //    let invX = ((-dy * player.y) - (dx * player.x)) / d;
- //    let invY =(-(dx * player.y) - (dy * player.x)) / d;
- //    let bx = (bullet.x * ix) - (bullet.y * iy) + invX;
- //    let by = (bullet.x * iy) + (bullet.y * ix) + invY;
- //
- //    if( bx > (-player.width/2) && bx < (player.width/2) && by > (-player.height/2) && by < (player.height/2))
- //    {
- //      return true;
- //    }
- //    else{
- //      return false;
- //    }
- // }
-}
-}
-   */
    getDistance(player,bullet){
      let playerX = player.x + (player.width/2);
      let playerY = player.y + (player.height/2);
@@ -123,17 +66,6 @@ class Entity{
      } else {
        return false;
      }
-      // let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
-      // let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
-      //
-      // let radii_sum = 30;
-      // if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
-      // {
-      //   return true;
-      // }
-      // else{
-      //   return false;
-      // }
    }
 
 }
