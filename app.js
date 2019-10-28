@@ -43,46 +43,8 @@ class Entity{
     this.rotSpd = 2;//rotation speed
    }
    /*
-   getDistance(o1,o2){
-     if(o1.y > (o2.y + o2.height) || (o1.x + o1.width) < o2.x || (o1.y + o1.height) < o2.y || o1.x > (o2.x+o2.width))
-     {
-       return false;
-     }
-     else{
-       return true;
-     }
-   }
-   */
-   /*
-   isWithinParallelPosSlope(xR, yR, thetaR, xL, yL, thetaL, xB, yB){
 
-   }
-
-   isWithinParallelNegSlope(xR, yR, thetaR, xL, yL, thetaL, xB, yB){
-
-   }
-   */
-   isCollision(player,bullet){
-     
-     /*
-     var line1x;
-     var line1y;
-     var line1Theta = player.rot;
-     var line2x;
-     var line2y;
-     var line2Theta = player.rot;
-     var isInParallelOne = false;
-     var isInParallelTwo = false;
-     var d = player.width / 2;
-     if (player.rot > 0 && player.rot < 90){//case 1: tank angled in quadrant one
-       line1x = player.x + d * Math.sin((90-player.rot)*Math.PI / 180);
-       line1y = player.y + d * Math.cos((90-player.rot)*Math.PI / 180);
-
-       line2x = player.x - d * Math.sin((90-player.rot)*Math.PI / 180);
-       line2y = player.y - d * Math.cos((90-player.rot)*Math.PI / 180);
-
-       isInParallelOne = isWithinParallelPosSlope(line1x, line1y, line1Theta, line2x, line2y, line2Theta, bullet.x, bullet.y);
-
+   getDistance(player,bullet){
 
 
      } else if (player.rot > 90 && player.rot < 180){//case 2: tank is in 4th quadrant
@@ -111,12 +73,24 @@ class Entity{
     // var bulletNewX = xDist;
     // var bulletNewY = d;
 
-    //------------------------------------------------------
-    // if( d <= player.height && xDist <= player.width){
-    //   return true;
-    // }
-    // return false;
-    //----------------------------------------------------
+   getDistance(player,bullet){
+      let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
+      let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
+
+      let radii_sum = 30;
+      if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
+   }
+
+    if( d <= player.height && xDist <= player.width){
+      return true;
+    }
+    return false;
  //    let dx = Math.cos((player.rot * Math.PI)/180 );
  //    let dy = Math.sin((player.rot* Math.PI)/180 );
  //    let d = dx ** dx - dy * -dy;
@@ -137,6 +111,22 @@ class Entity{
  //    }
  // }
 }
+}
+   */
+   getDistance(player,bullet){
+      let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
+      let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
+
+      let radii_sum = 30;
+      if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
+   }
+
 }
 
 class Player extends Entity{
@@ -224,23 +214,26 @@ class Player extends Entity{
   }
 
   update(){
+
     //if(BULLET_LIST.length > 0){
       for (var key in BULLET_LIST)
       {
-        if(this.isCollision(this,BULLET_LIST[key]) == true && BULLET_LIST[key].parent != this)
+        let colliding = this.getDistance(this,BULLET_LIST[key]);
+        if(colliding == true && BULLET_LIST[key].parent != this)
         {
-          console.log("hit");
-          // BULLET_LIST[key].isDead == true;
+          //console.log("hit");
+          BULLET_LIST[key].isDead == true;
 
           this.health = this.health - BULLET_LIST[key].damage;
           delete BULLET_LIST[key];
+          break;
         }
       }
       if(this.health <= 0)
       {
         delete PLAYER_LIST[this.id];
       }
-  }
+    }
   //}
 }
 
