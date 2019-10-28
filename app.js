@@ -87,7 +87,7 @@ class Entity{
       }
    }
 
-    if( d <= player.height && xDist <= player.width){
+    if(d <= player.height && xDist <= player.width){
       return true;
     }
     return false;
