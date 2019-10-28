@@ -58,6 +58,7 @@ socket.on('newPosition', function(data){
        data[i].width,
        data[i].height
     );
+
     ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
 
     var frontTankWidth = 10;//width and height of front of tank marker
@@ -98,6 +99,7 @@ socket.on('newPosition', function(data){
     ctx.arc(data[i].x + data[i].width / 2, data[i].y + data[i].height / 2, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
     ctx.fill();//filling circle
 
+
   }
 });
 
@@ -105,28 +107,24 @@ socket.on('drawBullets', function(data){
   for(var i = 0; i < data.length; i++){//drawing all bullets passed in through data array
     ctx.fillStyle = 'black';
     //ctx.fillRect(data[i].x, data[i].y, 30, 50);
-    ctx.beginPath();
-    ctx.arc(data[i].x, data[i].y, data[i].radius, 0, 2 * Math.PI);
-    ctx.fill();//filling circle
 
+    ctx.save();//need to save canvas before drawing rotated objects, this part draws the bullet
+    var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
 
-    // ctx.save();//need to save canvas before drawing rotated objects, this part draws the bullet
-    // var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
-    //
-    // ctx.translate(//moving the canvas to the center of the object
-    // data[i].x + data[i].width / 2,
-    // data[i].y + data[i].height / 2
-    // );
-    //
-    // ctx.rotate(rad);//rotating canvas to correct position
-    //
-    // ctx.fillRect(//drawing the bullet
-    //   (data[i].width / 2) * -1,
-    //   (data[i].height / 2) * -1,
-    //    data[i].width,
-    //    data[i].height
-    // );
-    // ctx.restore();
+    ctx.translate(//moving the canvas to the center of the object
+    data[i].x + data[i].width / 2,
+    data[i].y + data[i].height / 2
+    );
+
+    ctx.rotate(rad);//rotating canvas to correct position
+
+    ctx.fillRect(//drawing the bullet
+      (data[i].width / 2) * -1,
+      (data[i].height / 2) * -1,
+       data[i].width,
+       data[i].height
+    );
+    ctx.restore();
   }
 });
 
