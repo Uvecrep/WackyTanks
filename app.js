@@ -103,17 +103,37 @@ class Entity{
 }
    */
    getDistance(player,bullet){
-      let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
-      let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
+     let playerX = player.x + (player.width/2);
+     let playerY = player.y + (player.height/2);
 
-      let radii_sum = 30;
-      if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
-      {
-        return true;
-      }
-      else{
-        return false;
-      }
+     let Xnew = bullet.x - playerX;
+     let Ynew = playerY - bullet.y;
+     //console.log(Xnew);
+     //console.log(Ynew);
+     //console.log(" ");
+
+     //let degTheta = (player.rot * -1)+90;
+     let theta = player.rot * (Math.PI / 180);
+
+     let Xb = (Xnew * Math.cos(theta)) - (Ynew * Math.sin(theta));
+     let Yb = (Xnew * Math.sin(theta)) + (Ynew * Math.cos(theta));
+
+     if (Math.abs(Xb) <= (player.width/2) && Math.abs(Yb) <= (player.height/2)){
+       return true;
+     } else {
+       return false;
+     }
+      // let xdist = (player.x + player.width/2) - (bullet.x + bullet.width/2);
+      // let ydist = (player.y + player.height/2) - (bullet.y + bullet.height/2);
+      //
+      // let radii_sum = 30;
+      // if(Math.sqrt((xdist*xdist) + (ydist * ydist)) <= radii_sum)
+      // {
+      //   return true;
+      // }
+      // else{
+      //   return false;
+      // }
    }
 
 }
@@ -153,8 +173,14 @@ class Player extends Entity{
 
     if(this.pressingRight)//rotate to the right
       this.rot += this.rotSpd;//updates direction of tank
+      if (this.rot >= 360){
+        this.rot = this.rot - 360;
+      }
     if(this.pressingLeft)//rotate to the left
       this.rot -= this.rotSpd;//updates rotation angle
+      if (this.rot < 0){
+        this.rot = this.rot + 360;
+      }
     if(this.pressingUp){//move forward
       this.rad = ((this.rot + 90) * Math.PI) / 180;//angle of rotation + 90 degrees and converted to radians
       this.y -= (this.maxSpd * Math.sin(this.rad));//updating y position (y = max speed * sin(rotation angle))
@@ -230,7 +256,7 @@ class Bullet extends Entity{
       this.x = parent.x + (parent.width / 2) + (Math.cos((this.rot * Math.PI) / 180) * parent.cannonHeight);
       this.y = parent.y + (parent.height / 2) + (Math.sin((this.rot * Math.PI) / 180) * parent.cannonHeight);
 
-      this.width = 5;
+      this.width = 3;
       this.height = 5;
   }
 
