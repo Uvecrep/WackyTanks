@@ -46,24 +46,13 @@ class Entity{
 
    getDistance(player,bullet){
 
+    var innerAngle = (((Math.PI/2) - Math.tan(Math.abs(bullet.y-player.y)/Math.abs(bullet.x-player.x))) - (player.rot * (Math.PI/180)));
+    var d = (Math.sqrt(Math.pow(bullet.x-player.x, 2) + Math.pow(bullet.y-player.y, 2)));
+    var xDist = ((2 * d) * Math.sin(innerAngle/2));
 
-     } else if (player.rot > 90 && player.rot < 180){//case 2: tank is in 4th quadrant
-
-     } else if (player.rot > 180 && player.rot < 270){//case 3: tank is in 3rd quadrant
-
-     } else if (player.rot > 270 && player.rot < 360){//case 4: tank is in 2nd quadrant
-
-     }
-     */
-
-//old collision stuff
-    // var innerAngle = (((Math.PI/2) - Math.tan(Math.abs(bullet.y-player.y)/Math.abs(bullet.x-player.x))) - (player.rot * (Math.PI/180)));
-    // var d = (Math.sqrt(Math.pow(bullet.x-player.x, 2) + Math.pow(bullet.y-player.y, 2)));
-    // var xDist = ((2 * d) * Math.sin(innerAngle/2));
-
-    // console.log("angle is", innerAngle);
-    // console.log("d is", d);
-    // console.log("xDist is", xDist);
+    console.log("angle is", innerAngle);
+    console.log("d is", d);
+    console.log("xDist is", xDist);
 
     // var top = -player.height;
     // var bot = player.height;
@@ -87,7 +76,7 @@ class Entity{
       }
    }
 
-    if(d <= player.height && xDist <= player.width){
+    if( d <= player.height && xDist <= player.width){
       return true;
     }
     return false;
@@ -164,18 +153,8 @@ class Player extends Entity{
 
     if(this.pressingRight)//rotate to the right
       this.rot += this.rotSpd;//updates direction of tank
-      if (this.rot > 360){
-        this.rot = this.rot - 360;
-      } else if (this.rot < 0){
-        this.rot = this.rot + 360;
-      }
     if(this.pressingLeft)//rotate to the left
       this.rot -= this.rotSpd;//updates rotation angle
-      if (this.rot > 360){
-        this.rot = this.rot - 360;
-      } else if (this.rot < 0){
-        this.rot = this.rot + 360;
-      }
     if(this.pressingUp){//move forward
       this.rad = ((this.rot + 90) * Math.PI) / 180;//angle of rotation + 90 degrees and converted to radians
       this.y -= (this.maxSpd * Math.sin(this.rad));//updating y position (y = max speed * sin(rotation angle))
@@ -251,9 +230,8 @@ class Bullet extends Entity{
       this.x = parent.x + (parent.width / 2) + (Math.cos((this.rot * Math.PI) / 180) * parent.cannonHeight);
       this.y = parent.y + (parent.height / 2) + (Math.sin((this.rot * Math.PI) / 180) * parent.cannonHeight);
 
-      // this.width = 5;
-      // this.height = 5;
-      this.radius = 3;
+      this.width = 5;
+      this.height = 5;
   }
 
   settoRad(angle){
@@ -363,10 +341,9 @@ setInterval(function(){
     bulletPack.push({
       x:bullet.x,
       y:bullet.y,
-      // rot:bullet.rot,
-      // width:bullet.width,
-      // height:bullet.height,
-      radius:bullet.radius
+      rot:bullet.rot,
+      width:bullet.width,
+      height:bullet.height
     });
   }
 
