@@ -58,6 +58,17 @@ socket.on('newPosition', function(data){
        data[i].width,
        data[i].height
     );
+
+    ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
+
+    var frontTankWidth = 10;//width and height of front of tank marker
+    var frontTankHeight = 5;//height of marker
+    ctx.fillRect(//drawing marker onto front of tank to keep track of direction
+      (frontTankWidth / 2) * -1,
+      (data[i].height / 2) * -1,
+      frontTankWidth,
+      frontTankHeight
+    )
     ctx.restore();
 
     ctx.save();//Now we draw the cannon part of each Player
@@ -95,8 +106,12 @@ socket.on('newPosition', function(data){
 socket.on('drawBullets', function(data){
   for(var i = 0; i < data.length; i++){//drawing all bullets passed in through data array
     ctx.fillStyle = 'black';
-    //ctx.fillRect(data[i].x, data[i].y, 30, 50);
 
+    ctx.beginPath();
+    ctx.arc(data[i].x, data[i].y, data[i].width, 0, 2 * Math.PI);
+    ctx.fill();//filling circle
+    //ctx.fillRect(data[i].x, data[i].y, 30, 50);
+    /*
     ctx.save();//need to save canvas before drawing rotated objects, this part draws the bullet
     var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
 
@@ -114,6 +129,7 @@ socket.on('drawBullets', function(data){
        data[i].height
     );
     ctx.restore();
+    */
   }
 });
 
