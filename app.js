@@ -51,15 +51,11 @@ class Entity{
 
      let Xnew = bullet.x - playerX;
      let Ynew = playerY - bullet.y;
-     //console.log(Xnew);
-     //console.log(Ynew);
-     //console.log(" ");
-
-     //let degTheta = (player.rot * -1)+90;
+    
      let theta = player.rot * (Math.PI / 180);
 
-     let Xb = (Xnew * Math.cos(theta)) - (Ynew * Math.sin(theta));
-     let Yb = (Xnew * Math.sin(theta)) + (Ynew * Math.cos(theta));
+     let Xb = (Xnew * Math.cos(theta)) - (Ynew * Math.sin(theta));//Equation for a rotation matrix with column vectors
+     let Yb = (Xnew * Math.sin(theta)) + (Ynew * Math.cos(theta));//new y rotated by a certain angle
 
      if (Math.abs(Xb) <= (player.width/2) && Math.abs(Yb) <= (player.height/2)){
        return true;
