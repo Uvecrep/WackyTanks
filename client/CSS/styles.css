@@ -105,7 +105,7 @@ a:hover { text-decoration:underline; }
   height:85%;
   width:98%;
   border:1px solid #ACD8F0;
-  overflow:auto;
+  overflow:scroll;
 }
 
 #loginform { padding-top:18px; }
