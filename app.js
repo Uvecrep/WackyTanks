@@ -42,9 +42,6 @@ class Entity{
     this.maxSpd = 3;//movement speed
     this.rotSpd = 2;//rotation speed
    }
-
-
-
    getDistance(player,bullet){
      let playerX = player.x + (player.width/2);
      let playerY = player.y + (player.height/2);
@@ -57,7 +54,7 @@ class Entity{
      let Xb = (Xnew * Math.cos(theta)) - (Ynew * Math.sin(theta));//Equation for a rotation matrix with column vectors
      let Yb = (Xnew * Math.sin(theta)) + (Ynew * Math.cos(theta));//new y rotated by a certain angle
 
-     if (Math.abs(Xb) <= (player.width/2) && Math.abs(Yb) <= (player.height/2)){
+     if (Math.abs(Xb) <= (player.width/2) + bullet.width && Math.abs(Yb) <= (player.height/2) + bullet.width){
        return true;
      } else {
        return false;
@@ -126,7 +123,7 @@ class Player extends Entity{
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
     if (this.shooting){
-      if(this.framecount % 50 == 0 || this.firstShot == true)
+      if(this.framecount % 30 == 0 || this.firstShot == true)
       {
         this.Fire();
         this.firstShot = false;
@@ -155,7 +152,7 @@ class Player extends Entity{
         if(colliding == true && BULLET_LIST[key].parent != this)
         {
           //console.log("hit");
-          BULLET_LIST[key].isDead == true;
+          //BULLET_LIST[key].isDead == true;
 
           this.health = this.health - BULLET_LIST[key].damage;
           delete BULLET_LIST[key];
