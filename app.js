@@ -34,8 +34,8 @@ var BULLET_LIST = {};
 class Entity{
 
   constructor(){
-    this.x = 250;//position
-    this.y = 250;//position
+    this.x = Math.floor(Math.random() * 250);//position
+    this.y = Math.floor(Math.random() * 250);//position
     this.width = 0;//sizing
     this.height = 0;//sizing
     this.rot = 0;//angle of rotation
@@ -48,7 +48,7 @@ class Entity{
 
      let Xnew = bullet.x - playerX;
      let Ynew = playerY - bullet.y;
-    
+
      let theta = player.rot * (Math.PI / 180);
 
      let Xb = (Xnew * Math.cos(theta)) - (Ynew * Math.sin(theta));//Equation for a rotation matrix with column vectors
@@ -67,7 +67,7 @@ class Player extends Entity{
 
   constructor(id) {
     super();
-    this.health = 10;
+    this.health = 3;
     this.id = id;
     this.number = " "+ Math.floor(10*Math.random());
     this.pressingRight = false;//variables to handle user input
@@ -143,6 +143,29 @@ class Player extends Entity{
     BULLET_LIST[bulletID] = bullet;
   }
 
+  respawn(){
+    this.x = Math.floor(Math.random() * 250);//position
+    this.y = Math.floor(Math.random() * 250);//position
+    this.rot = 0;//angle of rotation
+    this.maxSpd = 3;//movement speed
+    this.rotSpd = 2;//rotation speed
+    this.pressingRight = false;//variables to handle user input
+    this.pressingLeft = false;
+    this.pressingUp = false;
+    this.pressingDown = false;
+    this.rotatingCannonLeft = false;
+    this.rotatingCannonRight = false;
+    this.shooting = false;
+    this.firstShot = true;
+    this.rad = 0;//tank's intial angle of rotation
+
+    this.cannonAngle = 180;//cannon's angle of rotation
+    this.cannonSpeed = 2;//cannon's rotation speed
+    this.attackSpeed = 1;
+
+    this.framecount = 0;
+  }
+
   update(){
 
     //if(BULLET_LIST.length > 0){
@@ -161,7 +184,8 @@ class Player extends Entity{
       }
       if(this.health <= 0)
       {
-        delete PLAYER_LIST[this.id];
+        this.respawn();
+        this.health = 3;
       }
     }
   //}
