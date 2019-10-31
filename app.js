@@ -221,7 +221,7 @@ class Bullet extends Entity{
     this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
-      
+
       this.isDead = true;
     }
     if(this.isDead){
@@ -229,7 +229,7 @@ class Bullet extends Entity{
     }
     this.x += (Math.cos((this.rot * Math.PI) / 180) * this.maxSpd);
     this.y += (Math.sin((this.rot * Math.PI) / 180) * this.maxSpd);
-    //   }
+
   }
 }
 
