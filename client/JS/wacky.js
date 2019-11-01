@@ -110,26 +110,6 @@ socket.on('drawBullets', function(data){
     ctx.beginPath();
     ctx.arc(data[i].x, data[i].y, data[i].width, 0, 2 * Math.PI);
     ctx.fill();//filling circle
-    //ctx.fillRect(data[i].x, data[i].y, 30, 50);
-    /*
-    ctx.save();//need to save canvas before drawing rotated objects, this part draws the bullet
-    var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
-
-    ctx.translate(//moving the canvas to the center of the object
-    data[i].x + data[i].width / 2,
-    data[i].y + data[i].height / 2
-    );
-
-    ctx.rotate(rad);//rotating canvas to correct position
-
-    ctx.fillRect(//drawing the bullet
-      (data[i].width / 2) * -1,
-      (data[i].height / 2) * -1,
-       data[i].width,
-       data[i].height
-    );
-    ctx.restore();
-    */
   }
 });
 
