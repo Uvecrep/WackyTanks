@@ -72,7 +72,7 @@ a:hover { text-decoration:underline; }
 #chat{
   padding-bottom:25px;
   background:#EBF4FB;
-  height: 100%;
+  height: 500px;
   width:100%;
   border:1px solid #ACD8F0;
 }

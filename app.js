@@ -78,7 +78,7 @@ class Player extends Entity{
     this.rotatingCannonRight = false;
     this.shooting = false;
     this.firstShot = true;
-    this.clipSize = 4;
+
 
     this.height = 50;//sizing of tank
     this.width = 30;//sizing of tank
@@ -124,17 +124,17 @@ class Player extends Entity{
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
     }
     if (this.shooting){
-      if(this.framecount % 30 == 0 || this.firstShot == true && this.clipSize > 0 )
+      if((this.framecount % 30 == 0 || this.firstShot == true) )
       {
         this.Fire();
         this.firstShot = false;
         this.framecount = 0;
-        this.clipSize--;
+
       }
     }
     else if(this.shooting == false)
     {
-      this.framecount == 0;
+      this.framecount = 0;
       this.firstShot = true;
     }
   }
@@ -186,7 +186,7 @@ class Player extends Entity{
 
           this.health = this.health - BULLET_LIST[key].damage;
           delete BULLET_LIST[key];
-          this.clip++;
+
           break;
         }
       }
@@ -226,7 +226,7 @@ class Bullet extends Entity{
     this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
-      this.parent.clipSize++;
+      
       this.isDead = true;
     }
     if(this.isDead){
