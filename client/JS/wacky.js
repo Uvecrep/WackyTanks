@@ -27,6 +27,7 @@ var socket = io();
 //TextBox
 socket.on("addMsg", function(data){
   document.getElementById("chatbox").innerHTML += "<div>"+data+"</div>";
+  document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
 });
 
 document.getElementById("sendInput").onsubmit = function(e){
