@@ -27,6 +27,7 @@ var socket = io();
 //TextBox
 socket.on("addMsg", function(data){
   document.getElementById("chatbox").innerHTML += "<div>"+data+"</div>";
+  document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
 });
 
 document.getElementById("sendInput").onsubmit = function(e){
@@ -134,20 +135,22 @@ socket.on('drawBullets', function(data){
 });
 
 document.onkeydown = function(event){
-  if(event.keyCode === 68)
-    socket.emit('keyPress', {inputId:'right', state:true});//rotates tank to the right
-  else if(event.keyCode === 83)
-    socket.emit('keyPress', {inputId:'down', state:true});//moves tank backward
-  else if(event.keyCode === 65)
-    socket.emit('keyPress', {inputId:'left', state:true});//rotates tank to the left
-  else if(event.keyCode === 87)
-    socket.emit('keyPress', {inputId:'up', state:true});//moves tank forward
-  else if(event.keyCode === 32)
-    socket.emit('keyPress', {inputId:'shoot', state:true});//shoots
-  else if(event.keyCode === 39)
-    socket.emit('keyPress', {inputId:'cannonRight', state:true});//rotates cannon to the right
-  else if(event.keyCode === 37)
-    socket.emit('keyPress', {inputId:'cannonLeft', state:true});//rotates cannon to the left
+  if(document.activeElement.id !== "usermsg"){
+    if(event.keyCode === 68)
+      socket.emit('keyPress', {inputId:'right', state:true});//rotates tank to the right
+    else if(event.keyCode === 83)
+      socket.emit('keyPress', {inputId:'down', state:true});//moves tank backward
+    else if(event.keyCode === 65)
+      socket.emit('keyPress', {inputId:'left', state:true});//rotates tank to the left
+    else if(event.keyCode === 87)
+      socket.emit('keyPress', {inputId:'up', state:true});//moves tank forward
+    else if(event.keyCode === 32)
+      socket.emit('keyPress', {inputId:'shoot', state:true});//shoots
+    else if(event.keyCode === 39)
+      socket.emit('keyPress', {inputId:'cannonRight', state:true});//rotates cannon to the right
+    else if(event.keyCode === 37)
+      socket.emit('keyPress', {inputId:'cannonLeft', state:true});//rotates cannon to the left
+  }
 }
 
 document.onkeyup = function(event){

@@ -226,6 +226,7 @@ class Bullet extends Entity{
     this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
+
       this.isDead = true;
     }
     if(this.isDead){
@@ -314,17 +315,16 @@ setInterval(function(){
     player.updatePosition();
     player.update();
     pack.push({
-      id: i,
-      x:player.x,
-      y:player.y,
-      rot:player.rot,
-      width:player.width,
-      height:player.height,
-      number:player.number,
-      cannonAngle:player.cannonAngle,
-      cannonWidth:player.cannonWidth,
-      cannonHeight:player.cannonHeight
-
+    id: i,
+    x:player.x,
+    y:player.y,
+    rot:player.rot,
+    width:player.width,
+    height:player.height,
+    number:player.number,
+    cannonAngle:player.cannonAngle,
+    cannonWidth:player.cannonWidth,
+    cannonHeight:player.cannonHeight
     });
   }
 
