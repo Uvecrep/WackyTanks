@@ -226,7 +226,7 @@ class Bullet extends Entity{
     this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
-      
+
       this.isDead = true;
     }
     if(this.isDead){
@@ -254,6 +254,10 @@ io.sockets.on('connection', function(socket){
 
   var player = new Player(socket.id);
   PLAYER_LIST[socket.id] = player;
+
+  SOCKET_LIST[socket.id].emit('setID', socket.id);
+
+
 
   socket.on('disconnect', function(){
     for(var i in BULLET_LIST){
@@ -324,6 +328,7 @@ setInterval(function(){
     var bullet = BULLET_LIST[i];
     bullet.update();
     bulletPack.push({
+      id:bullet.parent.id,
       x:bullet.x,
       y:bullet.y,
       rot:bullet.rot,

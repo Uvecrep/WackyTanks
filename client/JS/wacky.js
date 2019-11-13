@@ -7,6 +7,15 @@
 var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
+var id = 0;
+
+var canvasX = 0;
+var canvasY = 0;
+
+var objChangeX = 0;
+var objChangeY = 0;
+
+
 var socket = io();
 
 //LOGIN
@@ -37,18 +46,46 @@ document.getElementById("sendInput").onsubmit = function(e){
 
 //Canvas window //
 socket.on('newPosition', function(data){
-  //console.log(data.i);
+  var indexSelf = 0;
+
+  for(var i = 0; i < data.length; i++){
+    if (data[i].id == id){//determines which tank is self
+      indexSelf = i;
+    }
+  }
+
+  objChangeX = 250 - data[indexSelf].x;
+  objChangeY = 200 - data[indexSelf].y;
+
+  var objX = 0;
+  var objY = 0;
+
+
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//celars canvas
+
   for(var i = 0; i < data.length; i++){//drawing all objects passed in through data array
+    if (i != indexSelf){
+      objX = data[i].x + data[i].width / 2 + objChangeX;
+      objY = data[i].y + data[i].height / 2 + objChangeY;
+    } else {
+      objX = 250 + (data[i].width / 2);
+      objY = 200 + (data[i].height / 2);
+    }
     ctx.fillStyle = 'red';
     //ctx.fillRect(data[i].x, data[i].y, 30, 50);
+    //console.log("id: " + data[i].id);
+
 
     ctx.save();//need to save canvas before drawing rotated objects, this part draws the tank body
     var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
 
+    // ctx.translate(//moving the canvas to the center of the object
+    // data[i].x + data[i].width / 2,
+    // data[i].y + data[i].height / 2
+    // );
     ctx.translate(//moving the canvas to the center of the object
-    data[i].x + data[i].width / 2,
-    data[i].y + data[i].height / 2
+    objX,
+    objY
     );
 
     ctx.rotate(rad);//rotating canvas to correct position
@@ -76,8 +113,8 @@ socket.on('newPosition', function(data){
     var cRad = (data[i].cannonAngle * Math.PI) / 180;
 
     ctx.translate(//moving the canvas to the center of the tank
-      (data[i].x + data[i].width / 2),
-      (data[i].y + data[i].height / 2)
+      objX,
+      objY
     );
 
     ctx.rotate(cRad);//rotating canvas to correct position
@@ -97,19 +134,55 @@ socket.on('newPosition', function(data){
     ctx.fillStyle = "orange";//circle is orange
 
     ctx.beginPath();
-    ctx.arc(data[i].x + data[i].width / 2, data[i].y + data[i].height / 2, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
+    ctx.arc(objX, objY, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
     ctx.fill();//filling circle
-
-
   }
+
+  // canvasX = (data[indexSelf].x + data[indexSelf].width / 2) - 250;
+  // canvasY = (data[indexSelf].y + data[indexSelf].height / 2) - 200;
+  //
+  // ctx.translate(
+  //   canvasX,
+  //   canvasY
+  // );
+  // console.log("Canvas X: "+ canvasX);
+  // console.log("Canvas Y: "+ canvasY);
+  //
+  // ctx.fillRect(//drawing marker onto front of tank to keep track of direction
+  //   (frontTankWidth / 2) * -1,
+  //   (data[indexSelf].height / 2) * -1,
+  //   50,
+  //   50
+  // )
+
+
+});
+
+socket.on('setID', function(playerID){
+  id = playerID;
+  console.log("New ID Set to: " + id);
+
 });
 
 socket.on('drawBullets', function(data){
+  var indexSelf = 0;
+
+  for(var i = 0; i < data.length; i++){
+    if (data[i].id == id){//determines which tank is self
+      indexSelf = i;
+    }
+  }
+
+  var objX = 0;
+  var objY = 0;
+
   for(var i = 0; i < data.length; i++){//drawing all bullets passed in through data array
+    objX = data[i].x + objChangeX;
+    objY = data[i].y + objChangeY;
     ctx.fillStyle = 'black';
 
     ctx.beginPath();
-    ctx.arc(data[i].x, data[i].y, data[i].width, 0, 2 * Math.PI);
+    ctx.arc(objX, objY, data[i].width, 0, 2 * Math.PI);
     ctx.fill();//filling circle
   }
 });
