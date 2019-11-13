@@ -37,6 +37,7 @@ document.getElementById("sendInput").onsubmit = function(e){
 
 //Canvas window //
 socket.on('newPosition', function(data){
+  //console.log(data.i);
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//celars canvas
   for(var i = 0; i < data.length; i++){//drawing all objects passed in through data array
     ctx.fillStyle = 'red';
