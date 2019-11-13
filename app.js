@@ -166,6 +166,11 @@ class Player extends Entity{
     this.attackSpeed = 1;
 
     this.framecount = 0;
+
+    var playerName = ("" + this.id).slice(2,7);
+    for (var i in SOCKET_LIST){
+      SOCKET_LIST[i].emit('addMsg', playerName + ' died.');
+    }
   }
 
   update(){
