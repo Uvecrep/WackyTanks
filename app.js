@@ -226,7 +226,6 @@ class Bullet extends Entity{
     this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
-
       this.isDead = true;
     }
     if(this.isDead){
@@ -237,6 +236,15 @@ class Bullet extends Entity{
 
   }
 }
+
+class Wall extends Entity{
+    constructor(width, height,id){
+      this.id = id;
+      this.width;
+      this.height;
+    }
+}
+
 
 io.sockets.on('connection', function(socket){
 
