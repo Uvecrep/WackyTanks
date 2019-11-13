@@ -213,7 +213,7 @@ class Bullet extends Entity{
       this.rot = parent.cannonAngle+90;
       this.x = parent.x + (parent.width / 2) + (Math.cos((this.rot * Math.PI) / 180) * parent.cannonHeight);
       this.y = parent.y + (parent.height / 2) + (Math.sin((this.rot * Math.PI) / 180) * parent.cannonHeight);
-
+      this.maxSpd += 1;
       this.width = 3;
       this.height = 5;
   }
@@ -226,7 +226,6 @@ class Bullet extends Entity{
     this.lifeSpan -= 1;
     if (this.lifeSpan <= 0)
     {
-
       this.isDead = true;
     }
     if(this.isDead){
@@ -234,9 +233,18 @@ class Bullet extends Entity{
     }
     this.x += (Math.cos((this.rot * Math.PI) / 180) * this.maxSpd);
     this.y += (Math.sin((this.rot * Math.PI) / 180) * this.maxSpd);
-    //   }
+
   }
 }
+
+class Wall extends Entity{
+    constructor(width, height, id){
+      this.id = id;
+      this.width;
+      this.height;
+    }
+}
+
 
 io.sockets.on('connection', function(socket){
 
