@@ -29,6 +29,7 @@ console.log("Server started.");
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 var BULLET_LIST = {};
+var WALL_LIST = {};
 
 
 class Entity{
@@ -238,12 +239,30 @@ class Bullet extends Entity{
 }
 
 class Wall extends Entity{
-    constructor(width, height, id){
+    constructor(width, height, id, xPos, yPos){
+      super();
       this.id = id;
-      this.width;
-      this.height;
+      this.width = width;
+      this.height = height;
+      this.x = xPos;
+      this.y = yPos;
     }
 }
+
+//creating map chatbox
+var mapSize = 1000;
+var wallWidth = 100;
+
+var wall1 = new Wall(wallWidth, mapSize, 1, 0, 0);
+var wall2 = new Wall(mapSize, wallWidth, 2, 0, 0);
+var wall3 = new Wall(mapSize, wallWidth, 3, 0, (mapSize - wallWidth));
+var wall4 = new Wall(wallWidth, mapSize, 4, (mapSize - wallWidth),0);
+
+
+WALL_LIST[1] = wall1;
+WALL_LIST[2] = wall2;
+WALL_LIST[3] = wall3;
+WALL_LIST[4] = wall4;
 
 
 io.sockets.on('connection', function(socket){
@@ -264,6 +283,7 @@ io.sockets.on('connection', function(socket){
   PLAYER_LIST[socket.id] = player;
 
   SOCKET_LIST[socket.id].emit('setID', socket.id);
+
 
 
 
@@ -312,6 +332,7 @@ io.sockets.on('connection', function(socket){
 setInterval(function(){
   var pack = [];
   var bulletPack = [];
+  var wallPack = [];
 
   for(var i in PLAYER_LIST){
     var player = PLAYER_LIST[i];
@@ -327,7 +348,8 @@ setInterval(function(){
     number:player.number,
     cannonAngle:player.cannonAngle,
     cannonWidth:player.cannonWidth,
-    cannonHeight:player.cannonHeight
+    cannonHeight:player.cannonHeight,
+    iswall:false
     });
   }
 
@@ -344,9 +366,34 @@ setInterval(function(){
     });
   }
 
+  // for(var i in WALL_LIST){
+  //   var wall = WALL_LIST[i];
+  //   wallPack.push({
+  //     id:wall.id,
+  //     x:wall.x,
+  //     y:wall.y,
+  //     width:wall.width,
+  //     height:wall.height
+  //   });
+  // }
+
+  for(var i in WALL_LIST){
+    var wall = WALL_LIST[i];
+    pack.push({
+      wallId:wall.id,
+      wallX:wall.x,
+      wallY:wall.y,
+      wallWidth:wall.width,
+      wallHeight:wall.height,
+      isWall:true
+    });
+  }
+
   for (var i in SOCKET_LIST){
     var socket = SOCKET_LIST[i];
     socket.emit('newPosition',pack);
+    //socket.emit('drawWalls', wallPack);
     socket.emit('drawBullets',bulletPack);
+
   }
 }, 1000/60);

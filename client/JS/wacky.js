@@ -49,7 +49,9 @@ document.getElementById("sendInput").onsubmit = function(e){
 socket.on('newPosition', function(data){
   var indexSelf = 0;
 
-  for(var i = 0; i < data.length; i++){
+  var dLength = data.length;
+
+  for(var i = 0; i < dLength; i++){
     if (data[i].id == id){//determines which tank is self
       indexSelf = i;
     }
@@ -62,9 +64,10 @@ socket.on('newPosition', function(data){
   var objY = 0;
 
 
-  ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//celars canvas
+  ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
 
-  for(var i = 0; i < data.length; i++){//drawing all objects passed in through data array
+  for(var i = 0; i < dLength; i++){//drawing all objects passed in through data array
+    if (!data[i].isWall){
     if (i != indexSelf){
       objX = data[i].x + data[i].width / 2 + objChangeX;
       objY = data[i].y + data[i].height / 2 + objChangeY;
@@ -138,24 +141,28 @@ socket.on('newPosition', function(data){
     ctx.arc(objX, objY, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
     ctx.fill();//filling circle
   }
+  }
 
-  // canvasX = (data[indexSelf].x + data[indexSelf].width / 2) - 250;
-  // canvasY = (data[indexSelf].y + data[indexSelf].height / 2) - 200;
-  //
-  // ctx.translate(
-  //   canvasX,
-  //   canvasY
-  // );
-  // console.log("Canvas X: "+ canvasX);
-  // console.log("Canvas Y: "+ canvasY);
-  //
-  // ctx.fillRect(//drawing marker onto front of tank to keep track of direction
-  //   (frontTankWidth / 2) * -1,
-  //   (data[indexSelf].height / 2) * -1,
-  //   50,
-  //   50
-  // )
 
+  objX = 0;
+  objY = 0;
+  //ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
+  ctx.fillStyle = 'green';
+
+  for(var i = 0; i < dLength; i++){
+    if (data[i].isWall){
+      console.log("drawing wall");
+    objX = data[i].wallX + objChangeX;
+    objY = data[i].wallY + objChangeY;
+
+    ctx.fillRect(
+      objX,
+      objY,
+      data[i].wallWidth,
+      data[i].wallHeight
+    );
+  }
+  }
 
 });
 
@@ -166,18 +173,13 @@ socket.on('setID', function(playerID){
 });
 
 socket.on('drawBullets', function(data){
-  var indexSelf = 0;
-
-  for(var i = 0; i < data.length; i++){
-    if (data[i].id == id){//determines which tank is self
-      indexSelf = i;
-    }
-  }
 
   var objX = 0;
   var objY = 0;
 
-  for(var i = 0; i < data.length; i++){//drawing all bullets passed in through data array
+  var dLength = data.length;
+
+  for(var i = 0; i < dLength; i++){//drawing all bullets passed in through data array
     objX = data[i].x + objChangeX;
     objY = data[i].y + objChangeY;
     ctx.fillStyle = 'black';
@@ -185,6 +187,26 @@ socket.on('drawBullets', function(data){
     ctx.beginPath();
     ctx.arc(objX, objY, data[i].width, 0, 2 * Math.PI);
     ctx.fill();//filling circle
+  }
+});
+
+socket.on('drawWalls', function(data){
+  var objX = 0;
+  var objY = 0;
+
+  var dLength = data.length;
+  //ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
+
+  for(var i = 0; i < dLength; i++){//drawing all bullets passed in through data array
+    objX = data[i].x + objChangeX;
+    objY = data[i].y + objChangeY;
+    ctx.fillStyle = 'green';
+    ctx.fillRect(
+      objX,
+      objY,
+      data[i].width,
+      data[i].height
+    );
   }
 });
 
