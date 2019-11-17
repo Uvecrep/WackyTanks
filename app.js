@@ -31,12 +31,15 @@ var PLAYER_LIST = {};
 var BULLET_LIST = {};
 var WALL_LIST = {};
 
+var mapSize = 1000;
+var wallWidth = 100;
+
 
 class Entity{
 
   constructor(){
-    this.x = Math.floor(Math.random() * 250);//position
-    this.y = Math.floor(Math.random() * 250);//position
+    this.x = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
+    this.y = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.width = 0;//sizing
     this.height = 0;//sizing
     this.rot = 0;//angle of rotation
@@ -348,24 +351,14 @@ class Wall extends Entity{
               break;
           }
         }
-
-        //console.log(colliding);
-        // if(colliding == true)
-        // {
-        //   //console.log("hit wall");
-        //   //BULLET_LIST[key].isDead == true;
-        //
-        //
-        //   BULLET_LIST[key].rot = BULLET_LIST[key].rot + 90;
-        //
-        // }
       }
     }
 }
 
 //creating map chatbox
-var mapSize = 1000;
-var wallWidth = 100;
+// var mapSize = 1000;
+// var wallWidth = 100;
+//map size and width set above so we can use the numbers to determine spawn area, cant create the walls until down here bc the wall class is not defined where size and width are
 
 var wall1 = new Wall(wallWidth, mapSize, 1, 0, 0);
 var wall2 = new Wall(mapSize, wallWidth, 2, 0, 0);
@@ -468,18 +461,6 @@ setInterval(function(){
     });
   }
 
-  // for(var i in BULLET_LIST){
-  //   var bullet = BULLET_LIST[i];
-  //   bullet.update();
-  //   bulletPack.push({
-  //     id:bullet.parent.id,
-  //     x:bullet.x,
-  //     y:bullet.y,
-  //     rot:bullet.rot,
-  //     width:bullet.width,
-  //     height:bullet.height
-  //   });
-  // }
   for(var i in BULLET_LIST){
     var bullet = BULLET_LIST[i];
     bullet.update();
@@ -512,7 +493,6 @@ setInterval(function(){
   for (var i in SOCKET_LIST){
     var socket = SOCKET_LIST[i];
     socket.emit('newPosition',pack);
-    //socket.emit('drawBullets',bulletPack);
 
   }
 }, 1000/60);

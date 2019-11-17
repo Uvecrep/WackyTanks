@@ -57,8 +57,11 @@ socket.on('newPosition', function(data){
     }
   }
 
-  objChangeX = 250 - data[indexSelf].x;
-  objChangeY = 200 - data[indexSelf].y;
+  var cameraPositionX = 240;
+  var cameraPositionY = 190;
+
+  objChangeX = cameraPositionX - data[indexSelf].x;
+  objChangeY = cameraPositionY - data[indexSelf].y;
 
   var objX = 0;
   var objY = 0;
@@ -72,8 +75,8 @@ socket.on('newPosition', function(data){
       objX = data[i].x + data[i].width / 2 + objChangeX;
       objY = data[i].y + data[i].height / 2 + objChangeY;
     } else {
-      objX = 250 + (data[i].width / 2);
-      objY = 200 + (data[i].height / 2);
+      objX = cameraPositionX + (data[i].width / 2);
+      objY = cameraPositionY + (data[i].height / 2);
     }
     ctx.fillStyle = 'red';
     //ctx.fillRect(data[i].x, data[i].y, 30, 50);
