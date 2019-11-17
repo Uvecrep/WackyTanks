@@ -174,6 +174,44 @@ socket.on('newPosition', function(data){
     }
   }
 
+  var scanRadius = 180;
+  var dotRadius = 3;
+  var distanceDotAppears = 350;
+  var changeX;
+  var changeY;
+  var distance;
+  var theta;
+  var xDot;
+  var yDot;
+
+  ctx.fillStyle = 'red';
+
+  for (var i = 0; i < dLength; i++){
+    if (!data[i].isWall && !data[i].isBullet && i != indexSelf){
+      changeX = data[i].x - data[indexSelf].x;
+      changeY = data[indexSelf].y - data[i].y;
+
+      distance = Math.sqrt(Math.pow(changeX, 2) + Math.pow(changeY, 2));
+      if (distance > distanceDotAppears){
+
+        theta = Math.atan(changeY / changeX);
+        
+        if (changeX < 0){
+          theta = theta + Math.PI;
+        }
+        //console.log("Angle: " + theta);
+        xDot = scanRadius * Math.cos(theta) + cameraPositionX;
+        yDot = cameraPositionY - scanRadius * Math.sin(theta);
+
+        //console.log("xDot: " + xDot + " yDot: " + yDot);
+        ctx.beginPath();
+        ctx.arc(xDot, yDot, dotRadius, 0, 2 * Math.PI);
+        ctx.fill();//filling circle
+
+      }
+    }
+  }
+
 });
 
 socket.on('setID', function(playerID){

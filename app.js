@@ -191,8 +191,8 @@ class Player extends Entity{
   }
 
   respawn(){
-    this.x = Math.floor(Math.random() * 250);//position
-    this.y = Math.floor(Math.random() * 250);//position
+    this.x = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
+    this.y = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.rot = 0;//angle of rotation
     this.maxSpd = 3;//movement speed
     this.rotSpd = 2;//rotation speed
