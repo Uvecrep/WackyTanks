@@ -345,7 +345,7 @@ class Wall extends Entity{
                 BULLET_LIST[key].rot = 270 - (BULLET_LIST[key].rot - 270);
               } else if (BULLET_LIST[key].rot > 0 && BULLET_LIST[key].rot < 90){
                 BULLET_LIST[key].rot = 90 + (90 - BULLET_LIST[key].rot);
-              } else if (BULLET_LIST[key].rot == 0){
+              } else if (BULLET_LIST[key].rot == 0 || BULLET_LIST[key].rot == 360){
                 BULLET_LIST[key].rot = 180;
               }
               break;
