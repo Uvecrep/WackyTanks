@@ -429,6 +429,22 @@ io.sockets.on('connection', function(socket){
       player.rotatingCannonLeft = data.state;
   });
 
+socket.on('mouseMove', function(data){//function to track movement of the mouse
+  if (data.rotatePointX != 0 && data.rotatePointY != 0){
+    var changeX, changeY, theta;
+    changeX = data.mousePosX - data.rotatePointX;
+    changeY = data.rotatePointY - data.mousePosY;
+    theta = Math.atan(changeY / changeX);
+    theta = theta * 180 / Math.PI;
+    if (changeX < 0){
+      theta = theta + 180;
+    }
+    theta = theta * (-1);
+    theta = theta - 90;
+    player.cannonAngle = theta;
+  }
+});
+
   console.log('Player connection');
   var playerName = ("" + socket.id).slice(2,7);
   for (var i in SOCKET_LIST){

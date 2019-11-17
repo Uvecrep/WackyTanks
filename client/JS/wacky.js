@@ -4,6 +4,7 @@
 //var Img.player = new Image();
 //Img.player.src = "/client/images/tankBaseDarkGreenPartOne.png";
 
+var canvasElement = document.getElementById("ctx");
 var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
@@ -14,6 +15,11 @@ var canvasY = 0;
 
 var objChangeX = 0;
 var objChangeY = 0;
+
+var rPointX = 0;
+var rPointY = 0;
+var currentMousePosX = 0;
+var currentMousePosY = 0;
 
 
 var socket = io();
@@ -195,7 +201,7 @@ socket.on('newPosition', function(data){
       if (distance > distanceDotAppears){
 
         theta = Math.atan(changeY / changeX);
-        
+
         if (changeX < 0){
           theta = theta + Math.PI;
         }
@@ -214,12 +220,49 @@ socket.on('newPosition', function(data){
 
 });
 
+function getMousePos(canvasElement, evt) {
+  var rect = canvasElement.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
+
+
+canvasElement.addEventListener('mousemove', function(evt) {
+  var mousePos = getMousePos(canvasElement, evt);
+  var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+  currentMousePosX = mousePos.x;
+  currentMousePosY = mousePos.y;
+  socket.emit('mouseMove', {
+    rotatePointX:rPointX,
+    rotatePointY:rPointY,
+    mousePosX:mousePos.x,
+    mousePosY:mousePos.y
+  });
+  //console.log(message);
+  //writeMessage(canvasElement, message);
+}, false);
+
 socket.on('setID', function(playerID){
   id = playerID;
   console.log("New ID Set to: " + id);
 
 });
 
+function setRotatePoint(){
+  rPointX = currentMousePosX;
+  rPointY = currentMousePosY;
+  //console.log('X: ' + rPointX + " Y: " + rPointY);
+}
+
+canvasElement.addEventListener("mousedown", function (evt) {
+    socket.emit('keyPress', {inputId:'shoot', state:true});//shoots
+}, false);
+
+canvasElement.addEventListener("mouseup", function (evt) {
+    socket.emit('keyPress', {inputId:'shoot', state:false});
+}, false);
 
 document.onkeydown = function(event){
   if(document.activeElement.id !== "usermsg"){
@@ -237,6 +280,9 @@ document.onkeydown = function(event){
       socket.emit('keyPress', {inputId:'cannonRight', state:true});//rotates cannon to the right
     else if(event.keyCode === 37)
       socket.emit('keyPress', {inputId:'cannonLeft', state:true});//rotates cannon to the left
+    else if(event.keyCode === 80){
+      setRotatePoint();
+    }
   }
 }
 
