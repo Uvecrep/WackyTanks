@@ -463,33 +463,37 @@ setInterval(function(){
     cannonAngle:player.cannonAngle,
     cannonWidth:player.cannonWidth,
     cannonHeight:player.cannonHeight,
-    iswall:false
+    isWall:false,
+    isBullet:false
     });
   }
 
+  // for(var i in BULLET_LIST){
+  //   var bullet = BULLET_LIST[i];
+  //   bullet.update();
+  //   bulletPack.push({
+  //     id:bullet.parent.id,
+  //     x:bullet.x,
+  //     y:bullet.y,
+  //     rot:bullet.rot,
+  //     width:bullet.width,
+  //     height:bullet.height
+  //   });
+  // }
   for(var i in BULLET_LIST){
     var bullet = BULLET_LIST[i];
     bullet.update();
-    bulletPack.push({
+    pack.push({
       id:bullet.parent.id,
       x:bullet.x,
       y:bullet.y,
       rot:bullet.rot,
       width:bullet.width,
-      height:bullet.height
+      height:bullet.height,
+      isWall:false,
+      isBullet:true
     });
   }
-
-  // for(var i in WALL_LIST){
-  //   var wall = WALL_LIST[i];
-  //   wallPack.push({
-  //     id:wall.id,
-  //     x:wall.x,
-  //     y:wall.y,
-  //     width:wall.width,
-  //     height:wall.height
-  //   });
-  // }
 
   for(var i in WALL_LIST){
     var wall = WALL_LIST[i];
@@ -500,15 +504,15 @@ setInterval(function(){
       wallY:wall.y,
       wallWidth:wall.width,
       wallHeight:wall.height,
-      isWall:true
+      isWall:true,
+      isBullet:false
     });
   }
 
   for (var i in SOCKET_LIST){
     var socket = SOCKET_LIST[i];
     socket.emit('newPosition',pack);
-    //socket.emit('drawWalls', wallPack);
-    socket.emit('drawBullets',bulletPack);
+    //socket.emit('drawBullets',bulletPack);
 
   }
 }, 1000/60);

@@ -52,7 +52,7 @@ socket.on('newPosition', function(data){
   var dLength = data.length;
 
   for(var i = 0; i < dLength; i++){
-    if (data[i].id == id){//determines which tank is self
+    if (data[i].id == id && !data[i].isBullet){//determines which tank is self
       indexSelf = i;
     }
   }
@@ -67,7 +67,7 @@ socket.on('newPosition', function(data){
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
 
   for(var i = 0; i < dLength; i++){//drawing all objects passed in through data array
-    if (!data[i].isWall){
+    if (!data[i].isWall && !data[i].isBullet){
     if (i != indexSelf){
       objX = data[i].x + data[i].width / 2 + objChangeX;
       objY = data[i].y + data[i].height / 2 + objChangeY;
@@ -83,10 +83,6 @@ socket.on('newPosition', function(data){
     ctx.save();//need to save canvas before drawing rotated objects, this part draws the tank body
     var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
 
-    // ctx.translate(//moving the canvas to the center of the object
-    // data[i].x + data[i].width / 2,
-    // data[i].y + data[i].height / 2
-    // );
     ctx.translate(//moving the canvas to the center of the object
     objX,
     objY
@@ -163,6 +159,18 @@ socket.on('newPosition', function(data){
   }
   }
 
+  for (var b = 0; b < dLength; b++){
+    if (data[b].isBullet){
+      objX = data[b].x + objChangeX;
+      objY = data[b].y + objChangeY;
+      ctx.fillStyle = 'black';
+
+      ctx.beginPath();
+      ctx.arc(objX, objY, data[b].width, 0, 2 * Math.PI);
+      ctx.fill();//filling circle
+    }
+  }
+
 });
 
 socket.on('setID', function(playerID){
@@ -171,43 +179,6 @@ socket.on('setID', function(playerID){
 
 });
 
-socket.on('drawBullets', function(data){
-
-  var objX = 0;
-  var objY = 0;
-
-  var dLength = data.length;
-
-  for(var i = 0; i < dLength; i++){//drawing all bullets passed in through data array
-    objX = data[i].x + objChangeX;
-    objY = data[i].y + objChangeY;
-    ctx.fillStyle = 'black';
-
-    ctx.beginPath();
-    ctx.arc(objX, objY, data[i].width, 0, 2 * Math.PI);
-    ctx.fill();//filling circle
-  }
-});
-
-socket.on('drawWalls', function(data){
-  var objX = 0;
-  var objY = 0;
-
-  var dLength = data.length;
-  //ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
-
-  for(var i = 0; i < dLength; i++){//drawing all bullets passed in through data array
-    objX = data[i].x + objChangeX;
-    objY = data[i].y + objChangeY;
-    ctx.fillStyle = 'green';
-    ctx.fillRect(
-      objX,
-      objY,
-      data[i].width,
-      data[i].height
-    );
-  }
-});
 
 document.onkeydown = function(event){
   if(document.activeElement.id !== "usermsg"){
