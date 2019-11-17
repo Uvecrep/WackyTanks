@@ -62,6 +62,47 @@ class Entity{
      }
    }
 
+   checkCollisionWallBullet(wall, bullet){//this function detects collision between wall and bullet then returns which side of the wall the bullet hits (1-4)
+     let xb = bullet.x;
+     let yb = bullet.y;
+     let radiusB = bullet.width;
+
+     let xw = wall.x;
+     let yw = wall.y;
+     let width = wall.width;
+     let height = wall.height;
+
+     var dif1, dif2, dif3, dif4;
+     //top: 1
+     //right side: 2
+     //bottom: 3
+     //left side: 4
+     //no collision: 0
+
+     if (xb >= (xw - radiusB) && xb <= (xw + width + radiusB) && yb >= (yw - radiusB) && yb <= (yw + height + radiusB)){
+       dif1 = Math.abs(yb - yw);
+       dif2 = Math.abs(xb - (xw + width));
+       dif3 = Math.abs(yb - (yw + height));
+       dif4 = Math.abs(xb - xw);
+
+       if (dif1 < dif2 && dif1 < dif3 && dif1 < dif4){
+         //console.log('1');
+         return 1;
+       } else if (dif2 < dif1 && dif2 < dif3 && dif2 < dif4){
+         //console.log('2');
+         return 2;
+       } else if (dif3 < dif1 && dif3 < dif2 && dif3 < dif4){
+         //console.log('3');
+         return 3;
+       } else if (dif4 < dif1 && dif4 < dif2 && dif4 < dif3){
+         //console.log('4');
+         return 4;
+       }
+     }
+
+     return 0;
+   }
+
 }
 
 class Player extends Entity{
@@ -212,6 +253,14 @@ class Bullet extends Entity{
       this.lifeSpan = 100;
       this.isDead = false;
       this.rot = parent.cannonAngle+90;
+      while(this.rot < 0 || this.rot > 360){
+        if (this.rot < 0){
+          this.rot = this.rot + 360;
+        } else if (this.rot > 360){
+          this.rot = this.rot - 360;
+        }
+      }
+      //console.log("Bullet angle: " + this.rot);
       this.x = parent.x + (parent.width / 2) + (Math.cos((this.rot * Math.PI) / 180) * parent.cannonHeight);
       this.y = parent.y + (parent.height / 2) + (Math.sin((this.rot * Math.PI) / 180) * parent.cannonHeight);
       this.maxSpd += 1;
@@ -238,6 +287,8 @@ class Bullet extends Entity{
   }
 }
 
+
+
 class Wall extends Entity{
     constructor(width, height, id, xPos, yPos){
       super();
@@ -246,6 +297,69 @@ class Wall extends Entity{
       this.height = height;
       this.x = xPos;
       this.y = yPos;
+    }
+
+    update(){
+      for (var key in BULLET_LIST)
+      {
+        //top: 1
+        //right side: 2
+        //bottom: 3
+        //left side: 4
+        //no collision: 0
+        let colliding = this.checkCollisionWallBullet(this,BULLET_LIST[key]);
+        if (colliding != 0){
+          switch(colliding){//this switch statement calculates the new angle of each bullet after a collision
+            case 1://collision with top of wall
+              if (BULLET_LIST[key].rot > 90 && BULLET_LIST[key].rot < 180){
+                BULLET_LIST[key].rot = 180 + (180 - BULLET_LIST[key].rot);
+              } else if (BULLET_LIST[key].rot > 0 && BULLET_LIST[key].rot < 90){
+                BULLET_LIST[key].rot = 360 - BULLET_LIST[key].rot;
+              } else if (BULLET_LIST[key].rot == 90){
+                BULLET_LIST[key].rot = 270;
+              }
+              break;
+            case 2://collision with right side of wall
+              if (BULLET_LIST[key].rot > 180 && BULLET_LIST[key].rot < 270){
+                BULLET_LIST[key].rot = 270 + (270 - BULLET_LIST[key].rot);
+              } else if (BULLET_LIST[key].rot > 90 && BULLET_LIST[key].rot < 180){
+                BULLET_LIST[key].rot = 90 - (BULLET_LIST[key].rot - 90);
+              } else if (BULLET_LIST[key].rot == 180){
+                BULLET_LIST[key].rot = 0;
+              }
+              break;
+            case 3://collision with bottom of wall
+              if (BULLET_LIST[key].rot > 270 && BULLET_LIST[key].rot < 360){
+                BULLET_LIST[key].rot = 360 - BULLET_LIST[key].rot;
+              } else if (BULLET_LIST[key].rot > 180 && BULLET_LIST[key].rot < 270){
+                BULLET_LIST[key].rot = 180 - (BULLET_LIST[key].rot - 180);
+              } else if (BULLET_LIST[key].rot == 270){
+                BULLET_LIST[key].rot = 90;
+              }
+              break;
+            case 4://collision with left side of wall
+              if (BULLET_LIST[key].rot > 270 && BULLET_LIST[key].rot < 360){
+                BULLET_LIST[key].rot = 270 - (BULLET_LIST[key].rot - 270);
+              } else if (BULLET_LIST[key].rot > 0 && BULLET_LIST[key].rot < 90){
+                BULLET_LIST[key].rot = 90 + (90 - BULLET_LIST[key].rot);
+              } else if (BULLET_LIST[key].rot == 0){
+                BULLET_LIST[key].rot = 180;
+              }
+              break;
+          }
+        }
+
+        //console.log(colliding);
+        // if(colliding == true)
+        // {
+        //   //console.log("hit wall");
+        //   //BULLET_LIST[key].isDead == true;
+        //
+        //
+        //   BULLET_LIST[key].rot = BULLET_LIST[key].rot + 90;
+        //
+        // }
+      }
     }
 }
 
@@ -379,6 +493,7 @@ setInterval(function(){
 
   for(var i in WALL_LIST){
     var wall = WALL_LIST[i];
+    wall.update();
     pack.push({
       wallId:wall.id,
       wallX:wall.x,

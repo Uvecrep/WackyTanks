@@ -151,7 +151,6 @@ socket.on('newPosition', function(data){
 
   for(var i = 0; i < dLength; i++){
     if (data[i].isWall){
-      console.log("drawing wall");
     objX = data[i].wallX + objChangeX;
     objY = data[i].wallY + objChangeY;
 
