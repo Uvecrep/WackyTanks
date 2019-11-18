@@ -129,6 +129,12 @@ class Player extends Entity{
     this.width = 30;//sizing of tank
     this.rad = 0;//tank's intial angle of rotation
 
+    this.killCount = 0;
+    this.deathCount = 0;
+
+    this.fireCount = 0;
+    this.hitCount = 0;
+
 
     this.cannonWidth = 5;//sizing of cannon
     this.cannonHeight = 40;//sizing of cannon
@@ -188,6 +194,7 @@ class Player extends Entity{
     var bulletID = Math.random();
     var bullet = new Bullet(bulletID,this);
     BULLET_LIST[bulletID] = bullet;
+    this.fireCount = this.fireCount + 1;
   }
 
   respawn(){
@@ -230,6 +237,10 @@ class Player extends Entity{
           //BULLET_LIST[key].isDead == true;
 
           this.health = this.health - BULLET_LIST[key].damage;
+          if (this.health <= 0){
+            this.deathCount = this.deathCount + 1;
+            BULLET_LIST[key].parent.killCount = BULLET_LIST[key].parent.killCount + 1;
+          }
           delete BULLET_LIST[key];
 
           break;
@@ -237,7 +248,6 @@ class Player extends Entity{
       }
       if(this.health <= 0)
       {
-
         this.respawn();
         this.health = 3;
       }
@@ -473,7 +483,9 @@ setInterval(function(){
     cannonWidth:player.cannonWidth,
     cannonHeight:player.cannonHeight,
     isWall:false,
-    isBullet:false
+    isBullet:false,
+    kills:player.killCount,
+    deaths:player.deathCount
     });
   }
 

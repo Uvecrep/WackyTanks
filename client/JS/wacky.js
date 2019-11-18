@@ -13,12 +13,12 @@ var id = 0;
 var canvasX = 0;
 var canvasY = 0;
 
-var objChangeX = 0;
+var objChangeX = 0;//offset of objects drawn, used to center player
 var objChangeY = 0;
 
-var rPointX = 0;
-var rPointY = 0;
-var currentMousePosX = 0;
+var rPointX = 0;//rotation point for mouse tracking aiming
+var rPointY = 0;//y coordinate for rotation point
+var currentMousePosX = 0;//current mouse position, compared against rotation point to determine aiming
 var currentMousePosY = 0;
 
 
@@ -57,6 +57,8 @@ socket.on('newPosition', function(data){
 
   var dLength = data.length;
 
+  //-------------------------FIND SELF----------------------------------//
+
   for(var i = 0; i < dLength; i++){
     if (data[i].id == id && !data[i].isBullet){//determines which tank is self
       indexSelf = i;
@@ -74,6 +76,8 @@ socket.on('newPosition', function(data){
 
 
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
+
+  //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
 
   for(var i = 0; i < dLength; i++){//drawing all objects passed in through data array
     if (!data[i].isWall && !data[i].isBullet){
@@ -106,6 +110,8 @@ socket.on('newPosition', function(data){
        data[i].height
     );
 
+    //-------------------------DRAW BLACK FRONT OF TANK MARKER----------------------------------//
+
     ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
 
     var frontTankWidth = 10;//width and height of front of tank marker
@@ -117,6 +123,8 @@ socket.on('newPosition', function(data){
       frontTankHeight
     )
     ctx.restore();
+
+    //-------------------------DRAW CANNON----------------------------------//
 
     ctx.save();//Now we draw the cannon part of each Player
     var cRad = (data[i].cannonAngle * Math.PI) / 180;
@@ -149,6 +157,8 @@ socket.on('newPosition', function(data){
   }
 
 
+//-------------------------DRAW WALLS----------------------------------//
+
   objX = 0;
   objY = 0;
   //ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
@@ -168,6 +178,8 @@ socket.on('newPosition', function(data){
   }
   }
 
+  //-------------------------DRAW BULLETS----------------------------------//
+
   for (var b = 0; b < dLength; b++){
     if (data[b].isBullet){
       objX = data[b].x + objChangeX;
@@ -179,6 +191,8 @@ socket.on('newPosition', function(data){
       ctx.fill();//filling circle
     }
   }
+
+  //-------------------------DRAW ENEMY DOT INDICATOR----------------------------------//
 
   var scanRadius = 180;
   var dotRadius = 3;
@@ -217,6 +231,69 @@ socket.on('newPosition', function(data){
       }
     }
   }
+
+  //-------------------------DRAW K/D----------------------------------//
+
+  ctx.fillStyle = 'black';
+
+  ctx.font = "20px Arial";
+  ctx.fillText("Kills: " + data[indexSelf].kills, 10, 25);
+  ctx.fillText("Deaths: " + data[indexSelf].deaths, 10, 50);
+
+  //-------------------------DRAW TOP 3----------------------------------//
+
+  ctx.font = "15px Arial";
+  ctx.fillText("Top 3", 420, 15);
+  ctx.fillRect(390,20, 100, 1);//underline
+  //
+  // var number1 = -1;
+  // var kills1 = 0;
+  // var number2 = -1;
+  // var kills2 = 0;
+  // var number3 = -1;
+  // var kills3 = 0;
+  //
+  // var numSave = 0;
+  // var numSave2 = 0;
+  //
+  // for (var i = 0; i < dLength; i++){
+  //   if (!data[i].isWall && !data[i].isBullet){
+  //     if (data[i].kills > kills1){
+  //       kills1 = data[i].kills;
+  //       numSave = number1;
+  //       number1 = i;
+  //       if (numSave == -1){
+  //
+  //       } else if (data[numSave].kills > kills2 && numSave != -1){
+  //         kills2 = data[numSave].kills;
+  //         numSave2 = number2;
+  //         number2 = numSave;
+  //         if (data[numSave2].kills > kills3 && numSave2 != -1){
+  //           kills3 = data[numSave].kills;
+  //           number3 = numSave2;
+  //         }
+  //       } else if (data[numSave].kills > kills3 && numSave != -1){
+  //         kills3 = data[numSave].kills;
+  //         number3 = numSave;
+  //       }
+  //     } else if (data[i].kills > kills2){
+  //       kills2 = data[i].kills;
+  //       numSave = number2;
+  //       number2 = i;
+  //       if (data[numSave].kills > kills3 && numSave != -1){
+  //         kills3 = data[numSave].kills;
+  //         number3 = numSave;
+  //       }
+  //     } else if (data[i].kills > kills3){
+  //       kills3 = data[i].kills;
+  //       number3 = i;
+  //     }
+  //   }
+  // }
+  //
+  // ctx.fillText("id 1: " + number1 + " Kills: " + kills1, 390, 35);
+  // ctx.fillText("id 2: " + number2 + " Kills: " + kills2, 390, 50);
+  // ctx.fillText("id 3: " + number3 + " Kills: " + kills3, 390, 65);
 
 });
 
