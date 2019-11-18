@@ -202,6 +202,7 @@ class Player extends Entity{
   }
 
   respawn(){
+    //console.log("Player death: " + this.id);
     this.x = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.y = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.rot = 0;//angle of rotation

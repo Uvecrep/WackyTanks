@@ -270,7 +270,7 @@ socket.on('newPosition', function(data){
           number2 = numSave;
           if (numSave2 == -1){
           } else if (data[numSave2].kills > kills3 && numSave2 != -1){
-            kills3 = data[numSave].kills;
+            kills3 = data[numSave2].kills;
             number3 = numSave2;
           }
         } else if (data[numSave].kills > kills3 && numSave != -1){
