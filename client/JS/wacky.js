@@ -245,55 +245,57 @@ socket.on('newPosition', function(data){
   ctx.font = "15px Arial";
   ctx.fillText("Top 3", 420, 15);
   ctx.fillRect(390,20, 100, 1);//underline
-  //
-  // var number1 = -1;
-  // var kills1 = 0;
-  // var number2 = -1;
-  // var kills2 = 0;
-  // var number3 = -1;
-  // var kills3 = 0;
-  //
-  // var numSave = 0;
-  // var numSave2 = 0;
-  //
-  // for (var i = 0; i < dLength; i++){
-  //   if (!data[i].isWall && !data[i].isBullet){
-  //     if (data[i].kills > kills1){
-  //       kills1 = data[i].kills;
-  //       numSave = number1;
-  //       number1 = i;
-  //       if (numSave == -1){
-  //
-  //       } else if (data[numSave].kills > kills2 && numSave != -1){
-  //         kills2 = data[numSave].kills;
-  //         numSave2 = number2;
-  //         number2 = numSave;
-  //         if (data[numSave2].kills > kills3 && numSave2 != -1){
-  //           kills3 = data[numSave].kills;
-  //           number3 = numSave2;
-  //         }
-  //       } else if (data[numSave].kills > kills3 && numSave != -1){
-  //         kills3 = data[numSave].kills;
-  //         number3 = numSave;
-  //       }
-  //     } else if (data[i].kills > kills2){
-  //       kills2 = data[i].kills;
-  //       numSave = number2;
-  //       number2 = i;
-  //       if (data[numSave].kills > kills3 && numSave != -1){
-  //         kills3 = data[numSave].kills;
-  //         number3 = numSave;
-  //       }
-  //     } else if (data[i].kills > kills3){
-  //       kills3 = data[i].kills;
-  //       number3 = i;
-  //     }
-  //   }
-  // }
-  //
-  // ctx.fillText("id 1: " + number1 + " Kills: " + kills1, 390, 35);
-  // ctx.fillText("id 2: " + number2 + " Kills: " + kills2, 390, 50);
-  // ctx.fillText("id 3: " + number3 + " Kills: " + kills3, 390, 65);
+
+  var number1 = -1;
+  var kills1 = 0;
+  var number2 = -1;
+  var kills2 = 0;
+  var number3 = -1;
+  var kills3 = 0;
+
+  var numSave = 0;
+  var numSave2 = 0;
+
+  for (var i = 0; i < dLength; i++){
+    if (!data[i].isWall && !data[i].isBullet){
+      if (data[i].kills > kills1){
+        kills1 = data[i].kills;
+        numSave = number1;
+        number1 = i;
+        if (numSave == -1){
+
+        } else if (data[numSave].kills > kills2 && numSave != -1){
+          kills2 = data[numSave].kills;
+          numSave2 = number2;
+          number2 = numSave;
+          if (numSave2 == -1){
+          } else if (data[numSave2].kills > kills3 && numSave2 != -1){
+            kills3 = data[numSave].kills;
+            number3 = numSave2;
+          }
+        } else if (data[numSave].kills > kills3 && numSave != -1){
+          kills3 = data[numSave].kills;
+          number3 = numSave;
+        }
+      } else if (data[i].kills > kills2){
+        kills2 = data[i].kills;
+        numSave = number2;
+        number2 = i;
+        if (numSave == -1){
+        }else if (data[numSave].kills > kills3 && numSave != -1){
+          kills3 = data[numSave].kills;
+          number3 = numSave;
+        }
+      } else if (data[i].kills > kills3){
+        kills3 = data[i].kills;
+        number3 = i;
+      }
+    }
+  }
+
+  ctx.fillText("id 1: " + number1 + " Kills: " + kills1, 390, 35);
+  ctx.fillText("id 2: " + number2 + " Kills: " + kills2, 390, 50);
+  ctx.fillText("id 3: " + number3 + " Kills: " + kills3, 390, 65);
 
 });
 
