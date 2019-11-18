@@ -94,6 +94,15 @@ class Player extends Entity{
     this.framecount = 0;
   }
 
+  getMultiplyer(){
+  if(this.score > 5) {
+    return 1.5;
+  }
+  else {
+    return 1;
+  }
+}
+
   updatePosition(){
     this.framecount++;
 
@@ -183,8 +192,9 @@ class Player extends Entity{
         {
           //console.log("hit");
           //BULLET_LIST[key].isDead == true;
-
-          this.health = this.health - BULLET_LIST[key].damage;
+          BULLET_LIST[key].parent.score++;
+          var multiplyer = BULLET_LIST[key].parent.getMultiplyer();
+          this.health = this.health - multiplyer * BULLET_LIST[key].damage;
           delete BULLET_LIST[key];
 
           break;
