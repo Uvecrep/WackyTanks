@@ -122,7 +122,11 @@ socket.on('newPosition', function(data){
       frontTankWidth,
       frontTankHeight
     )
+
+
     ctx.restore();
+
+
 
     //-------------------------DRAW CANNON----------------------------------//
 
@@ -153,6 +157,17 @@ socket.on('newPosition', function(data){
     ctx.beginPath();
     ctx.arc(objX, objY, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
     ctx.fill();//filling circle
+
+
+    //-------------------------DRAW PLAYER NAME----------------------------------//
+
+    ctx.fillStyle = "black";
+
+    var playerName = ("" + data[i].id).slice(2,7);
+
+    ctx.font = "15px Arial";
+    ctx.fillText(playerName, objX - 19, objY - 40);
+
   }
   }
 
