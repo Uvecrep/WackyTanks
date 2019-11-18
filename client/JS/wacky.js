@@ -293,9 +293,15 @@ socket.on('newPosition', function(data){
     }
   }
 
-  ctx.fillText("id 1: " + number1 + " Kills: " + kills1, 390, 35);
-  ctx.fillText("id 2: " + number2 + " Kills: " + kills2, 390, 50);
-  ctx.fillText("id 3: " + number3 + " Kills: " + kills3, 390, 65);
+  if (number1 != -1){
+    ctx.fillText("id 1: " + number1 + " Kills: " + kills1, 390, 35);
+  }
+  if (number2 != -1){
+    ctx.fillText("id 2: " + number2 + " Kills: " + kills2, 390, 50);
+  }
+  if (number3 != -1){
+    ctx.fillText("id 3: " + number3 + " Kills: " + kills3, 390, 65);
+  }
 
 });
 

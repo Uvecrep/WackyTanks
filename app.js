@@ -170,9 +170,12 @@ class Player extends Entity{
     }
     if (this.rotatingCannonRight){//rotate cannon to right
       this.cannonAngle += this.cannonSpeed;//updating cannon's angle of rotation
+      //console.log('angle: ' + this.cannonAngle);
     }
     if (this.rotatingCannonLeft){//rotate cannon to left
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
+      //console.log('angle: ' + this.cannonAngle);
+      //this.cannonAngle = 45;
     }
     if (this.shooting){
       if((this.framecount % 30 == 0 || this.firstShot == true) )
@@ -194,6 +197,7 @@ class Player extends Entity{
     var bulletID = Math.random();
     var bullet = new Bullet(bulletID,this);
     BULLET_LIST[bulletID] = bullet;
+    //console.log('Angle: ' + this.cannonAngle);
     this.fireCount = this.fireCount + 1;
   }
 
