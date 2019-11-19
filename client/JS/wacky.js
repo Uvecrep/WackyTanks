@@ -258,8 +258,8 @@ socket.on('newPosition', function(data){
   //-------------------------DRAW TOP 3----------------------------------//
 
   ctx.font = "15px Arial";
-  ctx.fillText("Top 3", 415, 15);
-  ctx.fillRect(370,20, 125, 1);//underline
+  ctx.fillText("Top 3", 410, 15);
+  ctx.fillRect(365,20, 125, 1);//underline
 
   var number1 = -1;
   var kills1 = 0;
@@ -309,13 +309,13 @@ socket.on('newPosition', function(data){
   }
 
   if (number1 != -1){
-    ctx.fillText("id 1: " + ("" + data[number1].id).slice(2,7) + " Kills: " + kills1, 370, 35);
+    ctx.fillText("id 1: " + ("" + data[number1].id).slice(2,7) + " Kills: " + kills1, 365, 35);
   }
   if (number2 != -1){
-    ctx.fillText("id 2: " + ("" + data[number2].id).slice(2,7) + " Kills: " + kills2, 370, 50);
+    ctx.fillText("id 2: " + ("" + data[number2].id).slice(2,7) + " Kills: " + kills2, 365, 50);
   }
   if (number3 != -1){
-    ctx.fillText("id 3: " + ("" + data[number3].id).slice(2,7) + " Kills: " + kills3, 370, 65);
+    ctx.fillText("id 3: " + ("" + data[number3].id).slice(2,7) + " Kills: " + kills3, 365, 65);
   }
 
 });
