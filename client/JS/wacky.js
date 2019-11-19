@@ -136,6 +136,7 @@ socket.on('drawBullets', function(data){
 
 document.onkeydown = function(event){
   if(document.activeElement.id !== "usermsg"){
+    event.preventDefault();
     if(event.keyCode === 68)
       socket.emit('keyPress', {inputId:'right', state:true});//rotates tank to the right
     else if(event.keyCode === 83)

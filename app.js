@@ -1,24 +1,96 @@
 //Server Side
 
 var express = require('express');
+var bodyParser = require('body-parser')
 var app = express();
 var serv = require('http').Server(app);
 var io = require('socket.io')(serv,{});
 
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb+srv://admin:verysecurepassword@wackytanks-tpejq.gcp.mongodb.net/WackyTanks?retryWrites=true&w=majority"
+
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}))
 
 app.get('/',function(req, res){
+  console.log("LogIn");
   res.sendFile(__dirname + '/client/index.html');
 });
 app.use('/client', express.static(__dirname + '/client'));
 
+app.get('/signUp',function(req, res){
+  console.log("SignUp");
+  res.sendFile(__dirname + '/client/index.html');
+});
+app.use('/client', express.static(__dirname + '/client'));
+
+
+
 app.post('/', function(req, res){
   // instead of print data, we could make a call out to our database to save the form data.
   console.log(req.body);
-  res.sendFile(__dirname + '/client/game.html');
+
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+
+    var uname = req.body.name;
+    var pword = req.body.password;
+
+    var dbo = db.db("WackyTanks");
+    var query = { username: `${uname}`, password: `${pword}` };
+    dbo.collection("Logins").find(query).toArray(function(err, results){
+      if (err) throw err
+      console.log(results);
+      if(results === undefined || results.length == 0){
+        console.log("No Match");
+        console.log("Login Failed");
+        return;
+      }else{
+        console.log("Found Match");
+        res.sendFile(__dirname + '/client/game.html');
+      }
+      db.close();
+    });
+  });
 });
 
+
+
+app.post('/signUp', function(req, res){
+  // instead of print data, we could make a call out to our database to save the form data.
+  var uname = req.body.nameSignUp;
+  var pword = req.body.passwordSignUp;
+
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+
+    var dbo = db.db("WackyTanks");
+    var query = { username: `${uname}` }
+    var doc = { username: `${uname}`, password: `${pword}` };
+
+    dbo.collection("Logins").find(query).toArray(function(err, results){
+      if (err) throw err
+      console.log(results);
+      if(results === undefined || results.length == 0){
+        dbo.collection("Logins").insertOne(doc, function(err, results){
+          if (err) throw err;
+          db.close();
+        });
+        res.sendFile(__dirname + '/client/game.html');
+      }else{
+        console.log("User Name Taken");
+        return;
+      }
+      db.close();
+    });
+  });
+});
+
+
+
 app.get('/game',function(req, res){
+  console.log("get3");
   res.sendFile(__dirname + '/client/game.html');
 });
 
@@ -244,7 +316,7 @@ io.sockets.on('connection', function(socket){
   SOCKET_LIST[socket.id] = socket;
 
   // socket.on('signIn', function(data){
-  //   if(data.username === 'admin' && password === 'password'){
+  //   if(validLogin(data.username, data.password)){
   //     var player = new Player(socket.id);
   //     PLAYER_LIST[socket.id] = player;
   //     socket.emit('signInResponse', {success:true});
