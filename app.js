@@ -28,7 +28,6 @@ app.get('/signUp',function(req, res){
 app.use('/client', express.static(__dirname + '/client'));
 
 app.post('/', function(req, res){
-  // instead of print data, we could make a call out to our database to save the form data.
   console.log(req.body);
 
   MongoClient.connect(url, function(err, db) {
@@ -56,7 +55,6 @@ app.post('/', function(req, res){
 });
 
 app.post('/signUp', function(req, res){
-  // instead of print data, we could make a call out to our database to save the form data.
   uname = req.body.nameSignUp;
   var pword = req.body.passwordSignUp;
 

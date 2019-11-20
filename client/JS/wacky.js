@@ -24,21 +24,6 @@ var currentMousePosY = 0;
 
 var socket = io();
 
-//LOGIN
-// document.getElementById('SaveLogin').onclick = function(){
-//   socket.emit('signIn',
-//   {username:document.getElementById('UserName').value,
-//   password:document.getElementById('Password').value});
-// }
-//
-// socket.on('signInResponse', function(data){
-//   if(data.success){
-//     //let into game only on successful login
-//   }else{
-//     document.getElementById('unsuccessful').innerHTML = "Login Unsuccessful";
-//   }
-// });
-
 //TextBox
 socket.on("addMsg", function(data){
   document.getElementById("chatbox").innerHTML += "<div>"+data+"</div>";
@@ -401,43 +386,3 @@ document.onkeyup = function(event){
   else if(event.keyCode === 37)
     socket.emit('keyPress', {inputId:'cannonLeft', state:false});//stops cannon rotation to the left
 }
-// LOGIN SQL
-// app.get('/loginValidate', function(req, res) {
-// 	console.log("got here muahahah")
-// 	var query1 = "Call from database here to bring in list of all users;"; //games played in the Fall 2018 Season
-// 	var query2 = ';';
-// 	var query3 = ';';
-// 	db.task('get-everything', task => {
-// 	    return task.batch([
-// 	        task.any(query1),
-// 	        task.any(query2),
-// 	        task.any(query3)
-// 	    ]);
-// 	})
-// 	.then(batch_data => {
-//     // we valid if the batch is not empty....
-//     // if not empty then we want to
-// 		console.log(batch_data[0]);
-// 		console.log(batch_data[1]);
-// 		console.log(batch_data[2]);
-//
-// 		res.render('pages/player_info',{
-// 				my_title: "Page Title Here",
-// 				result_1: batch_data[0],
-// 				result_2: batch_data[1],
-// 				result_3: batch_data[2]
-// 			})
-// 	})
-// 	.catch(error => {
-// 		console.log(error)
-// 	    // display error message in case an error
-// 	        req.flash('error', error);
-// 	        res.render('pages/player_info',{
-// 				my_title: "Page Title Here",
-// 				result_1: '',
-// 				result_2: '',
-// 				result_3: ''
-// 			})
-//
-// 		});
-// };
