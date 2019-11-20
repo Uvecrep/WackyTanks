@@ -163,10 +163,8 @@ socket.on('newPosition', function(data){
 
     ctx.fillStyle = "black";
 
-    var playerName = ("" + data[i].id).slice(2,7);
-
     ctx.font = "15px Arial";
-    ctx.fillText(playerName, objX - 19, objY - 40);
+    ctx.fillText(data[i].name, objX - 19, objY - 40);
 
   }
   }
@@ -309,13 +307,13 @@ socket.on('newPosition', function(data){
   }
 
   if (number1 != -1){
-    ctx.fillText("id 1: " + ("" + data[number1].id).slice(2,7) + " Kills: " + kills1, 365, 35);
+    ctx.fillText("id 1: " + ("" + data[number1].name) + " Kills: " + kills1, 365, 35);
   }
   if (number2 != -1){
-    ctx.fillText("id 2: " + ("" + data[number2].id).slice(2,7) + " Kills: " + kills2, 365, 50);
+    ctx.fillText("id 2: " + ("" + data[number2].name) + " Kills: " + kills2, 365, 50);
   }
   if (number3 != -1){
-    ctx.fillText("id 3: " + ("" + data[number3].id).slice(2,7) + " Kills: " + kills3, 365, 65);
+    ctx.fillText("id 3: " + ("" + data[number3].name) + " Kills: " + kills3, 365, 65);
   }
 
 });

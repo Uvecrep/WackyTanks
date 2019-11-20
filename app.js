@@ -13,6 +13,8 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
 
+var uname;
+
 app.get('/',function(req, res){
   console.log("LogIn");
   res.sendFile(__dirname + '/client/index.html');
@@ -25,8 +27,6 @@ app.get('/signUp',function(req, res){
 });
 app.use('/client', express.static(__dirname + '/client'));
 
-
-
 app.post('/', function(req, res){
   // instead of print data, we could make a call out to our database to save the form data.
   console.log(req.body);
@@ -34,7 +34,7 @@ app.post('/', function(req, res){
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
 
-    var uname = req.body.name;
+    uname = req.body.name;
     var pword = req.body.password;
 
     var dbo = db.db("WackyTanks");
@@ -55,11 +55,9 @@ app.post('/', function(req, res){
   });
 });
 
-
-
 app.post('/signUp', function(req, res){
   // instead of print data, we could make a call out to our database to save the form data.
-  var uname = req.body.nameSignUp;
+  uname = req.body.nameSignUp;
   var pword = req.body.passwordSignUp;
 
   MongoClient.connect(url, function(err, db) {
@@ -86,8 +84,6 @@ app.post('/signUp', function(req, res){
     });
   });
 });
-
-
 
 app.get('/game',function(req, res){
   console.log("get3");
@@ -186,7 +182,7 @@ class Player extends Entity{
     super();
     this.health = 3;
     this.id = id;
-    this.number = " "+ Math.floor(10*Math.random());
+    this.name = uname,
     this.pressingRight = false;//variables to handle user input
     this.pressingLeft = false;
     this.pressingUp = false;
@@ -296,9 +292,8 @@ class Player extends Entity{
 
     this.framecount = 0;
 
-    var playerName = ("" + this.id).slice(2,7);
     for (var i in SOCKET_LIST){
-      SOCKET_LIST[i].emit('addMsg', playerName + ' died.');
+      SOCKET_LIST[i].emit('addMsg', this.name + ' died.');
     }
   }
 
@@ -464,22 +459,10 @@ io.sockets.on('connection', function(socket){
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
 
-  // socket.on('signIn', function(data){
-  //   if(validLogin(data.username, data.password)){
-  //     var player = new Player(socket.id);
-  //     PLAYER_LIST[socket.id] = player;
-  //     socket.emit('signInResponse', {success:true});
-  //   }else{
-  //     socket.emit('signInResponse', {success:false});
-  // });
-
   var player = new Player(socket.id);
   PLAYER_LIST[socket.id] = player;
 
   SOCKET_LIST[socket.id].emit('setID', socket.id);
-
-
-
 
   socket.on('disconnect', function(){
     for(var i in BULLET_LIST){
@@ -535,7 +518,7 @@ socket.on('mouseMove', function(data){//function to track movement of the mouse
   console.log('Player connection');
   var playerName = ("" + socket.id).slice(2,7);
   for (var i in SOCKET_LIST){
-    SOCKET_LIST[i].emit('addMsg', playerName + ' has joined the game.');
+    SOCKET_LIST[i].emit('addMsg', uname + ' has joined the game.');
   }
 });
 
@@ -553,9 +536,9 @@ setInterval(function(){
     x:player.x,
     y:player.y,
     rot:player.rot,
+    name:player.name,
     width:player.width,
     height:player.height,
-    number:player.number,
     cannonAngle:player.cannonAngle,
     cannonWidth:player.cannonWidth,
     cannonHeight:player.cannonHeight,
