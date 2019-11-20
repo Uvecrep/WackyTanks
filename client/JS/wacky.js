@@ -307,13 +307,13 @@ socket.on('newPosition', function(data){
   }
 
   if (number1 != -1){
-    ctx.fillText("id 1: " + ("" + data[number1].name) + " Kills: " + kills1, 365, 35);
+    ctx.fillText("1: " + (data[number1].name) + " - " + kills1, 365, 35);
   }
   if (number2 != -1){
-    ctx.fillText("id 2: " + ("" + data[number2].name) + " Kills: " + kills2, 365, 50);
+    ctx.fillText("2: " + ("" + data[number2].name) + " - " + kills2, 365, 50);
   }
   if (number3 != -1){
-    ctx.fillText("id 3: " + ("" + data[number3].name) + " Kills: " + kills3, 365, 65);
+    ctx.fillText("3: " + ("" + data[number3].name) + " - " + kills3, 365, 65);
   }
 
 });
