@@ -250,8 +250,8 @@ socket.on('newPosition', function(data){
   ctx.fillStyle = 'black';
 
   ctx.font = "20px Arial";
-  ctx.fillText("Kills: " + data[indexSelf].kills, 10, 25);
-  ctx.fillText("Deaths: " + data[indexSelf].deaths, 10, 50);
+  ctx.fillText("Total Kills: " + data[indexSelf].kills, 10, 25);
+  ctx.fillText("Total Deaths: " + data[indexSelf].deaths, 10, 50);
 
   //-------------------------DRAW TOP 3----------------------------------//
 
