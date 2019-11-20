@@ -289,31 +289,77 @@ socket.on('newPosition', function(data){
         } else if (data[numSave].kills > kills3 && numSave != -1){
           kills3 = data[numSave].kills;
           number3 = numSave;
+  var topList = [data[0]];
+
+  socket.on('kills',function(killer){
+    if(topList.length > 1){
+      for(var i in topList){
+        if(killer.killcount > topList[i].killCount && topList.length = 3){
+          topList[i] = killer;
         }
-      } else if (data[i].kills > kills2){
-        kills2 = data[i].kills;
-        numSave = number2;
-        number2 = i;
-        if (numSave == -1){
-        }else if (data[numSave].kills > kills3 && numSave != -1){
-          kills3 = data[numSave].kills;
-          number3 = numSave;
+        else if(killer.killcount > topList[i].killCount && topList.length != 3){
+          let temp = topList[i];
+          topList[i] = killer;
+          topList.appened(temp);
         }
-      } else if (data[i].kills > kills3){
-        kills3 = data[i].kills;
-        number3 = i;
       }
     }
-  }
+    else{
+      if (killer.killcount > topList[0].killCount){
+          topList[0] = killer;
+      }
+      else{
+        topList.append(killer);
+      }
+    }
+  });
 
-  if (number1 != -1){
-    ctx.fillText("1: " + (data[number1].name) + " - " + kills1, 365, 35);
+
+  // for (var i = 0; i < dLength; i++){
+  //   if (!data[i].isWall && !data[i].isBullet){
+  //     if (data[i].kills > kills1){
+  //       kills1 = data[i].kills;
+  //       numSave = number1;
+  //       number1 = i;
+  //       if (numSave == -1){
+  //
+  //       } else if (data[numSave].kills > kills2 && numSave != -1){
+  //         kills2 = data[numSave].kills;
+  //         numSave2 = number2;
+  //         number2 = numSave;
+  //         if (numSave2 == -1){
+  //         } else if (data[numSave2].kills > kills3 && numSave2 != -1){
+  //           kills3 = data[numSave2].kills;
+  //           number3 = numSave2;
+  //         }
+  //       } else if (data[numSave].kills > kills3 && numSave != -1){
+  //         kills3 = data[numSave].kills;
+  //         number3 = numSave;
+  //       }
+  //     } else if (data[i].kills > kills2){
+  //       kills2 = data[i].kills;
+  //       numSave = number2;
+  //       number2 = i;
+  //       if (numSave == -1){
+  //       }else if (data[numSave].kills > kills3 && numSave != -1){
+  //         kills3 = data[numSave].kills;
+  //         number3 = numSave;
+  //       }
+  //     } else if (data[i].kills > kills3){
+  //       kills3 = data[i].kills;
+  //       number3 = i;
+  //     }
+  //   }
+  // }
+
+  if (topList.length >= 1){
+    ctx.fillText("id 1: " + ("" + topList[0].id).slice(2,7) + " Kills: " + kills1, 365, 35);
   }
-  if (number2 != -1){
-    ctx.fillText("2: " + ("" + data[number2].name) + " - " + kills2, 365, 50);
+  if (topList.length >= 2){
+    ctx.fillText("id 2: " + ("" + topList[1].id).slice(2,7) + " Kills: " + kills2, 365, 50);
   }
-  if (number3 != -1){
-    ctx.fillText("3: " + ("" + data[number3].name) + " - " + kills3, 365, 65);
+  if (topList.length = 3){
+    ctx.fillText("id 3: " + ("" + topList[3].id).slice(2,7) + " Kills: " + kills3, 365, 65);
   }
 
 });
