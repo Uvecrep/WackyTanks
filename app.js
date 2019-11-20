@@ -477,9 +477,8 @@ io.sockets.on('connection', function(socket){
   });
 
   socket.on('sendMsgToServer', function(data){
-    var playerName = ("" + socket.id).slice(2,7);
     for (var i in SOCKET_LIST){
-      SOCKET_LIST[i].emit('addMsg', playerName + ': ' + data);
+      SOCKET_LIST[i].emit('addMsg', uname + ': ' + data);
     }
   });
 
@@ -517,7 +516,6 @@ socket.on('mouseMove', function(data){//function to track movement of the mouse
 });
 
   console.log('Player connection');
-  var playerName = ("" + socket.id).slice(2,7);
   for (var i in SOCKET_LIST){
     SOCKET_LIST[i].emit('addMsg', uname + ' has joined the game.');
   }
