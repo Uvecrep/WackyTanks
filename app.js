@@ -290,6 +290,7 @@ class Player extends Entity{
     this.cannonSpeed = 2;//cannon's rotation speed
     this.attackSpeed = 1;
 
+    this.killcount = 0;
     this.framecount = 0;
 
     for (var i in SOCKET_LIST){
