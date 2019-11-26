@@ -262,6 +262,28 @@ socket.on('newPosition', function(data){
     }
   }
 
+  //testing to find edges of tank//
+  ctx.fillStyle = "blue";
+
+  var pwidth = data[indexSelf].width;
+  var pheight = data[indexSelf].height;
+
+  var new0x = data[indexSelf].x + (pwidth / 2);
+  var new0y = data[indexSelf].y + (pheight / 2);
+
+  var pULX = data[indexSelf].x - new0x;//upper left x
+  var pULY = new0y - data[indexSelf].y;//upper left y
+
+  var pURX = data[indexSelf].x + pwidth - new0x;//upper right x
+  var pURY = new0y - data[indexSelf].y;//upper right y
+
+  var pBLX = data[indexSelf].x - new0x;//bottom left x
+  var pBLY = new0y - (data[indexSelf].y + pheight);//bottom left y
+
+
+
+
+
   //-------------------------DRAW K/D----------------------------------//
 
   ctx.fillStyle = 'black';
