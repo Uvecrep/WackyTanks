@@ -254,6 +254,8 @@ socket.on('newPosition', function(data){
   var numSave = 0;
   var numSave2 = 0;
 
+  //calculate top 3
+
   for (var i = 0; i < dLength; i++){
     if (!data[i].isWall && !data[i].isBullet){
       if (data[i].kills > kills1){
@@ -291,15 +293,44 @@ socket.on('newPosition', function(data){
     }
   }
 
+  var maxNameLength = 13;
+
+
+if (number1 != -1){
+  var name1 = "" + data[number1].name;
+  if (name1.length > maxNameLength){
+    name1 = name1.substring(0, maxNameLength);
+  }
+}
+
+if (number2 != -1){
+  var name2 = "" + data[number2].name;
+  if (name2.length > maxNameLength){
+    name2 = name2.substring(0, maxNameLength);
+  }
+}
+
+if (number3 != -1){
+  var name3 = "" + data[number3].name;
+  if (name3.length > maxNameLength){
+    name3 = name3.substring(0, maxNameLength);
+  }
+}
+
   if (number1 != -1){
-    ctx.fillText("1: " + (data[number1].name) + " - " + kills1, 365, 35);
+    ctx.fillText("1: " + name1 + " - " + kills1, 365, 35);
   }
   if (number2 != -1){
-    ctx.fillText("2: " + ("" + data[number2].name) + " - " + kills2, 365, 50);
+    ctx.fillText("2: " + name2 + " - " + kills2, 365, 50);
   }
   if (number3 != -1){
-    ctx.fillText("3: " + ("" + data[number3].name) + " - " + kills3, 365, 65);
+    ctx.fillText("3: " + name3 + " - " + kills3, 365, 65);
   }
+
+  //ctx.fillRect(data[indexSelf].x + objChangeX, data[indexSelf].y + objChangeY, 5, 5);
+  // ctx.beginPath();
+  // ctx.arc(data[indexSelf].x + objChangeX, data[indexSelf].y + objChange, 5, 0, 2 * Math.PI);
+  // ctx.fill();//filling circle
 
 });
 
