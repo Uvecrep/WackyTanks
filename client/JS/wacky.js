@@ -47,6 +47,8 @@ document.getElementById("sendInput").onsubmit = function(e){
 //Canvas window //
 socket.on('newPosition', function(data){
   var indexSelf = 0;
+  var wallWidth = 0;
+  var mapSize = 0;
 
   var dLength = data.length;
 
@@ -73,6 +75,25 @@ socket.on('newPosition', function(data){
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
 
   //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
+
+  ctx.fillStyle = 'rgb(154, 164, 181)';
+
+  //ctx.fillRect(300 + objChangeX, 0 + objChangeY, 50, 1000);
+
+  mapSize = data[0].mapsize;
+  wallWidth = data[0].wallwidth;
+  var gridWidth = 100;//distance between bars
+  var barWidth = 1;//width of each bar in grid
+
+
+  for (var i = wallWidth; i < mapSize; i = i + gridWidth){
+    ctx.fillRect(i + objChangeX, objChangeY, barWidth, mapSize);
+  }
+
+  for (var j = wallWidth; j < mapSize; j = j + gridWidth){
+    ctx.fillRect(objChangeX, j + objChangeY, mapSize, barWidth);
+  }
+
 
   for(var i = 0; i < dLength; i++){//drawing all objects passed in through data array
     if (!data[i].isWall && !data[i].isBullet){
@@ -104,6 +125,7 @@ socket.on('newPosition', function(data){
        data[i].width,
        data[i].height
     );
+
 
     //-------------------------DRAW BLACK FRONT OF TANK MARKER----------------------------------//
 

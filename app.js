@@ -542,7 +542,9 @@ setInterval(function(){
     isWall:false,
     isBullet:false,
     kills:player.killCount,
-    deaths:player.deathCount
+    deaths:player.deathCount,
+    mapsize:mapSize,
+    wallwidth:wallWidth
     });
   }
 
