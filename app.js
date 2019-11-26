@@ -476,7 +476,7 @@ io.sockets.on('connection', function(socket){
 
   socket.on('sendMsgToServer', function(data){
     for (var i in SOCKET_LIST){
-      SOCKET_LIST[i].emit('addMsg', uname + ': ' + data);
+      SOCKET_LIST[i].emit('addMsg', data[0].name + ': ' + data[0].msg);
     }
   });
 

@@ -21,6 +21,8 @@ var rPointY = 0;//y coordinate for rotation point
 var currentMousePosX = 0;//current mouse position, compared against rotation point to determine aiming
 var currentMousePosY = 0;
 
+var pname = '';
+
 
 var socket = io();
 
@@ -32,7 +34,13 @@ socket.on("addMsg", function(data){
 
 document.getElementById("sendInput").onsubmit = function(e){
   e.preventDefault();
-  socket.emit("sendMsgToServer", document.getElementById("usermsg").value);
+  var pack = [];
+  pack.push({
+    name:pname,
+    msg:document.getElementById("usermsg").value
+  });
+  //console.log(pack[0].name + ' ' + pack[0].msg);
+  socket.emit("sendMsgToServer", pack);
   document.getElementById("usermsg").value = '';
 }
 
@@ -49,6 +57,8 @@ socket.on('newPosition', function(data){
       indexSelf = i;
     }
   }
+
+  pname = data[indexSelf].name;
 
   var cameraPositionX = 240;
   var cameraPositionY = 190;
