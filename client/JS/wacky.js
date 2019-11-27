@@ -262,7 +262,7 @@ socket.on('newPosition', function(data){
     }
   }
 
-/* This code puts a blue circle on each edge of the tank, used to test code for wall collision
+// This code puts a blue circle on each edge of the tank, used to test code for wall collision
   //testing to find edges of tank//
   ctx.fillStyle = "blue";
 
@@ -301,22 +301,22 @@ socket.on('newPosition', function(data){
   var rotBRY = (pBRX * Math.sin(theta)) + (pBRY * Math.cos(theta));
 
   ctx.beginPath();
-  ctx.arc(rotULX + cameraPositionX + (pwidth/2), rotULY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.arc(rotULX + cameraPositionX + (pwidth/2), rotULY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
   ctx.fill();//filling circle
 
   ctx.beginPath();
-  ctx.arc(rotURX + cameraPositionX+ (pwidth/2), rotURY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.arc(rotURX + cameraPositionX+ (pwidth/2), rotURY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
   ctx.fill();//filling circle
 
   ctx.beginPath();
-  ctx.arc(rotBRX + cameraPositionX+ (pwidth/2), rotBRY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.arc(rotBRX + cameraPositionX+ (pwidth/2), rotBRY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
   ctx.fill();//filling circle
 
   ctx.beginPath();
-  ctx.arc(rotBLX + cameraPositionX+ (pwidth/2), rotBLY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.arc(rotBLX + cameraPositionX+ (pwidth/2), rotBLY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
   ctx.fill();//filling circle
 
-  */
+  //*/
 
   //console.log("player x: " + data[indexSelf].x + " player y: " + data[indexSelf].y);
   //console.log("calc x: " + (rotULX + new0x) + " calc y: " + (new0y - rotULY));

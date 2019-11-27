@@ -285,8 +285,6 @@ class Player extends Entity{
     }
     if (this.rotatingCannonLeft){//rotate cannon to left
       this.cannonAngle -= this.cannonSpeed;//updating cannon's angle of rotation
-      //console.log('angle: ' + this.cannonAngle);
-      //this.cannonAngle = 45;
     }
     if (this.shooting){
       if((this.framecount % 30 == 0 || this.firstShot == true) )
@@ -308,7 +306,6 @@ class Player extends Entity{
     var bulletID = Math.random();
     var bullet = new Bullet(bulletID,this);
     BULLET_LIST[bulletID] = bullet;
-    //console.log('Angle: ' + this.cannonAngle);
     this.fireCount = this.fireCount + 1;
   }
 
@@ -342,15 +339,11 @@ class Player extends Entity{
   }
 
   update(){
-
-    //if(BULLET_LIST.length > 0){
       for (var key in BULLET_LIST)
       {
         let colliding = this.getDistance(this,BULLET_LIST[key]);
         if(colliding == true && BULLET_LIST[key].parent != this)
         {
-          //console.log("hit");
-          //BULLET_LIST[key].isDead == true;
 
           this.health = this.health - BULLET_LIST[key].damage;
           if (this.health <= 0){
@@ -368,7 +361,6 @@ class Player extends Entity{
         this.health = 3;
       }
     }
-  //}
 }
 
 class Bullet extends Entity{
@@ -429,10 +421,7 @@ class Wall extends Entity{
     }
 
     update(){
-      //console.log('updating wall: ' + this.id);
-
       for (var player in PLAYER_LIST){
-        //console.log("player: "+ PLAYER_LIST[player].id);
         var pwidth = PLAYER_LIST[player].width;
         var pheight = PLAYER_LIST[player].height;
         var theta = PLAYER_LIST[player].rot;
@@ -485,41 +474,33 @@ class Wall extends Entity{
 
 
         if (collideTopLeft > 0){
-          //console.log("collide top left with wall: " + this.id);
           PLAYER_LIST[player].canRotateLeft = false;
           if (collideTopLeft == 1 || collideTopLeft == 3){//top or bottom
             PLAYER_LIST[player].canMoveForward = false;
           } else {
             PLAYER_LIST[player].canMoveBackward = false;
           }
-          //PLAYER_LIST[player].isCollidingWithWall = true;
         }
 
         if (collideTopRight > 0){
-          //console.log("collide top right with wall: " + this.id);
           PLAYER_LIST[player].canRotateRight = false;
           if (collideTopRight == 1 || collideTopRight == 3){//top or bottom
             PLAYER_LIST[player].canMoveForward = false;
           } else {
             PLAYER_LIST[player].canMoveBackward = false;
           }
-          //PLAYER_LIST[player].isCollidingWithWall = true;
         }
 
         if (collideBotLeft > 0){
-          //console.log("collide bottom left with wall: " + this.id);
           PLAYER_LIST[player].canRotateRight = false;
           if (collideBotLeft == 1 || collideBotLeft == 3){//top or bottom
             PLAYER_LIST[player].canMoveBackward = false;
           } else {
             PLAYER_LIST[player].canMoveForward = false;
           }
-          //PLAYER_LIST[player].canMoveBackward = false;
-          //PLAYER_LIST[player].isCollidingWithWall = true;
         }
 
         if (collideBotRight > 0){
-          //console.log("collide bottom right with wall: " + this.id);
           PLAYER_LIST[player].canRotateLeft = false;
 
           if (collideBotRight == 1 || collideBotRight == 3){//top or bottom
@@ -527,13 +508,7 @@ class Wall extends Entity{
           } else {
             PLAYER_LIST[player].canMoveForward = false;
           }
-          //PLAYER_LIST[player].canMoveBackward = false;
-          //PLAYER_LIST[player].isCollidingWithWall = true;
         }
-        //
-        // if (!collideTopLeft && !collideTopRight && !collideBotLeft && !collideBotRight){
-        //   PLAYER_LIST[player].isCollidingWithWall = false;
-        // }
 
       }
       for (var key in BULLET_LIST)
@@ -588,10 +563,6 @@ class Wall extends Entity{
     }
 }
 
-//creating map chatbox
-// var mapSize = 1000;
-// var wallWidth = 100;
-//map size and width set above so we can use the numbers to determine spawn area, cant create the walls until down here bc the wall class is not defined where size and width are
 
 var wall1 = new Wall(wallWidth, mapSize, 1, 0, 0);
 var wall2 = new Wall(mapSize, wallWidth, 2, 0, 0);
