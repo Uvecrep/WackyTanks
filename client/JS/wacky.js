@@ -262,11 +262,15 @@ socket.on('newPosition', function(data){
     }
   }
 
+/* This code puts a blue circle on each edge of the tank, used to test code for wall collision
   //testing to find edges of tank//
   ctx.fillStyle = "blue";
 
   var pwidth = data[indexSelf].width;
   var pheight = data[indexSelf].height;
+  var theta = data[indexSelf].rot;
+  //theta = theta + 90;
+  theta = theta * Math.PI / 180;
 
   var new0x = data[indexSelf].x + (pwidth / 2);
   var new0y = data[indexSelf].y + (pheight / 2);
@@ -280,6 +284,42 @@ socket.on('newPosition', function(data){
   var pBLX = data[indexSelf].x - new0x;//bottom left x
   var pBLY = new0y - (data[indexSelf].y + pheight);//bottom left y
 
+  var pBRX = data[indexSelf].x + pwidth - new0x;//bpottom right
+  var pBRY = new0y - (data[indexSelf].y + pheight);//bottom rigjht
+
+
+  var rotULX = (pULX * Math.cos(theta)) - (pULY * Math.sin(theta));
+  var rotULY = (pULX * Math.sin(theta)) + (pULY * Math.cos(theta));
+
+  var rotURX = (pURX * Math.cos(theta)) - (pURY * Math.sin(theta));
+  var rotURY = (pURX * Math.sin(theta)) + (pURY * Math.cos(theta));
+
+  var rotBLX = (pBLX * Math.cos(theta)) - (pBLY * Math.sin(theta));
+  var rotBLY = (pBLX * Math.sin(theta)) + (pBLY * Math.cos(theta));
+
+  var rotBRX = (pBRX * Math.cos(theta)) - (pBRY * Math.sin(theta));
+  var rotBRY = (pBRX * Math.sin(theta)) + (pBRY * Math.cos(theta));
+
+  ctx.beginPath();
+  ctx.arc(rotULX + cameraPositionX + (pwidth/2), rotULY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.fill();//filling circle
+
+  ctx.beginPath();
+  ctx.arc(rotURX + cameraPositionX+ (pwidth/2), rotURY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.fill();//filling circle
+
+  ctx.beginPath();
+  ctx.arc(rotBRX + cameraPositionX+ (pwidth/2), rotBRY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.fill();//filling circle
+
+  ctx.beginPath();
+  ctx.arc(rotBLX + cameraPositionX+ (pwidth/2), rotBLY + cameraPositionY+(pheight/2), 5, 0, 2 * Math.PI);
+  ctx.fill();//filling circle
+
+  */
+
+  //console.log("player x: " + data[indexSelf].x + " player y: " + data[indexSelf].y);
+  //console.log("calc x: " + (rotULX + new0x) + " calc y: " + (new0y - rotULY));
 
 
 
