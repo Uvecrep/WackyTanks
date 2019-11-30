@@ -52,7 +52,7 @@ socket.on('newPosition', function(data){
 
   var dLength = data.length;
 
-  //-------------------------FIND SELF----------------------------------//
+  //-----------------------------FIND SELF----------------------------------//
 
   for(var i = 0; i < dLength; i++){
     if (data[i].id == id && !data[i].isBullet){//determines which tank is self
@@ -262,66 +262,18 @@ socket.on('newPosition', function(data){
     }
   }
 
-// This code puts a blue circle on each edge of the tank, used to test code for wall collision
-  //testing to find edges of tank//
-  ctx.fillStyle = "blue";
 
-  var pwidth = data[indexSelf].width;
-  var pheight = data[indexSelf].height;
-  var theta = data[indexSelf].rot;
-  //theta = theta + 90;
-  theta = theta * Math.PI / 180;
+  //----------------------------Update Player List--------------------------------//
 
-  var new0x = data[indexSelf].x + (pwidth / 2);
-  var new0y = data[indexSelf].y + (pheight / 2);
+  var insertString = "<tbody><tr>\n      <th>Name</th>\n      <th>Total Kills</th>\n      <th>Total Deaths</th>\n    </tr>";
 
-  var pULX = data[indexSelf].x - new0x;//upper left x
-  var pULY = new0y - data[indexSelf].y;//upper left y
-
-  var pURX = data[indexSelf].x + pwidth - new0x;//upper right x
-  var pURY = new0y - data[indexSelf].y;//upper right y
-
-  var pBLX = data[indexSelf].x - new0x;//bottom left x
-  var pBLY = new0y - (data[indexSelf].y + pheight);//bottom left y
-
-  var pBRX = data[indexSelf].x + pwidth - new0x;//bpottom right
-  var pBRY = new0y - (data[indexSelf].y + pheight);//bottom rigjht
-
-
-  var rotULX = (pULX * Math.cos(theta)) - (pULY * Math.sin(theta));
-  var rotULY = (pULX * Math.sin(theta)) + (pULY * Math.cos(theta));
-
-  var rotURX = (pURX * Math.cos(theta)) - (pURY * Math.sin(theta));
-  var rotURY = (pURX * Math.sin(theta)) + (pURY * Math.cos(theta));
-
-  var rotBLX = (pBLX * Math.cos(theta)) - (pBLY * Math.sin(theta));
-  var rotBLY = (pBLX * Math.sin(theta)) + (pBLY * Math.cos(theta));
-
-  var rotBRX = (pBRX * Math.cos(theta)) - (pBRY * Math.sin(theta));
-  var rotBRY = (pBRX * Math.sin(theta)) + (pBRY * Math.cos(theta));
-
-  ctx.beginPath();
-  ctx.arc(rotULX + cameraPositionX + (pwidth/2), rotULY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
-  ctx.fill();//filling circle
-
-  ctx.beginPath();
-  ctx.arc(rotURX + cameraPositionX+ (pwidth/2), rotURY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
-  ctx.fill();//filling circle
-
-  ctx.beginPath();
-  ctx.arc(rotBRX + cameraPositionX+ (pwidth/2), rotBRY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
-  ctx.fill();//filling circle
-
-  ctx.beginPath();
-  ctx.arc(rotBLX + cameraPositionX+ (pwidth/2), rotBLY + cameraPositionY+(pheight/2), 1, 0, 2 * Math.PI);
-  ctx.fill();//filling circle
-
-  //*/
-
-  //console.log("player x: " + data[indexSelf].x + " player y: " + data[indexSelf].y);
-  //console.log("calc x: " + (rotULX + new0x) + " calc y: " + (new0y - rotULY));
-
-
+  for (var i = 0; i < dLength; i++){
+    if (!data[i].isWall && !data[i].isBullet){
+      insertString = insertString + "\n    <tr>\n      <td>" + data[i].name + "</td>\n      <td>" + data[i].kills + "</td>\n      <td>" + data[i].deaths + "</td>\n    </tr>";
+    }
+  }
+  //insertString = insertString + "\n    </tr>\n    <tr>\n      <td>test name</td>\n      <td>12</td>\n      <td>5</td>";
+  document.getElementById('myPopup').innerHTML = insertString + "\n  </tbody>";
 
 
   //-------------------------DRAW K/D----------------------------------//
