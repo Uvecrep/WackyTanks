@@ -21,23 +21,10 @@ var rPointY = 0;//y coordinate for rotation point
 var currentMousePosX = 0;//current mouse position, compared against rotation point to determine aiming
 var currentMousePosY = 0;
 
+var pname = '';
+
 
 var socket = io();
-
-//LOGIN
-// document.getElementById('SaveLogin').onclick = function(){
-//   socket.emit('signIn',
-//   {username:document.getElementById('UserName').value,
-//   password:document.getElementById('Password').value});
-// }
-//
-// socket.on('signInResponse', function(data){
-//   if(data.success){
-//     //let into game only on successful login
-//   }else{
-//     document.getElementById('unsuccessful').innerHTML = "Login Unsuccessful";
-//   }
-// });
 
 //TextBox
 socket.on("addMsg", function(data){
@@ -47,23 +34,33 @@ socket.on("addMsg", function(data){
 
 document.getElementById("sendInput").onsubmit = function(e){
   e.preventDefault();
-  socket.emit("sendMsgToServer", document.getElementById("usermsg").value);
+  var pack = [];
+  pack.push({
+    name:pname,
+    msg:document.getElementById("usermsg").value
+  });
+  //console.log(pack[0].name + ' ' + pack[0].msg);
+  socket.emit("sendMsgToServer", pack);
   document.getElementById("usermsg").value = '';
 }
 
 //Canvas window //
 socket.on('newPosition', function(data){
   var indexSelf = 0;
+  var wallWidth = 0;
+  var mapSize = 0;
 
   var dLength = data.length;
 
-  //-------------------------FIND SELF----------------------------------//
+  //-----------------------------FIND SELF----------------------------------//
 
   for(var i = 0; i < dLength; i++){
     if (data[i].id == id && !data[i].isBullet){//determines which tank is self
       indexSelf = i;
     }
   }
+
+  pname = data[indexSelf].name;
 
   var cameraPositionX = 240;
   var cameraPositionY = 190;
@@ -78,6 +75,25 @@ socket.on('newPosition', function(data){
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
 
   //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
+
+  ctx.fillStyle = 'rgb(154, 164, 181)';
+
+  //ctx.fillRect(300 + objChangeX, 0 + objChangeY, 50, 1000);
+
+  mapSize = data[0].mapsize;
+  wallWidth = data[0].wallwidth;
+  var gridWidth = 100;//distance between bars
+  var barWidth = 1;//width of each bar in grid
+
+
+  for (var i = wallWidth; i < mapSize; i = i + gridWidth){
+    ctx.fillRect(i + objChangeX, objChangeY, barWidth, mapSize);
+  }
+
+  for (var j = wallWidth; j < mapSize; j = j + gridWidth){
+    ctx.fillRect(objChangeX, j + objChangeY, mapSize, barWidth);
+  }
+
 
   for(var i = 0; i < dLength; i++){//drawing all objects passed in through data array
     if (!data[i].isWall && !data[i].isBullet){
@@ -110,6 +126,7 @@ socket.on('newPosition', function(data){
        data[i].height
     );
 
+
     //-------------------------DRAW BLACK FRONT OF TANK MARKER----------------------------------//
 
     ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
@@ -122,7 +139,11 @@ socket.on('newPosition', function(data){
       frontTankWidth,
       frontTankHeight
     )
+
+
     ctx.restore();
+
+
 
     //-------------------------DRAW CANNON----------------------------------//
 
@@ -153,6 +174,15 @@ socket.on('newPosition', function(data){
     ctx.beginPath();
     ctx.arc(objX, objY, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
     ctx.fill();//filling circle
+
+
+    //-------------------------DRAW PLAYER NAME----------------------------------//
+
+    ctx.fillStyle = "black";
+
+    ctx.font = "15px Arial";
+    ctx.fillText(data[i].name, objX - 19, objY - 40);
+
   }
   }
 
@@ -232,19 +262,33 @@ socket.on('newPosition', function(data){
     }
   }
 
+
+  //----------------------------Update Player List--------------------------------//
+
+  var insertString = "<tbody><tr>\n      <th>Name</th>\n      <th>Total Kills</th>\n      <th>Total Deaths</th>\n    </tr>";
+
+  for (var i = 0; i < dLength; i++){
+    if (!data[i].isWall && !data[i].isBullet){
+      insertString = insertString + "\n    <tr>\n      <td>" + data[i].name + "</td>\n      <td>" + data[i].kills + "</td>\n      <td>" + data[i].deaths + "</td>\n    </tr>";
+    }
+  }
+  //insertString = insertString + "\n    </tr>\n    <tr>\n      <td>test name</td>\n      <td>12</td>\n      <td>5</td>";
+  document.getElementById('myPopup').innerHTML = insertString + "\n  </tbody>";
+
+
   //-------------------------DRAW K/D----------------------------------//
 
   ctx.fillStyle = 'black';
 
   ctx.font = "20px Arial";
-  ctx.fillText("Kills: " + data[indexSelf].kills, 10, 25);
-  ctx.fillText("Deaths: " + data[indexSelf].deaths, 10, 50);
+  ctx.fillText("Total Kills: " + data[indexSelf].kills, 10, 25);
+  ctx.fillText("Total Deaths: " + data[indexSelf].deaths, 10, 50);
 
   //-------------------------DRAW TOP 3----------------------------------//
 
   ctx.font = "15px Arial";
-  ctx.fillText("Top 3", 420, 15);
-  ctx.fillRect(390,20, 100, 1);//underline
+  ctx.fillText("Top 3", 410, 15);
+  ctx.fillRect(365,20, 125, 1);//underline
 
   var number1 = -1;
   var kills1 = 0;
@@ -255,6 +299,8 @@ socket.on('newPosition', function(data){
 
   var numSave = 0;
   var numSave2 = 0;
+
+  //calculate top 3
 
   for (var i = 0; i < dLength; i++){
     if (!data[i].isWall && !data[i].isBullet){
@@ -270,7 +316,7 @@ socket.on('newPosition', function(data){
           number2 = numSave;
           if (numSave2 == -1){
           } else if (data[numSave2].kills > kills3 && numSave2 != -1){
-            kills3 = data[numSave].kills;
+            kills3 = data[numSave2].kills;
             number3 = numSave2;
           }
         } else if (data[numSave].kills > kills3 && numSave != -1){
@@ -293,9 +339,44 @@ socket.on('newPosition', function(data){
     }
   }
 
-  ctx.fillText("id 1: " + number1 + " Kills: " + kills1, 390, 35);
-  ctx.fillText("id 2: " + number2 + " Kills: " + kills2, 390, 50);
-  ctx.fillText("id 3: " + number3 + " Kills: " + kills3, 390, 65);
+  var maxNameLength = 13;
+
+
+if (number1 != -1){
+  var name1 = "" + data[number1].name;
+  if (name1.length > maxNameLength){
+    name1 = name1.substring(0, maxNameLength);
+  }
+}
+
+if (number2 != -1){
+  var name2 = "" + data[number2].name;
+  if (name2.length > maxNameLength){
+    name2 = name2.substring(0, maxNameLength);
+  }
+}
+
+if (number3 != -1){
+  var name3 = "" + data[number3].name;
+  if (name3.length > maxNameLength){
+    name3 = name3.substring(0, maxNameLength);
+  }
+}
+
+  if (number1 != -1){
+    ctx.fillText("1: " + name1 + " - " + kills1, 365, 35);
+  }
+  if (number2 != -1){
+    ctx.fillText("2: " + name2 + " - " + kills2, 365, 50);
+  }
+  if (number3 != -1){
+    ctx.fillText("3: " + name3 + " - " + kills3, 365, 65);
+  }
+
+  //ctx.fillRect(data[indexSelf].x + objChangeX, data[indexSelf].y + objChangeY, 5, 5);
+  // ctx.beginPath();
+  // ctx.arc(data[indexSelf].x + objChangeX, data[indexSelf].y + objChange, 5, 0, 2 * Math.PI);
+  // ctx.fill();//filling circle
 
 });
 
@@ -345,6 +426,7 @@ canvasElement.addEventListener("mouseup", function (evt) {
 
 document.onkeydown = function(event){
   if(document.activeElement.id !== "usermsg"){
+    event.preventDefault();
     if(event.keyCode === 68)
       socket.emit('keyPress', {inputId:'right', state:true});//rotates tank to the right
     else if(event.keyCode === 83)
@@ -381,43 +463,3 @@ document.onkeyup = function(event){
   else if(event.keyCode === 37)
     socket.emit('keyPress', {inputId:'cannonLeft', state:false});//stops cannon rotation to the left
 }
-// LOGIN SQL
-// app.get('/loginValidate', function(req, res) {
-// 	console.log("got here muahahah")
-// 	var query1 = "Call from database here to bring in list of all users;"; //games played in the Fall 2018 Season
-// 	var query2 = ';';
-// 	var query3 = ';';
-// 	db.task('get-everything', task => {
-// 	    return task.batch([
-// 	        task.any(query1),
-// 	        task.any(query2),
-// 	        task.any(query3)
-// 	    ]);
-// 	})
-// 	.then(batch_data => {
-//     // we valid if the batch is not empty....
-//     // if not empty then we want to
-// 		console.log(batch_data[0]);
-// 		console.log(batch_data[1]);
-// 		console.log(batch_data[2]);
-//
-// 		res.render('pages/player_info',{
-// 				my_title: "Page Title Here",
-// 				result_1: batch_data[0],
-// 				result_2: batch_data[1],
-// 				result_3: batch_data[2]
-// 			})
-// 	})
-// 	.catch(error => {
-// 		console.log(error)
-// 	    // display error message in case an error
-// 	        req.flash('error', error);
-// 	        res.render('pages/player_info',{
-// 				my_title: "Page Title Here",
-// 				result_1: '',
-// 				result_2: '',
-// 				result_3: ''
-// 			})
-//
-// 		});
-// };

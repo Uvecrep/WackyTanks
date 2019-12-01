@@ -5,11 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <!---------------------------------------------------------------------------->
+
   <!--Fonts-->
+
+  <!---------------------------------------------------------------------------->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine|Lacquer|Luckiest Guy|Righteous|Permanent Marker|Mogra">
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Monoton&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Bungee+Inline&display=swap" rel="stylesheet">
+<!---------------------------------------------------------------------------->
+
 <!---------------------------------------------------------------------------->
   <!--BootStraps-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -21,12 +26,20 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
   </script>
   <!---------------------------------------------------------------------------->
+
   <!-- Links for JS, CSS, Etc -->
+
+  <!---------------------------------------------------------------------------->
   <link rel="stylesheet" href="./client/CSS/styles.css">
   <link rel="stylesheet" href="./client/JS/wacky.js">
   <!---------------------------------------------------------------------------->
+
+  <!---------------------------------------------------------------------------->
   <title>Wacky Tanks</title>
 </head>
+<!---------------------------------------------------------------------------->
+
+<!---------------------------------------------------------------------------->
 <body>
   <div class="row">
     <div class="col">
@@ -44,68 +57,79 @@
     src="./client/JS/slideshow.js">
   </script>
   <!-- Creates a form -->
-  <form action="/" method="post">
 
-<!--DROPDOWN LOGIN BARS-->
-<div class="accordion" id="accordionExample">
-  <div class="card">
-    <div id="loginBar" class="card-header">
-      <h5 class="mb-0">
-        <!--LOGIN BUTTON-->
-        <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLogin" aria-expanded="false" aria-controls="collapseLogin">
-          Login
-        </a>
-        <!--REGISTER BUTTON-->
-        <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseRegister" aria-expanded="false" aria-controls="collapseRegister">
-          Register
-        </a>
-      </h5>
-    </div>
-    <!-- Register Button Inputs -->
-    <div id="collapseRegister" class="collapse" aria-labelledby="collapseRegister" data-parent="#accordionExample">
-      <div class="card-body">
-        <!-- name -->
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name">
-        <br>
-        <br>
-        <!-- Email -->
-        <label for="Email">Email</label>
-        <input type="text" name="Email" id="Email">
-        <br>
-        <br>
-        <!-- Phone -->
-        <label for="Phone">Phone</label>
-        <input type="number" name="Phone" id="Phone">
-        <br>
-        <br>
-        <button>
-          <a id="text" data-text="saveInfo" href="#">Save ME!</a>
-        </button>
+
+    <!--DROPDOWN LOGIN BARS-->
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div id="loginBar" class="card-header">
+          <h5 class="mb-0">
+            <!--LOGIN BUTTON-->
+            <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLogin" aria-expanded="false" aria-controls="collapseLogin">
+              Login
+            </a>
+            <!--REGISTER BUTTON-->
+            <a id="registerButton" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseRegister" aria-expanded="false" aria-controls="collapseRegister">
+              Register
+            </a>
+          </h5>
+        </div>
+        <!-- Register Button Inputs -->
+        <div id="collapseRegister" class="collapse" aria-labelledby="collapseRegister" data-parent="#accordionExample">
+          <div class="card-body">
+            <form action="/signup" method="post">
+
+              <!-- name -->
+              <label for="name">User Name</label>
+              <input type="text" name="nameSignUp" id="UserNameSignUp" required></input>
+
+              <br>
+              <br>
+
+              <!-- Password -->
+              <label for="password">Password</label>
+              <input type="password" name="passwordSignUp" id="PasswordSignUp" required></input>
+
+              <br>
+              <br>
+
+              <button id="SignUp">Register!</button>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Login Button Inputs -->
+        <div id="collapseLogin" class="collapse" aria-labelledby="collapseLogin" data-parent="#accordionExample">
+          <div class="card-body">
+            <form action="/" method="post">
+            <!-- name -->
+            <label for="name">User Name</label>
+            <input type="text" name="name" id="UserName" required></input>
+
+            <br>
+            <br>
+
+            <!-- Email -->
+            <label for="password">Password</label>
+            <input type="password" name="password" id="Password" required></input>
+
+            <br>
+
+            <p id="unsuccessful"> </p>
+
+            <br>
+
+            <button id="SaveLogin">Reporting for Duty!</button>
+
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- Login Button Inputs -->
-    <div id="collapseLogin" class="collapse" aria-labelledby="collapseLogin" data-parent="#accordionExample">
-      <div class="card-body">
-        <!-- name -->
-        <label for="name">UserName</label>
-        <input type="text" name="name" id="UserName"></input>
-        <br>
-        <br>
-        <!-- Email -->
-        <label for="password">Password</label>
-        <input type="password" name="password" id="Password"></input>
-        <br>
-        <p id="unsuccessful"> </p>
-        <br>
-        <button action="/loginValidate" id="SaveLogin" onclick="LoginSave">Reporting for Duty!</button>
-      </div>
-    </div>
-  </div>
-</div>
-<br>
-<br>
-  </form>
+    <br>
+    <br>
+
 
   <div class="accordion" id="accordionExample">
   <div class="card">
