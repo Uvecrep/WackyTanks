@@ -23,6 +23,8 @@ var currentMousePosY = 0;
 
 var pname = '';
 
+var showControls = false;
+
 
 var socket = io();
 
@@ -377,6 +379,11 @@ if (number3 != -1){
   // ctx.beginPath();
   // ctx.arc(data[indexSelf].x + objChangeX, data[indexSelf].y + objChange, 5, 0, 2 * Math.PI);
   // ctx.fill();//filling circle
+
+  if (showControls){
+    var img = document.getElementById('controls');
+    ctx.drawImage(img, 10, 10, 150, 180);
+  }
 
 });
 
