@@ -23,6 +23,8 @@ var currentMousePosY = 0;
 
 var pname = '';
 
+var showControls = false;
+
 
 var socket = io();
 
@@ -378,6 +380,18 @@ if (number3 != -1){
   // ctx.arc(data[indexSelf].x + objChangeX, data[indexSelf].y + objChange, 5, 0, 2 * Math.PI);
   // ctx.fill();//filling circle
 
+  //----------------Printing controls image---------------------//
+
+  ctx.font = "12px Arial";
+  if (showControls){
+    var img = document.getElementById('controls');
+    ctx.drawImage(img, 3, 100, 495, 200);
+    ctx.font = "20px Arial";
+    ctx.fillText("Press 'c' to hide controls", 150, 320);
+  } else {
+    ctx.fillText("Press 'c' to show controls", 5, 395);
+  }
+
 });
 
 function getMousePos(canvasElement, evt) {
@@ -443,6 +457,12 @@ document.onkeydown = function(event){
       socket.emit('keyPress', {inputId:'cannonLeft', state:true});//rotates cannon to the left
     else if(event.keyCode === 80){
       setRotatePoint();
+    } else if (event.keyCode === 67){
+      if(showControls == false){
+        showControls = true;
+      } else {
+        showControls = false;
+      }
     }
   }
 }
