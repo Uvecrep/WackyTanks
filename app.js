@@ -309,7 +309,7 @@ class Player extends Entity{
     this.fireCount = this.fireCount + 1;
   }
 
-  respawn(){
+  respawn(killername){
     //console.log("Player death: " + this.id);
     this.x = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.y = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
@@ -334,11 +334,12 @@ class Player extends Entity{
     this.framecount = 0;
 
     for (var i in SOCKET_LIST){
-      SOCKET_LIST[i].emit('addMsg', this.name + ' died.');
+      SOCKET_LIST[i].emit('addMsg', this.name + ' was killed by ' + killername + '.');
     }
   }
 
   update(){
+    var killername = '';
       for (var key in BULLET_LIST)
       {
         let colliding = this.getDistance(this,BULLET_LIST[key]);
@@ -347,6 +348,7 @@ class Player extends Entity{
 
           this.health = this.health - BULLET_LIST[key].damage;
           if (this.health <= 0){
+            killername = BULLET_LIST[key].parent.name;
             this.deathCount = this.deathCount + 1;
             BULLET_LIST[key].parent.killCount = BULLET_LIST[key].parent.killCount + 1;
           }
@@ -357,7 +359,7 @@ class Player extends Entity{
       }
       if(this.health <= 0)
       {
-        this.respawn();
+        this.respawn(killername);
         this.health = 3;
       }
     }
