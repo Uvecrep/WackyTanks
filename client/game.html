@@ -96,6 +96,7 @@
 
       <div class="row">
         <canvas id="ctx" width="500" height="400" style="border:1px solid #000000;"></canvas>
+
         <div class="col">
           <div id="chat" >
               <!-- <div id="menu">
@@ -112,11 +113,21 @@
                   <input id="usermsg" type="text" autocomplete="off" />
                   <input id="submitmsg" type="submit" />
               </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
 </body>
+<form>
+   <input type="text" id="Tankdamage" value="1"/>
+   <input type="button" onclick="incrementValue()" value="increase damage" />
+</form>
+<br>
+<form>
+   <input type="text" id="Tankhealth" value="3"/>
+   <input type="button" onclick="incrementValue()" value="increase health" />
+</form>
 
 <!--Script for link to Socket Controls-->
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
