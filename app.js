@@ -99,7 +99,9 @@ var WALL_LIST = {};
 
 var mapSize = 1000;
 var wallWidth = 100;
-
+//const jsdom = require("jsdom");
+//const { JSDOM } = jsdom;
+//const dom = new JSDOM(document.getElementById('damage').style.visibility = 'hidden');
 
 class Entity{
 
@@ -221,6 +223,8 @@ class Player extends Entity{
     this.rotatingCannonRight = false;
     this.shooting = false;
     this.firstShot = true;
+    this.damage = 1;
+    this.score = 0;
 
 
     this.height = 50;//sizing of tank
@@ -248,6 +252,24 @@ class Player extends Entity{
     this.isCollidingWithWall = false;
 
     this.framecount = 0;
+  }
+
+  PowerUp(){
+    //console.log('here');
+    //dmg.style.display = "none";
+
+    for(var i in PLAYER_LIST){
+      var player = PLAYER_LIST[i];
+      if(player.score > 5){
+        if(player.damage >= 2){
+          break;
+        }
+        player.damage++;
+        for (var i in SOCKET_LIST){
+          SOCKET_LIST[i].emit('addMsg', this.name +'s damage has increased');
+        }
+      }
+    }
   }
 
   updatePosition(){
@@ -345,8 +367,9 @@ class Player extends Entity{
         let colliding = this.getDistance(this,BULLET_LIST[key]);
         if(colliding == true && BULLET_LIST[key].parent != this)
         {
-
-          this.health = this.health - BULLET_LIST[key].damage;
+          BULLET_LIST[key].parent.score++;
+          this.health = this.health - BULLET_LIST[key].parent.damage;
+          BULLET_LIST[key].parent.PowerUp();
           if (this.health <= 0){
             killername = BULLET_LIST[key].parent.name;
             this.deathCount = this.deathCount + 1;

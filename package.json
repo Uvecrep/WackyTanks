@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.17.1",
+    "jsdom": "^15.2.1",
     "mongodb": "^3.3.4",
     "socket.io": "^2.3.0"
   },
