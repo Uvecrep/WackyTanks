@@ -277,11 +277,13 @@ socket.on('newPosition', function(data){
 
   //----------------------------Update Player List--------------------------------//
 
-  var insertString = "<tbody><tr>\n      <th>Name</th>\n      <th>Total Kills</th>\n      <th>Total Deaths</th>\n    </tr>";
+  var insertString = "<tbody><tr>\n      <th>Player Number</th>\n      <th>Name</th>\n      <th>Total Kills</th>\n      <th>Total Deaths</th>\n    </tr>";
+  var counter = 1;
 
   for (var i = 0; i < dLength; i++){
     if (!data[i].isWall && !data[i].isBullet){
-      insertString = insertString + "\n    <tr>\n      <td>" + data[i].name + "</td>\n      <td>" + data[i].kills + "</td>\n      <td>" + data[i].deaths + "</td>\n    </tr>";
+      insertString = insertString + "\n    <tr>\n      <td>" + counter + "</td>\n      <td>" + data[i].name + "</td>\n      <td>" + data[i].kills + "</td>\n      <td>" + data[i].deaths + "</td>\n    </tr>";
+      counter = counter + 1;
     }
   }
   //insertString = insertString + "\n    </tr>\n    <tr>\n      <td>test name</td>\n      <td>12</td>\n      <td>5</td>";
@@ -401,7 +403,7 @@ if (number3 != -1){
   } else {
     ctx.fillText("Press 'c' to show controls", 5, 395);
   }
-
+    ctx.font = "12px Arial";
     ctx.fillText("Press 'r' to respawn", 388, 395);
 
 
