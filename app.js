@@ -390,12 +390,12 @@ class Player extends Entity{
       if(this.health <= 0)
       {
         this.respawn(killername);
-        for (var key in BULLET_LIST){
-          if (BULLET_LIST[key].parent = this){
-            delete BULLET_LIST[key];
-            this.clip --;
-          }
-        }
+        // for (var key in BULLET_LIST){
+        //   if (BULLET_LIST[key].parent = this){
+        //     delete BULLET_LIST[key];
+        //     this.clip --;
+        //   }
+        // }
         this.health = 3;
       }
     }
