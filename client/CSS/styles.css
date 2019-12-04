@@ -35,13 +35,23 @@ h2{
 
 /*SLIDESHOW BEGIN */
 
-.mySlides{
+/* .mySlides{
   display:none;
   height: 800px;
-  image-orientation: centered;
+  margin : 0 auto;
   width: auto;
   padding: 0px;
+} */
 
+.css-container-fluid {
+width: 100%;
+}
+.css-slideshow {
+text-align:center;
+position: relative;
+max-width: 410px;
+height: 730px;
+margin: auto;
 }
 
 /*SLIDESHOW END */
