@@ -623,6 +623,7 @@ class Wall extends Entity{
 }
 
 
+//---------------Edges of map------------------//
 var wall1 = new Wall(wallWidth, mapSize, 1, 0, 0);
 var wall2 = new Wall(mapSize, wallWidth, 2, 0, 0);
 var wall3 = new Wall(mapSize, wallWidth, 3, 0, (mapSize - wallWidth));

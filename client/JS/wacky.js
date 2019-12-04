@@ -216,6 +216,9 @@ socket.on('newPosition', function(data){
 
   ctx.fillStyle = "black";
   ctx.font = "15px Arial";
+  var nameOfChar = '';
+
+  var maxDrawNameLength = 22;
 
   for(var i = 0; i < dLength; i++){//drawing all objects passed in through data array
     if (!data[i].isWall && !data[i].isBullet){
@@ -226,7 +229,11 @@ socket.on('newPosition', function(data){
         objX = cameraPositionX + (data[i].width / 2);
         objY = cameraPositionY + (data[i].height / 2);
       }
-      ctx.fillText(data[i].name, objX - 25, objY - 40);
+      nameOfChar = data[i].name;
+      if (nameOfChar.length > maxDrawNameLength){
+        nameOfChar = nameOfChar.substring(0, maxDrawNameLength);
+      }
+      ctx.fillText(nameOfChar, objX - 25, objY - 40);
     }
   }
 
