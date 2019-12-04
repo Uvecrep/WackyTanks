@@ -37,10 +37,9 @@ h2{
 
 .mySlides{
   display:none;
-  margin-left: 200px;
-  margin-right: 200px;
-  height: 600px;
-  width: 100%;
+  height: 800px;
+  image-orientation: centered;
+  width: auto;
   padding: 0px;
 
 }
