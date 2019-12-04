@@ -393,6 +393,7 @@ class Player extends Entity{
         for (var key in BULLET_LIST){
           if (BULLET_LIST[key].parent = this){
             delete BULLET_LIST[key];
+            this.clip --;
           }
         }
         this.health = 3;
