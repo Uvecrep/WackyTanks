@@ -35,13 +35,12 @@ h2{
 
 /*SLIDESHOW BEGIN */
 
-.mySlides{
+ .mySlides{
   display:none;
   height: 800px;
-  image-orientation: centered;
+  margin : 0 auto;
   width: auto;
   padding: 0px;
-
 }
 
 /*SLIDESHOW END */
