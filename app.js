@@ -391,7 +391,7 @@ class Player extends Entity{
       {
         this.respawn(killername);
         for (var key in BULLET_LIST){
-          if (BULLET_LIST[key].parent = this){
+          if (BULLET_LIST[key].parent = killername){
             delete BULLET_LIST[key];
           }
         }
