@@ -337,6 +337,11 @@ class Player extends Entity{
 
   respawn(killername){
     //console.log("Player death: " + this.id);
+    for (var i in BULLET_LIST){
+      if (BULLET_LIST[i].parent == this){
+        delete BULLET_LIST[i];
+      }
+    }
     this.x = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.y = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.rot = 0;//angle of rotation
