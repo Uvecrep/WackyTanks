@@ -225,7 +225,7 @@ class Player extends Entity{
     this.firstShot = true;
     this.damage = 1;
     this.score = 0;
-
+    this.clip = 5;
 
     this.height = 50;//sizing of tank
     this.width = 30;//sizing of tank
@@ -325,10 +325,13 @@ class Player extends Entity{
   }
 
   Fire(){
-    var bulletID = Math.random();
-    var bullet = new Bullet(bulletID,this);
-    BULLET_LIST[bulletID] = bullet;
-    this.fireCount = this.fireCount + 1;
+    if(this.clip > 0){
+      var bulletID = Math.random();
+      var bullet = new Bullet(bulletID,this);
+      BULLET_LIST[bulletID] = bullet;
+      this.fireCount = this.fireCount + 1;
+      this.clip--;
+    }
   }
 
   respawn(killername){
@@ -347,6 +350,7 @@ class Player extends Entity{
     this.shooting = false;
     this.firstShot = true;
     this.rad = 0;//tank's intial angle of rotation
+    this.clip = 5;//tank's amount of bullets it can fire
 
     this.cannonAngle = 180;//cannon's angle of rotation
     this.cannonSpeed = 2;//cannon's rotation speed
@@ -370,15 +374,18 @@ class Player extends Entity{
           BULLET_LIST[key].parent.score++;
           this.health = this.health - BULLET_LIST[key].parent.damage;
           BULLET_LIST[key].parent.PowerUp();
+
           if (this.health <= 0){
             killername = BULLET_LIST[key].parent.name;
             this.deathCount = this.deathCount + 1;
             BULLET_LIST[key].parent.killCount = BULLET_LIST[key].parent.killCount + 1;
           }
+          BULLET_LIST[key].parent.clip += 1;
           delete BULLET_LIST[key];
 
           break;
         }
+
       }
       if(this.health <= 0)
       {
@@ -425,6 +432,7 @@ class Bullet extends Entity{
       this.isDead = true;
     }
     if(this.isDead){
+      this.parent.clip++;
       delete BULLET_LIST[this.id];
     }
     this.x += (Math.cos((this.rot * Math.PI) / 180) * this.maxSpd);
