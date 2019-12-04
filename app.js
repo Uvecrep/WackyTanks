@@ -331,6 +331,7 @@ class Player extends Entity{
       BULLET_LIST[bulletID] = bullet;
       this.fireCount = this.fireCount + 1;
       this.clip--;
+      
     }
   }
 
@@ -380,7 +381,10 @@ class Player extends Entity{
             this.deathCount = this.deathCount + 1;
             BULLET_LIST[key].parent.killCount = BULLET_LIST[key].parent.killCount + 1;
           }
-          BULLET_LIST[key].parent.clip += 1;
+          if(BULLET_LIST[key].parent.clip < 5){
+            BULLET_LIST[key].parent.clip += 1;
+          }
+          console.log(BULLET_LIST[key].parent.clip);
           delete BULLET_LIST[key];
 
           break;
@@ -432,7 +436,10 @@ class Bullet extends Entity{
       this.isDead = true;
     }
     if(this.isDead){
-      this.parent.clip++;
+      if(this.parent.clip < 5){
+        this.parent.clip++;
+      }
+
       delete BULLET_LIST[this.id];
     }
     this.x += (Math.cos((this.rot * Math.PI) / 180) * this.maxSpd);
