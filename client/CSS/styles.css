@@ -48,8 +48,8 @@ width: 100%;
 }
 .css-slideshow {
 text-align:center;
-position: relative;
-max-width: auto;
+position: absolute;
+
 height: 730px;
 }
 
