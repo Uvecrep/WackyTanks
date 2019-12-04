@@ -87,6 +87,9 @@ socket.on('newPosition', function(data){
   var gridWidth = 100;//distance between bars
   var barWidth = 1;//width of each bar in grid
 
+  //ctx.fillStyle = 'black';//used to get images for presentation with black backround
+  //ctx.fillRect(10,10, 500, 400);
+
   //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
 
 
@@ -509,3 +512,8 @@ document.onkeyup = function(event){
   else if(event.keyCode === 37)
     socket.emit('keyPress', {inputId:'cannonLeft', state:false});//stops cannon rotation to the left
 }
+
+//
+// <img class="mySlides" src="./client/images/gamescreenshot.png">
+// <img class="mySlides" src="./client/images/army-tank-drawing-56.jpg">
+// <img class="mySlides" src="./client/images/tankGirl.jpg">
