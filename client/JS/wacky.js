@@ -402,6 +402,9 @@ if (number3 != -1){
     ctx.fillText("Press 'c' to show controls", 5, 395);
   }
 
+    ctx.fillText("Press 'r' to respawn", 388, 395);
+
+
 });
 
 function getMousePos(canvasElement, evt) {
@@ -473,6 +476,9 @@ document.onkeydown = function(event){
       } else {
         showControls = false;
       }
+    } else if (event.keyCode === 82){
+      socket.emit('respawnButton', {fakeInfo:true});
+      console.log("trying to respawn");
     }
   }
 }
