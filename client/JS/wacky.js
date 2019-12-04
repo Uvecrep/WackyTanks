@@ -25,6 +25,8 @@ var pname = '';
 
 var showControls = false;
 
+var topPlayerID = -1;
+
 
 var socket = io();
 
@@ -76,16 +78,19 @@ socket.on('newPosition', function(data){
 
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
 
-  //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
+  //---------------------------------DRAW GRID--------------------------------------//
 
   ctx.fillStyle = 'rgb(154, 164, 181)';
-
-  //ctx.fillRect(300 + objChangeX, 0 + objChangeY, 50, 1000);
 
   mapSize = data[0].mapsize;
   wallWidth = data[0].wallwidth;
   var gridWidth = 100;//distance between bars
   var barWidth = 1;//width of each bar in grid
+
+  //ctx.fillStyle = 'black';//used to get images for presentation with black backround
+  //ctx.fillRect(10,10, 500, 400);
+
+  //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
 
 
   for (var i = wallWidth; i < mapSize; i = i + gridWidth){
@@ -106,10 +111,11 @@ socket.on('newPosition', function(data){
       objX = cameraPositionX + (data[i].width / 2);
       objY = cameraPositionY + (data[i].height / 2);
     }
-    ctx.fillStyle = 'red';
-    //ctx.fillRect(data[i].x, data[i].y, 30, 50);
-    //console.log("id: " + data[i].id);
-
+    if (topPlayerID == i){
+      ctx.fillStyle = 'blue';
+    } else {
+      ctx.fillStyle = 'red';
+    }
 
     ctx.save();//need to save canvas before drawing rotated objects, this part draws the tank body
     var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
@@ -131,7 +137,11 @@ socket.on('newPosition', function(data){
 
     //-------------------------DRAW BLACK FRONT OF TANK MARKER----------------------------------//
 
-    ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
+    if (topPlayerID == i){
+      ctx.fillStyle = "red";
+    } else {
+      ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
+    }
 
     var frontTankWidth = 10;//width and height of front of tank marker
     var frontTankHeight = 5;//height of marker
@@ -277,11 +287,13 @@ socket.on('newPosition', function(data){
 
   //----------------------------Update Player List--------------------------------//
 
-  var insertString = "<tbody><tr>\n      <th>Name</th>\n      <th>Total Kills</th>\n      <th>Total Deaths</th>\n    </tr>";
+  var insertString = "<tbody><tr>\n      <th>Player Number</th>\n      <th>Name</th>\n      <th>Total Kills</th>\n      <th>Total Deaths</th>\n    </tr>";
+  var counter = 1;
 
   for (var i = 0; i < dLength; i++){
     if (!data[i].isWall && !data[i].isBullet){
-      insertString = insertString + "\n    <tr>\n      <td>" + data[i].name + "</td>\n      <td>" + data[i].kills + "</td>\n      <td>" + data[i].deaths + "</td>\n    </tr>";
+      insertString = insertString + "\n    <tr>\n      <td>" + counter + "</td>\n      <td>" + data[i].name + "</td>\n      <td>" + data[i].kills + "</td>\n      <td>" + data[i].deaths + "</td>\n    </tr>";
+      counter = counter + 1;
     }
   }
   //insertString = insertString + "\n    </tr>\n    <tr>\n      <td>test name</td>\n      <td>12</td>\n      <td>5</td>";
@@ -317,6 +329,7 @@ socket.on('newPosition', function(data){
   for (var i = 0; i < dLength; i++){
     if (!data[i].isWall && !data[i].isBullet){
       if (data[i].kills > kills1){
+        topPlayerID = i;
         kills1 = data[i].kills;
         numSave = number1;
         number1 = i;
@@ -401,7 +414,7 @@ if (number3 != -1){
   } else {
     ctx.fillText("Press 'c' to show controls", 5, 395);
   }
-
+    ctx.font = "12px Arial";
     ctx.fillText("Press 'r' to respawn", 388, 395);
 
 
@@ -499,3 +512,8 @@ document.onkeyup = function(event){
   else if(event.keyCode === 37)
     socket.emit('keyPress', {inputId:'cannonLeft', state:false});//stops cannon rotation to the left
 }
+
+//
+// <img class="mySlides" src="./client/images/gamescreenshot.png">
+// <img class="mySlides" src="./client/images/army-tank-drawing-56.jpg">
+// <img class="mySlides" src="./client/images/tankGirl.jpg">

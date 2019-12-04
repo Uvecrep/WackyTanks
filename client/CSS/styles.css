@@ -35,17 +35,12 @@ h2{
 
 /*SLIDESHOW BEGIN */
 
-.mySlides{
+ .mySlides{
   display:none;
-  margin-left: auto;
-  margin-right: auto;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  height: 100px;
-  width: 100%;
+  height: 800px;
+  margin : 0 auto;
+  width: auto;
   padding: 0px;
-
 }
 
 /*SLIDESHOW END */
