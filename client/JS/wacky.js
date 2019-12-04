@@ -177,14 +177,6 @@ socket.on('newPosition', function(data){
     ctx.arc(objX, objY, topCannonRadius, 0, 2 * Math.PI);//drawing circle on top of tank
     ctx.fill();//filling circle
 
-
-    //-------------------------DRAW PLAYER NAME----------------------------------//
-
-    ctx.fillStyle = "black";
-
-    ctx.font = "15px Arial";
-    ctx.fillText(data[i].name, objX - 19, objY - 40);
-
   }
   }
 
@@ -208,6 +200,24 @@ socket.on('newPosition', function(data){
       data[i].wallHeight
     );
   }
+  }
+
+  //-------------------------DRAW PLAYER NAME----------------------------------//
+
+  ctx.fillStyle = "black";
+  ctx.font = "15px Arial";
+
+  for(var i = 0; i < dLength; i++){//drawing all objects passed in through data array
+    if (!data[i].isWall && !data[i].isBullet){
+      if (i != indexSelf){
+        objX = data[i].x + data[i].width / 2 + objChangeX;
+        objY = data[i].y + data[i].height / 2 + objChangeY;
+      } else {
+        objX = cameraPositionX + (data[i].width / 2);
+        objY = cameraPositionY + (data[i].height / 2);
+      }
+      ctx.fillText(data[i].name, objX - 25, objY - 40);
+    }
   }
 
   //-------------------------DRAW BULLETS----------------------------------//
@@ -391,7 +401,6 @@ if (number3 != -1){
   } else {
     ctx.fillText("Press 'c' to show controls", 5, 395);
   }
-
 });
 
 function getMousePos(canvasElement, evt) {
