@@ -37,9 +37,12 @@ h2{
 
 .mySlides{
   display:none;
-  height: 300px;
+  margin-left: 100px;
+  margin-right: 100px;
+  height: 600px;
+  width: 100%;
   padding: 0px;
-  width:100%;
+
 }
 
 /*SLIDESHOW END */
