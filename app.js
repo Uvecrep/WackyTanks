@@ -360,8 +360,14 @@ class Player extends Entity{
     this.killcount = 0;
     this.framecount = 0;
 
-    for (var i in SOCKET_LIST){
-      SOCKET_LIST[i].emit('addMsg', this.name + ' was killed by ' + killername + '.');
+    if (killername == 'suicide'){
+      for (var i in SOCKET_LIST){
+        SOCKET_LIST[i].emit('addMsg', this.name + ' respawned.');
+      }
+    } else {
+      for (var i in SOCKET_LIST){
+        SOCKET_LIST[i].emit('addMsg', this.name + ' was killed by ' + killername + '.');
+      }
     }
   }
 
@@ -641,6 +647,11 @@ io.sockets.on('connection', function(socket){
     delete SOCKET_LIST[socket.id];
     delete PLAYER_LIST[socket.id];
     console.log("Player disconnection");
+  });
+
+  socket.on('respawnButton', function(){
+    PLAYER_LIST[socket.id].deathCount = PLAYER_LIST[socket.id].deathCount + 1;
+    PLAYER_LIST[socket.id].respawn('suicide');
   });
 
   socket.on('sendMsgToServer', function(data){
