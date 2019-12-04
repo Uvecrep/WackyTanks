@@ -390,6 +390,11 @@ class Player extends Entity{
       if(this.health <= 0)
       {
         this.respawn(killername);
+        for bullet in BULLET_LIST{
+          if (bullet.parent = this){
+            delete BULLET_LIST[bullet];
+          }
+        }
         this.health = 3;
       }
     }
