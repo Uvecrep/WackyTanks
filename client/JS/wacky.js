@@ -25,6 +25,8 @@ var pname = '';
 
 var showControls = false;
 
+var topPlayerID = -1;
+
 
 var socket = io();
 
@@ -76,16 +78,16 @@ socket.on('newPosition', function(data){
 
   ctx.clearRect(0,0,window.innerWidth,window.innerHeight);//clears canvas
 
-  //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
+  //---------------------------------DRAW GRID--------------------------------------//
 
   ctx.fillStyle = 'rgb(154, 164, 181)';
-
-  //ctx.fillRect(300 + objChangeX, 0 + objChangeY, 50, 1000);
 
   mapSize = data[0].mapsize;
   wallWidth = data[0].wallwidth;
   var gridWidth = 100;//distance between bars
   var barWidth = 1;//width of each bar in grid
+
+  //-------------------------DRAW PLAYER RECTANGLES----------------------------------//
 
 
   for (var i = wallWidth; i < mapSize; i = i + gridWidth){
@@ -106,10 +108,11 @@ socket.on('newPosition', function(data){
       objX = cameraPositionX + (data[i].width / 2);
       objY = cameraPositionY + (data[i].height / 2);
     }
-    ctx.fillStyle = 'red';
-    //ctx.fillRect(data[i].x, data[i].y, 30, 50);
-    //console.log("id: " + data[i].id);
-
+    if (topPlayerID == i){
+      ctx.fillStyle = 'blue';
+    } else {
+      ctx.fillStyle = 'red';
+    }
 
     ctx.save();//need to save canvas before drawing rotated objects, this part draws the tank body
     var rad = (data[i].rot * Math.PI) / 180;//getting object's angle in radians
@@ -131,7 +134,11 @@ socket.on('newPosition', function(data){
 
     //-------------------------DRAW BLACK FRONT OF TANK MARKER----------------------------------//
 
-    ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
+    if (topPlayerID == i){
+      ctx.fillStyle = "red";
+    } else {
+      ctx.fillStyle = "black";//for drawing the black marking on the front of the tank
+    }
 
     var frontTankWidth = 10;//width and height of front of tank marker
     var frontTankHeight = 5;//height of marker
@@ -319,6 +326,7 @@ socket.on('newPosition', function(data){
   for (var i = 0; i < dLength; i++){
     if (!data[i].isWall && !data[i].isBullet){
       if (data[i].kills > kills1){
+        topPlayerID = i;
         kills1 = data[i].kills;
         numSave = number1;
         number1 = i;
