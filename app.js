@@ -331,7 +331,6 @@ class Player extends Entity{
       BULLET_LIST[bulletID] = bullet;
       this.fireCount = this.fireCount + 1;
       this.clip--;
-
     }
   }
 
