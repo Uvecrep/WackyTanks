@@ -401,7 +401,6 @@ if (number3 != -1){
   } else {
     ctx.fillText("Press 'c' to show controls", 5, 395);
   }
-
 });
 
 function getMousePos(canvasElement, evt) {
