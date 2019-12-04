@@ -183,7 +183,7 @@ socket.on('newPosition', function(data){
     ctx.fillStyle = "black";
 
     ctx.font = "15px Arial";
-    ctx.fillText(data[i].name, objX - 19, objY - 40);
+    ctx.fillText(data[i].name, objX - 25, objY - 40);
 
   }
   }
