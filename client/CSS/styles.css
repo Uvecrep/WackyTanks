@@ -35,22 +35,12 @@ h2{
 
 /*SLIDESHOW BEGIN */
 
-/* .mySlides{
+ .mySlides{
   display:none;
   height: 800px;
   margin : 0 auto;
   width: auto;
   padding: 0px;
-} */
-
-.css-container-fluid {
-width: 100%;
-}
-.css-slideshow {
-text-align:center;
-position: absolute;
-
-height: 730px;
 }
 
 /*SLIDESHOW END */
