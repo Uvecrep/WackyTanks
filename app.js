@@ -444,6 +444,9 @@ class Bullet extends Entity{
       if(this.parent.clip < 5){
         this.parent.clip+=1;
       }
+      else{
+        this.parent.clip = 5;
+      }
 
       delete BULLET_LIST[this.id];
     }
