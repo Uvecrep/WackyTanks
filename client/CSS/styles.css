@@ -49,9 +49,8 @@ width: 100%;
 .css-slideshow {
 text-align:center;
 position: relative;
-
+max-width: auto;
 height: 730px;
-margin: auto;
 }
 
 /*SLIDESHOW END */
