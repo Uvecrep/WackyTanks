@@ -384,7 +384,6 @@ class Player extends Entity{
           if(BULLET_LIST[key].parent.clip < 5){
             BULLET_LIST[key].parent.clip += 1;
           }
-          console.log(BULLET_LIST[key].parent.clip);
           delete BULLET_LIST[key];
 
           break;
@@ -443,7 +442,7 @@ class Bullet extends Entity{
     }
     if(this.isDead){
       if(this.parent.clip < 5){
-        this.parent.clip++;
+        this.parent.clip+=1;
       }
 
       delete BULLET_LIST[this.id];
