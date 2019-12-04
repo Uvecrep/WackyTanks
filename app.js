@@ -733,6 +733,7 @@ setInterval(function(){
     isBullet:false,
     kills:player.killCount,
     deaths:player.deathCount,
+    health:player.health,
     mapsize:mapSize,
     wallwidth:wallWidth
     });

@@ -304,9 +304,14 @@ socket.on('newPosition', function(data){
 
   ctx.fillStyle = 'black';
 
+  var h = data[indexSelf].health;
+  var phealth = (h / 3) * 100;
+  phealth = Math.floor(phealth);
+
   ctx.font = "20px Arial";
   ctx.fillText("Total Kills: " + data[indexSelf].kills, 10, 25);
   ctx.fillText("Total Deaths: " + data[indexSelf].deaths, 10, 50);
+  ctx.fillText("Health: " + phealth + "%", 10, 75);
 
   //-------------------------DRAW TOP 3----------------------------------//
 
