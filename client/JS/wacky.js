@@ -529,3 +529,4 @@ document.onkeyup = function(event){
 // <img class="mySlides" src="./client/images/gamescreenshot.png">
 // <img class="mySlides" src="./client/images/army-tank-drawing-56.jpg">
 // <img class="mySlides" src="./client/images/tankGirl.jpg">
+//style="width:1392px;height:434px;"
