@@ -14,6 +14,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
 
 var uname;
+var pdamage = 1;
+var phealth = 3;
 
 app.get('/',function(req, res){
   console.log("LogIn");
@@ -257,18 +259,21 @@ class Player extends Entity{
   PowerUp(){
     //console.log('here');
     //dmg.style.display = "none";
-
     for(var i in PLAYER_LIST){
       var player = PLAYER_LIST[i];
+      SOCKET_LIST[i].emit('score',player.score);
       if(player.score > 5){
         if(player.damage >= 2){
           break;
         }
-        player.damage++;
-        for (var i in SOCKET_LIST){
-          SOCKET_LIST[i].emit('addMsg', this.name +'s damage has increased');
-        }
+        player.damage = pdamage;
       }
+      // if(player.score > 10){
+      //   if(player.health >= 5){
+      //     break;
+      //   }
+      //   player.health = phealth;
+      // }
     }
   }
 
@@ -354,9 +359,14 @@ class Player extends Entity{
 
     this.killcount = 0;
     this.framecount = 0;
+    this.score = 0;
+    this.damage = 1;
+    this.spawn = true;
+
 
     for (var i in SOCKET_LIST){
       SOCKET_LIST[i].emit('addMsg', this.name + ' was killed by ' + killername + '.');
+      SOCKET_LIST[i].emit('respawn',this.respawn);
     }
   }
 
@@ -395,7 +405,7 @@ class Bullet extends Entity{
       this.id = id;
       this.parent = parent;
       this.speed = 0;
-      this.damage = 1;
+      //this.damage = 1;
       this.lifeSpan = 100;
       this.isDead = false;
       this.rot = parent.cannonAngle+90;
@@ -663,6 +673,16 @@ socket.on('mouseMove', function(data){//function to track movement of the mouse
     player.cannonAngle = theta;
   }
 });
+
+socket.on('dmg',function(data){
+  pdamage = data;
+  //console.log(pdamage);
+})
+
+// socket.on('health',function(data){
+//   phealth = data;
+//   console.log('myhealth: '+phealth);
+// })
 
   console.log('Player connection');
   for (var i in SOCKET_LIST){

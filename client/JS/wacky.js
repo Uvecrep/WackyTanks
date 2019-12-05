@@ -9,6 +9,9 @@ var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
 var id = 0;
+var damage = 1;
+var health = 3;
+var score = 0;
 
 var canvasX = 0;
 var canvasY = 0;
@@ -285,6 +288,8 @@ socket.on('newPosition', function(data){
   ctx.font = "20px Arial";
   ctx.fillText("Total Kills: " + data[indexSelf].kills, 10, 25);
   ctx.fillText("Total Deaths: " + data[indexSelf].deaths, 10, 50);
+  //ctx.fillText("Total Score": " + data[indexSelf].scores,10,75);
+  //console.log(data[indexSelf].name);
 
   //-------------------------DRAW TOP 3----------------------------------//
 
@@ -483,3 +488,62 @@ document.onkeyup = function(event){
   else if(event.keyCode === 37)
     socket.emit('keyPress', {inputId:'cannonLeft', state:false});//stops cannon rotation to the left
 }
+
+//socket.on('dmg',function(data){
+  //damage = data;
+  //console.log(data);
+//})
+document.getElementById('damagebutton').style.visibility ="hidden";
+//document.getElementById('healthbutton').style.visibility ="hidden";
+
+socket.on('score',function(data){
+  update();
+  show();
+  score = data;
+  socket.emit('dmg',damage);
+  //socket.emit('health',health);
+  //console.log(score);
+  //onsole.log('damage is:' + damage);
+  //console.log('health is: '+health);
+})
+
+socket.on('respawn',function(data){
+  if(data == true){
+    update();
+  }
+})
+
+function update(){
+    document.getElementById('damagebutton').style.visibility = "hidden";
+    document.getElementById('damage').value = 1;
+    document.getElementById('damagebutton').value = 'Increase damage';
+    damage = 1;
+}
+
+function show(){
+  if(score >= 5){
+    document.getElementById('damagebutton').style.visibility = "visible";
+    damage = 2;
+  }
+  //if(score >= 10){
+    //document.getElementById('healthbutton').style.visibility = "visible";
+  //}
+}
+
+function incrementDamage(){
+  document.getElementById('damage').value = damage;
+  document.getElementById('damagebutton').value = 'Your Damage';
+}
+
+
+
+//function incrementHealth(){
+  //  health = 5;
+    //document.getElementById('health').value = health;
+//}
+
+//console.log(score);
+//document.getElementById('damage').style.visibility = "hidden";
+//document.getElementById('damagebutton').style.visibility ="hidden";
+//document.getElementById('health').style.visibility = "hidden";
+//document.getElementById('healthbutton').style.visibility ="hidden";
