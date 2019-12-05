@@ -1,4 +1,4 @@
-//Server Side
+  //Server Side
 
 var express = require('express');
 var bodyParser = require('body-parser')
@@ -227,7 +227,7 @@ class Player extends Entity{
     this.firstShot = true;
     this.damage = 1;
     this.score = 0;
-
+    this.clip = 5;
 
     this.height = 50;//sizing of tank
     this.width = 30;//sizing of tank
@@ -330,14 +330,23 @@ class Player extends Entity{
   }
 
   Fire(){
-    var bulletID = Math.random();
-    var bullet = new Bullet(bulletID,this);
-    BULLET_LIST[bulletID] = bullet;
-    this.fireCount = this.fireCount + 1;
+    if(this.clip > 0){
+      var bulletID = Math.random();
+      var bullet = new Bullet(bulletID,this);
+      BULLET_LIST[bulletID] = bullet;
+      this.fireCount = this.fireCount + 1;
+      this.clip--;
+
+    }
   }
 
   respawn(killername){
     //console.log("Player death: " + this.id);
+    for (var i in BULLET_LIST){
+      if (BULLET_LIST[i].parent == this){
+        delete BULLET_LIST[i];
+      }
+    }
     this.x = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.y = Math.floor(Math.random() * (mapSize - (3*wallWidth))) + wallWidth;//position
     this.rot = 0;//angle of rotation
@@ -352,6 +361,7 @@ class Player extends Entity{
     this.shooting = false;
     this.firstShot = true;
     this.rad = 0;//tank's intial angle of rotation
+    this.clip = 5;//tank's amount of bullets it can fire
 
     this.cannonAngle = 180;//cannon's angle of rotation
     this.cannonSpeed = 2;//cannon's rotation speed
@@ -364,9 +374,15 @@ class Player extends Entity{
     this.spawn = true;
 
 
-    for (var i in SOCKET_LIST){
-      SOCKET_LIST[i].emit('addMsg', this.name + ' was killed by ' + killername + '.');
-      SOCKET_LIST[i].emit('respawn',this.respawn);
+    if (killername == 'suicide'){
+      for (var i in SOCKET_LIST){
+        SOCKET_LIST[i].emit('addMsg', this.name + ' respawned.');
+        SOCKET_LIST[i].emit('respawn',this.respawn);
+      }
+    } else {
+      for (var i in SOCKET_LIST){
+        SOCKET_LIST[i].emit('addMsg', this.name + ' was killed by ' + killername + '.');
+      }
     }
   }
 
@@ -380,19 +396,30 @@ class Player extends Entity{
           BULLET_LIST[key].parent.score++;
           this.health = this.health - BULLET_LIST[key].parent.damage;
           BULLET_LIST[key].parent.PowerUp();
+
           if (this.health <= 0){
             killername = BULLET_LIST[key].parent.name;
             this.deathCount = this.deathCount + 1;
             BULLET_LIST[key].parent.killCount = BULLET_LIST[key].parent.killCount + 1;
           }
+          if(BULLET_LIST[key].parent.clip < 5){
+            BULLET_LIST[key].parent.clip += 1;
+          }
           delete BULLET_LIST[key];
 
           break;
         }
+
       }
       if(this.health <= 0)
       {
         this.respawn(killername);
+        // for (var key in BULLET_LIST){
+        //   if (BULLET_LIST[key].parent = this){
+        //     delete BULLET_LIST[key];
+        //     this.clip --;
+        //   }
+        // }
         this.health = 3;
       }
     }
@@ -435,6 +462,13 @@ class Bullet extends Entity{
       this.isDead = true;
     }
     if(this.isDead){
+      if(this.parent.clip < 5){
+        this.parent.clip+=1;
+      }
+      else{
+        this.parent.clip = 5;
+      }
+
       delete BULLET_LIST[this.id];
     }
     this.x += (Math.cos((this.rot * Math.PI) / 180) * this.maxSpd);
@@ -599,6 +633,7 @@ class Wall extends Entity{
 }
 
 
+//---------------Edges of map------------------//
 var wall1 = new Wall(wallWidth, mapSize, 1, 0, 0);
 var wall2 = new Wall(mapSize, wallWidth, 2, 0, 0);
 var wall3 = new Wall(mapSize, wallWidth, 3, 0, (mapSize - wallWidth));
@@ -630,6 +665,11 @@ io.sockets.on('connection', function(socket){
     delete SOCKET_LIST[socket.id];
     delete PLAYER_LIST[socket.id];
     console.log("Player disconnection");
+  });
+
+  socket.on('respawnButton', function(){
+    PLAYER_LIST[socket.id].deathCount = PLAYER_LIST[socket.id].deathCount + 1;
+    PLAYER_LIST[socket.id].respawn('suicide');
   });
 
   socket.on('sendMsgToServer', function(data){
@@ -714,6 +754,7 @@ setInterval(function(){
     isBullet:false,
     kills:player.killCount,
     deaths:player.deathCount,
+    health:player.health,
     mapsize:mapSize,
     wallwidth:wallWidth
     });

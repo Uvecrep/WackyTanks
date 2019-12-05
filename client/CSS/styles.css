@@ -35,11 +35,12 @@ h2{
 
 /*SLIDESHOW BEGIN */
 
-.mySlides{
+ .mySlides{
   display:none;
-  height: 300px;
+  height: 800px;
+  margin : 0 auto;
+  width: auto;
   padding: 0px;
-  width:100%;
 }
 
 /*SLIDESHOW END */
