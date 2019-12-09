@@ -103,6 +103,12 @@ var wallWidth = 100;
 //const { JSDOM } = jsdom;
 //const dom = new JSDOM(document.getElementById('damage').style.visibility = 'hidden');
 
+
+/*
+Entity object
+basis for every single object in game
+each object has an x,y,height,width
+*/
 class Entity{
 
   constructor(){
@@ -630,46 +636,51 @@ var wall3 = new Wall(mapSize, wallWidth, 3, 0, (mapSize - wallWidth));
 var wall4 = new Wall(wallWidth, mapSize, 4, (mapSize - wallWidth),0);
 
 
+//This is where the 4 walls surrounding the map are defined
 WALL_LIST[1] = wall1;
 WALL_LIST[2] = wall2;
 WALL_LIST[3] = wall3;
 WALL_LIST[4] = wall4;
 
 
-io.sockets.on('connection', function(socket){
+io.sockets.on('connection', function(socket){//called when player connects to server
 
-  socket.id = Math.random();
-  SOCKET_LIST[socket.id] = socket;
+  socket.id = Math.random();//creating random socket id
+  SOCKET_LIST[socket.id] = socket;//adding socket to list
 
-  var player = new Player(socket.id);
-  PLAYER_LIST[socket.id] = player;
+  var player = new Player(socket.id);//creating player on connection
+  PLAYER_LIST[socket.id] = player;//adding player to list
 
   SOCKET_LIST[socket.id].emit('setID', socket.id);
 
-  socket.on('disconnect', function(){
-    for(var i in BULLET_LIST){
+  socket.on('disconnect', function(){//called when player leaves server
+    for(var i in BULLET_LIST){//delete all bullets belonging to player
       if (BULLET_LIST[i].parent === PLAYER_LIST[socket.id]){
         delete BULLET_LIST[i];
       }
     }
-    delete SOCKET_LIST[socket.id];
+    delete SOCKET_LIST[socket.id];//delete player from lists
     delete PLAYER_LIST[socket.id];
     console.log("Player disconnection");
   });
 
+
+//called when player hits respawn button
   socket.on('respawnButton', function(){
-    PLAYER_LIST[socket.id].deathCount = PLAYER_LIST[socket.id].deathCount + 1;
-    PLAYER_LIST[socket.id].respawn('suicide');
+    PLAYER_LIST[socket.id].deathCount = PLAYER_LIST[socket.id].deathCount + 1;//adding 1 to player death count
+    PLAYER_LIST[socket.id].respawn('suicide');//marking that player was killed by suicide
   });
 
+//called when player sends msg to chat box
   socket.on('sendMsgToServer', function(data){
-    if (data[0].msg != ''){
-      for (var i in SOCKET_LIST){
+    if (data[0].msg != ''){//does not send empy messages
+      for (var i in SOCKET_LIST){//emmitting message
         SOCKET_LIST[i].emit('addMsg', data[0].name + ': ' + data[0].msg);
       }
     }
   });
 
+//called every time player presses a key: detects which key is pressed and decides what to do
   socket.on('keyPress', function(data){
     if(data.inputId === 'left'){
       player.pressingLeft = data.state;
@@ -688,19 +699,24 @@ io.sockets.on('connection', function(socket){
     }
   });
 
+/*
+Mousemove function
+called every time mouse is moved across canvas
+allows for cannon mouse tracking
+*/
 socket.on('mouseMove', function(data){//function to track movement of the mouse
-  if (data.rotatePointX != 0 && data.rotatePointY != 0){
-    var changeX, changeY, theta;
-    changeX = data.mousePosX - data.rotatePointX;
-    changeY = data.rotatePointY - data.mousePosY;
-    theta = Math.atan(changeY / changeX);
-    theta = theta * 180 / Math.PI;
-    if (changeX < 0){
-      theta = theta + 180;
+  if (data.rotatePointX != 0 && data.rotatePointY != 0){//does not change cannon position if rotate point is not set before
+    var changeX, changeY, theta;//variables
+    changeX = data.mousePosX - data.rotatePointX;//determining change of x between rotate point and mouse position
+    changeY = data.rotatePointY - data.mousePosY;//same as above for y
+    theta = Math.atan(changeY / changeX);//tangent of y/x
+    theta = theta * 180 / Math.PI;//converting to degrees
+    if (changeX < 0){//adjusting for trig complications
+      theta = theta + 180;//incrementing by 180
     }
-    theta = theta * (-1);
-    theta = theta - 90;
-    player.cannonAngle = theta;
+    theta = theta * (-1);//need these two calculations to adjust for how cannon is drawn
+    theta = theta - 90;//same as above
+    player.cannonAngle = theta;//setting new cannon angle
   }
 });
 
