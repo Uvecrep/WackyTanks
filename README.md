@@ -43,7 +43,7 @@ Repo Organization/Structure
       index.html is the front page with login and register
 
 How to build/run/test code
-  To test code locally you need to have node.js and mongo db installed in your terminal.
+  To test code locally you need to have node.js and mongo db installed in your terminal. Additionally, you will need to use the npm to install socket.io and express.
   If you have both of these things installed, cd into the WackyTanks file.
   The command "node app.js" will start up the server locally and can be accessed by typing "localhost:2000" as a url.
   You will need to have access to wifi even when running locally in order to access the mongo db database and login.
