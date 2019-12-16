@@ -44,6 +44,7 @@ app.post('/', function(req, res){
       if(results === undefined || results.length == 0){
         console.log("No Match");
         console.log("Login Failed");
+        res.sendFile(__dirname + '/client/index.html');
         return;
       }else{
         console.log("Found Match");
