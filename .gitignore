@@ -1,5 +1,4 @@
 node_modules
-supabase-config.js
 .DS_Store
 
 # Environment variables - Never commit these!
