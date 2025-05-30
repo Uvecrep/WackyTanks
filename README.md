@@ -2,6 +2,8 @@
 
 **WackyTanks** is an online competitive multiplayer tank battle arena that provides seamless, bug-free gameplay. Battle against other players in real-time with responsive controls and dynamic gameplay mechanics.
 
+Play Now: https://wackytanks.onrender.com/
+
 ## ✨ Features
 
 - 🏟️ **Real-time Multiplayer**: Battle against other players online
