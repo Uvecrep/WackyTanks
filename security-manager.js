@@ -173,7 +173,8 @@ class SecurityManager {
       statement_timeout: 30000, // 30 second timeout
       query_timeout: 30000,
       connectionTimeoutMillis: 10000,
-      idleTimeoutMillis: 30000
+      idleTimeoutMillis: 30000,
+      family: 4 // Explicitly force IPv4 to avoid IPv6 connection issues
     });
     
     await client.connect();
