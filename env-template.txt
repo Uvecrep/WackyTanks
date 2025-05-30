@@ -3,11 +3,11 @@
 # You can find these in your Supabase project settings under "Database" > "Connection info"
 
 # Supabase Database Configuration
-DB_HOST=db.zwtkroeaamchwmilkgpr.supabase.co
-DB_PORT=5432
-DB_NAME=postgres
-DB_USER=postgres
-DB_PASSWORD=6u92my#3Sb-+F6S
+DB_HOST=DB_HOST_VALUE
+DB_PORT=PORT_VALUE
+DB_NAME=DB_NAME_VALUE
+DB_USER=DB_USER_VALUE
+DB_PASSWORD=DB_PASSWORD_VALUE
 DB_SSL_REJECT_UNAUTHORIZED=false
 
 # Security Configuration
