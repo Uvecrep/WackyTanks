@@ -6,12 +6,156 @@ var app = express();
 var serv = require('http').Server(app);
 var io = require('socket.io')(serv,{});
 
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://admin:verysecurepassword@wackytanks-tpejq.gcp.mongodb.net/WackyTanks?retryWrites=true&w=majority"
+// PostgreSQL client for Supabase
+const { Client } = require('pg');
+
+// Import Database Manager for protection and cleanup
+const DatabaseManager = require('./database-manager');
+const dbManager = new DatabaseManager();
+
+// Import Security Manager for enhanced protection
+const SecurityManager = require('./security-manager');
+const securityManager = new SecurityManager();
+
+// Import bad-words for chat censoring
+const Filter = require('bad-words');
+const filter = new Filter();
+
+// Chat censoring function
+function censorMessage(message) {
+  if (!message || typeof message !== 'string') {
+    return message;
+  }
+  
+  // Clean the message using bad-words
+  let censored = filter.clean(message);
+  
+  // Additional custom censoring rules
+  // Block attempts to share personal information patterns
+  censored = censored.replace(/\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g, '[PHONE REDACTED]'); // Phone numbers
+  censored = censored.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL REDACTED]'); // Email addresses
+  censored = censored.replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g, '[IP REDACTED]'); // IP addresses
+  
+  // Block discord/social media invites
+  censored = censored.replace(/discord\.gg\/\w+/gi, '[INVITE REDACTED]');
+  censored = censored.replace(/\b(discord|skype|telegram|whatsapp)\b.*?\b(add|join|invite)\b/gi, '[SOCIAL REDACTED]');
+  
+  // Limit message length
+  if (censored.length > 200) {
+    censored = censored.substring(0, 200) + '...';
+  }
+  
+  return censored;
+}
+
+// Chat rate limiting and spam detection
+const chatHistory = new Map(); // Store recent messages per player
+const RATE_LIMIT_WINDOW = 5000; // 5 seconds
+const MAX_MESSAGES_PER_WINDOW = 3; // Max 3 messages per 5 seconds
+const SPAM_THRESHOLD = 0.8; // Similarity threshold for spam detection
+
+// Function to check if message is spam or rate limited
+function isMessageAllowed(playerId, message) {
+  const now = Date.now();
+  const playerHistory = chatHistory.get(playerId) || { messages: [], timestamps: [] };
+  
+  // Clean old messages outside the rate limit window
+  const recentIndices = [];
+  for (let i = playerHistory.timestamps.length - 1; i >= 0; i--) {
+    if (now - playerHistory.timestamps[i] <= RATE_LIMIT_WINDOW) {
+      recentIndices.unshift(i);
+    }
+  }
+  
+  const recentMessages = recentIndices.map(i => playerHistory.messages[i]);
+  const recentTimestamps = recentIndices.map(i => playerHistory.timestamps[i]);
+  
+  // Check rate limiting
+  if (recentMessages.length >= MAX_MESSAGES_PER_WINDOW) {
+    return { allowed: false, reason: 'Rate limited: Too many messages' };
+  }
+  
+  // Check for spam (similar messages)
+  for (const recentMsg of recentMessages) {
+    if (calculateSimilarity(message.toLowerCase(), recentMsg.toLowerCase()) > SPAM_THRESHOLD) {
+      return { allowed: false, reason: 'Spam detected: Similar message recently sent' };
+    }
+  }
+  
+  // Add current message to history
+  playerHistory.messages.push(message);
+  playerHistory.timestamps.push(now);
+  
+  // Keep only recent data
+  if (playerHistory.messages.length > MAX_MESSAGES_PER_WINDOW) {
+    playerHistory.messages = playerHistory.messages.slice(-MAX_MESSAGES_PER_WINDOW);
+    playerHistory.timestamps = playerHistory.timestamps.slice(-MAX_MESSAGES_PER_WINDOW);
+  }
+  
+  chatHistory.set(playerId, playerHistory);
+  return { allowed: true };
+}
+
+// Simple string similarity calculation
+function calculateSimilarity(str1, str2) {
+  if (str1 === str2) return 1;
+  if (str1.length === 0 || str2.length === 0) return 0;
+  
+  const longer = str1.length > str2.length ? str1 : str2;
+  const shorter = str1.length > str2.length ? str2 : str1;
+  
+  if (longer.length === 0) return 1;
+  
+  const distance = levenshteinDistance(longer, shorter);
+  return (longer.length - distance) / longer.length;
+}
+
+// Levenshtein distance calculation for string similarity
+function levenshteinDistance(str1, str2) {
+  const matrix = [];
+  
+  for (let i = 0; i <= str2.length; i++) {
+    matrix[i] = [i];
+  }
+  
+  for (let j = 0; j <= str1.length; j++) {
+    matrix[0][j] = j;
+  }
+  
+  for (let i = 1; i <= str2.length; i++) {
+    for (let j = 1; j <= str1.length; j++) {
+      if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j] + 1
+        );
+      }
+    }
+  }
+  
+  return matrix[str2.length][str1.length];
+}
+
+// Supabase connection configuration
+// Create a 'supabase-config.js' file based on 'supabase-config.example.js'
+let dbConfig;
+try {
+  dbConfig = require('./supabase-config.js');
+} catch (error) {
+  console.error('Please create supabase-config.js file based on supabase-config.example.js');
+  console.error('You can find your Supabase connection details in your project settings under "Database" > "Connection info"');
+  process.exit(1);
+}
 
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
+
+// Trust proxy for accurate IP detection
+app.set('trust proxy', true);
 
 var uname;
 
@@ -27,67 +171,192 @@ app.get('/signUp',function(req, res){
 });
 app.use('/client', express.static(__dirname + '/client'));
 
-app.post('/', function(req, res){
+app.post('/', async function(req, res){
   console.log(req.body);
 
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-
+  const clientIP = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'] || 'unknown';
+  
+  try {
     uname = req.body.name;
-    var pword = req.body.password;
+    const pword = req.body.password;
 
-    var dbo = db.db("WackyTanks");
-    var query = { username: `${uname}`, password: `${pword}` };
-    dbo.collection("Logins").find(query).toArray(function(err, results){
-      if (err) throw err
-      console.log(results);
-      if(results === undefined || results.length == 0){
-        console.log("No Match");
-        console.log("Login Failed");
-        res.sendFile(__dirname + '/client/index.html');
-        return;
-      }else{
-        console.log("Found Match");
-        res.sendFile(__dirname + '/client/game.html');
-      }
-      db.close();
-    });
-  });
+    // Use secure authentication
+    const user = await securityManager.authenticateUser(uname, pword, clientIP);
+    
+    console.log("Found Match");
+    res.sendFile(__dirname + '/client/game.html');
+    
+  } catch (err) {
+    console.log("Authentication failed:", err.message);
+    res.sendFile(__dirname + '/client/index.html');
+  }
 });
 
-app.post('/signUp', function(req, res){
-  uname = req.body.nameSignUp;
-  var pword = req.body.passwordSignUp;
+app.post('/signUp', async function(req, res){
+  const clientIP = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'] || 'unknown';
+  
+  try {
+    uname = req.body.nameSignUp;
+    const pword = req.body.passwordSignUp;
 
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
+    // Check if we're near the user limit and cleanup if needed
+    const currentCount = await dbManager.checkTableRowCount('users');
+    if (currentCount >= dbManager.tableLimits.users * 0.9) {
+      console.log('🔄 Approaching user limit, performing preemptive cleanup...');
+      await dbManager.enforceTableLimit('users');
+    }
 
-    var dbo = db.db("WackyTanks");
-    var query = { username: `${uname}` }
-    var doc = { username: `${uname}`, password: `${pword}` };
-
-    dbo.collection("Logins").find(query).toArray(function(err, results){
-      if (err) throw err
-      console.log(results);
-      if(results === undefined || results.length == 0){
-        dbo.collection("Logins").insertOne(doc, function(err, results){
-          if (err) throw err;
-          db.close();
-        });
-        res.sendFile(__dirname + '/client/game.html');
-      }else{
-        console.log("User Name Taken");
-        return;
-      }
-      db.close();
-    });
-  });
+    // Use secure user creation (includes all validations and protections)
+    const newUser = await securityManager.createSecureUser(uname, pword, clientIP);
+    
+    console.log("New secure user created successfully:", newUser.id);
+    res.sendFile(__dirname + '/client/game.html');
+    
+  } catch (err) {
+    console.error('Secure signup failed:', err.message);
+    res.sendFile(__dirname + '/client/index.html');
+  }
 });
 
 app.get('/game',function(req, res){
   console.log("get3");
   res.sendFile(__dirname + '/client/game.html');
 });
+
+app.get('/admin', function(req, res){
+  const clientIP = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'] || 'unknown';
+  
+  // Check admin access rate limiting
+  const accessCheck = securityManager.checkAdminAccess(clientIP);
+  if (!accessCheck.allowed) {
+    return res.status(429).json({
+      error: accessCheck.message
+    });
+  }
+  
+  securityManager.recordAdminAccess(clientIP);
+  res.sendFile(__dirname + '/client/admin.html');
+});
+
+// Security Management Endpoints
+app.get('/security-status', function(req, res) {
+  const clientIP = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'] || 'unknown';
+  
+  // Check admin access rate limiting
+  const accessCheck = securityManager.checkAdminAccess(clientIP);
+  if (!accessCheck.allowed) {
+    return res.status(429).json({
+      error: accessCheck.message
+    });
+  }
+  
+  try {
+    const securityStatus = securityManager.getSecurityStatus();
+    res.json({
+      success: true,
+      security_status: securityStatus
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+app.post('/security-unblock-ip', function(req, res) {
+  const clientIP = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'] || 'unknown';
+  
+  try {
+    const { ip } = req.body;
+    if (!ip) {
+      return res.status(400).json({
+        success: false,
+        error: 'IP address is required'
+      });
+    }
+    
+    securityManager.unblockIP(ip);
+    res.json({
+      success: true,
+      message: `IP ${ip} has been unblocked`
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+// Database Management Endpoints
+app.get('/db-status', async function(req, res) {
+  try {
+    const status = await dbManager.getDatabaseStatus();
+    res.json({
+      success: true,
+      timestamp: new Date().toISOString(),
+      database_status: status
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+app.post('/db-cleanup', async function(req, res) {
+  try {
+    await dbManager.manualCleanup();
+    const status = await dbManager.getDatabaseStatus();
+    res.json({
+      success: true,
+      message: 'Manual cleanup completed successfully',
+      database_status: status
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+app.post('/db-update-limit', async function(req, res) {
+  try {
+    const { tableName, newLimit } = req.body;
+    if (!tableName || !newLimit) {
+      return res.status(400).json({
+        success: false,
+        error: 'tableName and newLimit are required'
+      });
+    }
+    
+    const limit = parseInt(newLimit);
+    if (limit < 1 || limit > 50000) {
+      return res.status(400).json({
+        success: false,
+        error: 'Limit must be between 1 and 50,000'
+      });
+    }
+    
+    dbManager.updateTableLimit(tableName, limit);
+    res.json({
+      success: true,
+      message: `Limit updated for table ${tableName} to ${limit}`
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+// Add keep-alive routes for Render deployment
+const keepAlive = require('./keep-alive');
+app.use('/', keepAlive);
 
 serv.listen(process.env.PORT || 2000);//listen to port 2000
 console.log("Server started.");
@@ -654,6 +923,10 @@ io.sockets.on('connection', function(socket){//called when player connects to se
         delete BULLET_LIST[i];
       }
     }
+    
+    // Clean up chat history for disconnected player
+    chatHistory.delete(socket.id);
+    
     delete SOCKET_LIST[socket.id];//delete player from lists
     delete PLAYER_LIST[socket.id];
     console.log("Player disconnection");
@@ -669,8 +942,30 @@ io.sockets.on('connection', function(socket){//called when player connects to se
 //called when player sends msg to chat box
   socket.on('sendMsgToServer', function(data){
     if (data[0].msg != ''){//does not send empy messages
-      for (var i in SOCKET_LIST){//emmitting message
-        SOCKET_LIST[i].emit('addMsg', data[0].name + ': ' + data[0].msg);
+      const playerId = socket.id;
+      const playerName = data[0].name;
+      const originalMessage = data[0].msg;
+      
+      // Check if message is allowed (rate limiting and spam detection)
+      const messageCheck = isMessageAllowed(playerId, originalMessage);
+      
+      if (!messageCheck.allowed) {
+        // Send error message only to the sender
+        SOCKET_LIST[playerId].emit('addMsg', '[SYSTEM]: ' + messageCheck.reason);
+        return;
+      }
+      
+      // Censor the message
+      const censoredMessage = censorMessage(originalMessage);
+      
+      // Log potentially inappropriate content attempts
+      if (censoredMessage !== originalMessage) {
+        console.log(`[CHAT FILTER] Player ${playerName} (${playerId}) sent filtered content: "${originalMessage}" -> "${censoredMessage}"`);
+      }
+      
+      // Send the censored message to all players
+      for (var i in SOCKET_LIST){
+        SOCKET_LIST[i].emit('addMsg', playerName + ': ' + censoredMessage);
       }
     }
   });

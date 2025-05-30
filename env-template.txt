@@ -1,0 +1,29 @@
+# Database Configuration
+# Copy this file to '.env' and fill in your actual Supabase connection details
+# You can find these in your Supabase project settings under "Database" > "Connection info"
+
+# Supabase Database Configuration
+DB_HOST=db.zwtkroeaamchwmilkgpr.supabase.co
+DB_PORT=5432
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=6u92my#3Sb-+F6S
+DB_SSL_REJECT_UNAUTHORIZED=false
+
+# Security Configuration
+SECURITY_SECRET_KEY=your-super-secret-key-here-change-this-in-production
+JWT_SECRET=your-jwt-secret-key-here-change-this-too
+
+# Application Configuration
+NODE_ENV=development
+PORT=2000
+
+# Rate Limiting Configuration (optional - uses defaults if not set)
+MAX_AUTH_ATTEMPTS=5
+AUTH_LOCKOUT_TIME_MINUTES=15
+MAX_ADMIN_ATTEMPTS=10
+ADMIN_LOCKOUT_TIME_MINUTES=5
+
+# Database Limits (optional - uses defaults if not set)
+DB_USERS_LIMIT=1000
+DB_CLEANUP_INTERVAL_MINUTES=10 

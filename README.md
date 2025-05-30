@@ -1,50 +1,168 @@
-# WackyTanks
-Wacky Tanks is an online competitive multiplayer tank battle arena experience that provides online bug-free seamless gameplay.
+# WackyTanks 🎮
 
-Repo Organization/Structure
-  Our repository is organized into 3 folders: git, client, and node_modules.
-  We also have several files outside of these folders. The most important of these files is app.js, which is our server code and what we run node.js with.
-  The other files that are not within folders setup node and git.
-  app.js
-    This is our server file, it contains the java script that handles everything to do with our game server side.
-    The server communicates to each client with socket.io, which can be seen in the socket.on functions.
-    Every object in the game is based of off the basic entity class. Players, bullets, and walls all extend this entity class.
-    Entity object
-      each entity has the same list of variables. x, y, height, width, rotation, rotation speed, and entity speed.
-      collision checks are handled within the entity class, checking collison between players and bullets, players and walls, and walls and bullets.
-    Player object
-      The player object extends entity, and stores all information of the player in its variables.
-      player has functions to update movement, respawn, fire a bullet, and more.
-    Wall object
-      Another extension of entity object
-      Contains extensive update function that handles bullet collision (calculates new trajectory of bullet)
-    Bullet object
-      Extends Entity
-      contains variables for lifespan and trajectory angle.
-      Simple object, mostly manipulated by other functions.
-    app.js contains a set interval function that sends all of the game information to the player in packets for the player to draw.
-  The git and node_modules folders are not very important to the gameplay, they contain source code to deal with node and the git repository
-  The client folder contains the code that is send to each player, including html pages and client side code to draw the game.
-  client
-    css
-      contains a styles folder to build the website correctly
-    images
-      contains all images used in the game (just the website)
-    JS
-      contains javascript to run a slideshow on the frontpage
-      also contains client side code to draw game onto canvas and detect player keypresses
-      wacky.js
-        this is where everything gets drawn on the player side.
-        takes the information from the server and draws it to canvas with player centered.
-        has to modify x and y of all objects to create illusion of player centering
-    PHP
-      contains html code for front page and game page.
-      game.html is the page with the canvas and game drawn on it
-      index.html is the front page with login and register
+**WackyTanks** is an online competitive multiplayer tank battle arena that provides seamless, bug-free gameplay. Battle against other players in real-time with responsive controls and dynamic gameplay mechanics.
 
-How to build/run/test code
-  To test code locally you need to have node.js and mongo db installed in your terminal. Additionally, you will need to use the npm to install socket.io and express.
-  If you have both of these things installed, cd into the WackyTanks file.
-  The command "node app.js" will start up the server locally and can be accessed by typing "localhost:2000" as a url.
-  You will need to have access to wifi even when running locally in order to access the mongo db database and login.
-  You can open multiple tabs to test how the game looks to different players.
+## ✨ Features
+
+- 🏟️ **Real-time Multiplayer**: Battle against other players online
+- 🎯 **Responsive Controls**: Smooth tank movement and shooting mechanics
+- 🔄 **Live Updates**: Real-time game state synchronization using Socket.IO
+- 🛡️ **Collision Detection**: Advanced physics for tanks, bullets, and walls
+- 🎨 **Modern UI**: Clean and intuitive web-based interface
+- 🔐 **User Authentication**: Secure login and registration system
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+Before running WackyTanks, ensure you have the following installed:
+
+- **Node.js** (version 12.0.0 or higher)
+- **npm** (comes with Node.js)
+- **Internet connection** (for database access)
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd WackyTanks
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Start the server**:
+   ```bash
+   npm start
+   # or
+   node app.js
+   ```
+
+4. **Access the game**:
+   Open your browser and navigate to `http://localhost:2000`
+
+### Testing Multiplayer
+
+To test multiplayer functionality:
+1. Start the server using the instructions above
+2. Open multiple browser tabs/windows
+3. Navigate to `http://localhost:2000` in each tab
+4. Create different accounts and join games
+
+## 📁 Project Structure
+
+```
+WackyTanks/
+├── app.js                    # Main server file (Node.js/Express)
+├── package.json              # Project dependencies and scripts
+├── package-lock.json         # Locked dependency versions
+├── database-manager.js       # Database operations and management
+├── security-manager.js       # Security utilities and protection
+├── supabase-config.js        # Database configuration
+├── client/                   # Frontend assets
+│   ├── index.html           # Landing page
+│   ├── game.html            # Game canvas page
+│   ├── admin.html           # Admin interface
+│   ├── CSS/                 # Stylesheets
+│   ├── JS/                  # Client-side JavaScript
+│   ├── images/              # Game assets and images
+│   └── PHP/                 # Additional HTML templates
+├── docs/                    # Documentation files
+│   ├── ENVIRONMENT_SETUP.md
+│   ├── SECURITY_PROTECTION.md
+│   ├── DATABASE_PROTECTION.md
+│   └── SUPABASE_SETUP.md
+└── node_modules/            # Node.js dependencies
+```
+
+## 🎮 Game Architecture
+
+### Core Components
+
+#### Entity System
+All game objects inherit from a base `Entity` class:
+- **Properties**: x, y, height, width, rotation, rotation speed, entity speed
+- **Collision Detection**: Handles interactions between players, bullets, and walls
+
+#### Player Object
+- Extends the Entity class
+- Manages player movement, respawning, and bullet firing
+- Stores player-specific data and state
+
+#### Wall Object
+- Extends the Entity class
+- Handles bullet collision calculations
+- Manages trajectory changes upon impact
+
+#### Bullet Object
+- Extends the Entity class
+- Contains lifespan and trajectory properties
+- Simple object manipulated by other game systems
+
+### Client-Server Communication
+
+The game uses **Socket.IO** for real-time communication:
+- Server sends game state updates to all connected clients
+- Clients send input events (movement, shooting) to the server
+- Game state is synchronized at regular intervals
+
+### Frontend Architecture
+
+#### Client-side Rendering (`wacky.js`)
+- Renders game objects on HTML5 Canvas
+- Implements player-centered camera system
+- Handles coordinate transformation for smooth gameplay
+- Manages keyboard input detection
+
+## 🛠️ Technologies Used
+
+- **Backend**: Node.js, Express.js
+- **Real-time Communication**: Socket.IO
+- **Database**: PostgreSQL (via Supabase)
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Security**: bcrypt for password hashing
+- **Content Filtering**: bad-words library
+
+## 🔧 Dependencies
+
+```json
+{
+  "express": "^4.17.1",
+  "socket.io": "^2.3.0",
+  "pg": "^8.12.0",
+  "bcrypt": "^6.0.0",
+  "dotenv": "^16.5.0",
+  "bad-words": "^3.0.4",
+  "jsdom": "^15.2.1"
+}
+```
+
+## 📝 Development
+
+### Adding New Features
+
+1. **Server-side**: Modify `app.js` for game logic changes
+2. **Client-side**: Update files in the `client/JS/` directory
+3. **Database**: Use `database-manager.js` for data operations
+4. **Security**: Leverage `security-manager.js` for protection features
+
+### Environment Setup
+
+For detailed environment setup instructions, see:
+- [`ENVIRONMENT_SETUP.md`](ENVIRONMENT_SETUP.md)
+- [`SUPABASE_SETUP.md`](SUPABASE_SETUP.md)
+
+### Security Considerations
+
+This project includes comprehensive security measures:
+- See [`SECURITY_PROTECTION.md`](SECURITY_PROTECTION.md) for security guidelines
+- See [`DATABASE_PROTECTION.md`](DATABASE_PROTECTION.md) for database security
+
+## 👥 Authors
+
+**Reality Bytes** - Development Team
+
+Ian Peterson • Will Loughlin • Jayden Tang • Clint Eisenzimmer • Ryan Kenfield

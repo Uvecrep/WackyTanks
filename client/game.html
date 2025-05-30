@@ -21,6 +21,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
     </script>
     <!---------------------------------------------------------------------------->
+  <!-- Favicon -->
+  <link rel="icon" type="image/gif" href="./client/images/tankBaseDarkGreen.gif">
+  
   <!--Links for JS, CSS, Etc.. -->
   <link rel="stylesheet" href="./client/CSS/styles.css">
   <link rel="stylesheet" href="./client/JS/wacky.js">
@@ -28,6 +31,71 @@
 </head>
 
 <body>
+
+  <!-- Security Warning Banner -->
+  <div id="security-banner" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-bottom: 0; border-radius: 0; background-color: #fff3cd; border-color: #ffeaa7; position: sticky; top: 0; z-index: 1000;">
+    <div class="container-fluid">
+      <strong>⚠️ Security Notice:</strong> This application currently has known security vulnerabilities in its dependencies. 
+      <a href="#" onclick="showSecurityDetails()" class="alert-link">View Details</a> | 
+      <a href="https://github.com/advisories" target="_blank" class="alert-link">Learn More</a>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Security Details Modal -->
+  <div id="securityModal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+    <div style="position: relative; width: 80%; max-width: 600px; margin: 50px auto; background-color: white; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+      <div style="padding: 20px; border-bottom: 1px solid #ddd;">
+        <h3 style="margin: 0; display: inline-block;">Security Vulnerabilities</h3>
+        <button onclick="closeSecurityModal()" style="float: right; background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+      </div>
+      <div style="padding: 20px;">
+        <p><strong>The following security vulnerabilities have been identified:</strong></p>
+        <ul>
+          <li><strong>Socket.IO v2.x:</strong> Multiple vulnerabilities in dependencies (cookie, debug, parseuri)</li>
+          <li><strong>jsdom v15.x:</strong> Vulnerabilities in request and tough-cookie dependencies</li>
+          <li><strong>Request package:</strong> Server-Side Request Forgery vulnerability</li>
+        </ul>
+        <p><strong>Risk Level:</strong> Low to Moderate</p>
+        <p><strong>Recommended Action:</strong> Update to Socket.IO v4.x and jsdom v26.x when possible (requires code changes).</p>
+        <p><strong>Current Status:</strong> Packages updated to latest compatible versions within current major versions.</p>
+      </div>
+      <div style="padding: 15px 20px; border-top: 1px solid #ddd; text-align: right;">
+        <button onclick="closeSecurityModal()" style="background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSecurityDetails() {
+      console.log('showSecurityDetails called'); // Debug log
+      var modal = document.getElementById('securityModal');
+      console.log('Modal element:', modal); // Debug log
+      if (modal) {
+        modal.style.display = 'block';
+        console.log('Modal display set to block'); // Debug log
+      } else {
+        console.log('Modal element not found!'); // Debug log
+      }
+    }
+    
+    function closeSecurityModal() {
+      var modal = document.getElementById('securityModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+    
+    // Close modal when clicking outside of it (but not interfering with existing modal)
+    document.addEventListener('click', function(event) {
+      var securityModal = document.getElementById('securityModal');
+      if (event.target === securityModal) {
+        closeSecurityModal();
+      }
+    });
+  </script>
 
   <!--<h1 id=gameTop>Wacky Tanks!!</h1>-->
   <div id='SaveLogin'></div>
@@ -136,8 +204,8 @@
 <br>
 <br>
 <div class="copyrightTag">
-  <p>Copyright &copy; 2019</p>
-  <p>Created By: Reality Bytes Group 1 (Ian Peterson, Will Loughlin, Jayden Tang, Clint Eisenzimmer, Ryan Kenfield)</p>
+  <p>© 2019 WackyTanks</p>
+  <p>Ian Peterson • Will Loughlin • Jayden Tang • Clint Eisenzimmer • Ryan Kenfield</p>
 </div>
 
 
