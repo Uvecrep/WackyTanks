@@ -56,10 +56,6 @@ CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
    };
    ```
 
-   **⚠️ Common Mistake:** Don't include `https://` in the host field!
-   - ❌ Wrong: `'https://db.zwtkroeaamchwmilkgpr.supabase.co'`
-   - ✅ Correct: `'db.zwtkroeaamchwmilkgpr.supabase.co'`
-
 ### 5. Test the Connection
 Run the application:
 ```bash
@@ -76,7 +72,7 @@ If configured correctly, you should see "Server started." without any database c
 
 ## 🛠 Troubleshooting
 
-**"ENOTFOUND https://..." errors**: This means you included `https://` in your host field. Remove the `https://` prefix and use only the hostname (e.g., `db.zwtkroeaamchwmilkgpr.supabase.co`).
+**"ENOTFOUND https://..." errors**: This means you included `https://` in your host field. Remove the `https://` prefix and use only the hostname.
 
 **Connection timeout errors**: Check your Supabase project is active and the connection details are correct.
 

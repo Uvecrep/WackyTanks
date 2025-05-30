@@ -172,11 +172,8 @@
             <label>Update Table Limit:</label>
             <select id="tableSelect">
                 <option value="users">Users</option>
-                <option value="game_sessions">Game Sessions</option>
-                <option value="chat_logs">Chat Logs</option>
-                <option value="player_stats">Player Stats</option>
             </select>
-            <input type="number" id="newLimit" placeholder="New limit (max: 50,000)" min="1" max="50000">
+            <input type="number" id="newLimit" placeholder="New limit" min="1" max="50000">
             <button class="btn-update" onclick="updateLimit()">Update Limit</button>
         </div>
         

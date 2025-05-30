@@ -142,12 +142,22 @@ function levenshteinDistance(str1, str2) {
 // Supabase connection configuration
 // Create a 'supabase-config.js' file based on 'supabase-config.example.js'
 let dbConfig;
+let databaseAvailable = false;
 try {
   dbConfig = require('./supabase-config.js');
+  // Temporarily disable database for testing - remove this line when DB is fixed
+  // databaseAvailable = false; // Change to true when database password is fixed
+  // console.log('⚠️ Database temporarily disabled for testing (password encoding issue)');
+  // console.log('   Fix: URL encode special characters in DB_PASSWORD or use simpler password');
+  databaseAvailable = true;
+  console.log('✅ Database configuration loaded successfully');
 } catch (error) {
-  console.error('Please create supabase-config.js file based on supabase-config.example.js');
-  console.error('You can find your Supabase connection details in your project settings under "Database" > "Connection info"');
-  process.exit(1);
+  console.warn('⚠️ Database configuration not found. Using fallback authentication.');
+  console.warn('To enable full database features:');
+  console.warn('1. Create a Supabase account and project');
+  console.warn('2. Copy env-template.txt to .env and fill in your database details');
+  console.warn('3. Restart the server');
+  databaseAvailable = false;
 }
 
 app.use(express.json());
@@ -156,6 +166,40 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 // Trust proxy for accurate IP detection
 app.set('trust proxy', true);
+
+// Simple fallback authentication for testing without database
+const fallbackUsers = new Map(); // username -> { password, created }
+
+function createFallbackUser(username, password) {
+  if (fallbackUsers.has(username)) {
+    throw new Error('Username already exists');
+  }
+  
+  // Simple validation
+  if (!username || username.length < 3) {
+    throw new Error('Username must be at least 3 characters long');
+  }
+  
+  if (!password || password.length < 6) {
+    throw new Error('Password must be at least 6 characters long');
+  }
+  
+  fallbackUsers.set(username, {
+    password: password, // In production, this would be hashed
+    created: new Date()
+  });
+  
+  return { id: fallbackUsers.size, username };
+}
+
+function authenticateFallbackUser(username, password) {
+  const user = fallbackUsers.get(username);
+  if (!user || user.password !== password) {
+    throw new Error('Invalid username or password');
+  }
+  
+  return { id: 1, username };
+}
 
 var uname;
 
@@ -180,15 +224,21 @@ app.post('/', async function(req, res){
     uname = req.body.name;
     const pword = req.body.password;
 
-    // Use secure authentication
-    const user = await securityManager.authenticateUser(uname, pword, clientIP);
+    let user;
+    if (databaseAvailable) {
+      // Use secure authentication with database
+      user = await securityManager.authenticateUser(uname, pword, clientIP);
+    } else {
+      // Use fallback authentication for testing
+      user = authenticateFallbackUser(uname, pword);
+    }
     
     console.log("Found Match");
-    res.sendFile(__dirname + '/client/game.html');
+    res.json({ success: true, message: "Login successful", redirect: "/client/game.html" });
     
   } catch (err) {
     console.log("Authentication failed:", err.message);
-    res.sendFile(__dirname + '/client/index.html');
+    res.json({ success: false, message: "Invalid credentials" });
   }
 });
 
@@ -199,22 +249,28 @@ app.post('/signUp', async function(req, res){
     uname = req.body.nameSignUp;
     const pword = req.body.passwordSignUp;
 
-    // Check if we're near the user limit and cleanup if needed
-    const currentCount = await dbManager.checkTableRowCount('users');
-    if (currentCount >= dbManager.tableLimits.users * 0.9) {
-      console.log('🔄 Approaching user limit, performing preemptive cleanup...');
-      await dbManager.enforceTableLimit('users');
-    }
+    let newUser;
+    if (databaseAvailable) {
+      // Check if we're near the user limit and cleanup if needed
+      const currentCount = await dbManager.checkTableRowCount('users');
+      if (currentCount >= dbManager.tableLimits.users * 0.9) {
+        console.log('🔄 Approaching user limit, performing preemptive cleanup...');
+        await dbManager.enforceTableLimit('users');
+      }
 
-    // Use secure user creation (includes all validations and protections)
-    const newUser = await securityManager.createSecureUser(uname, pword, clientIP);
+      // Use secure user creation (includes all validations and protections)
+      newUser = await securityManager.createSecureUser(uname, pword, clientIP);
+    } else {
+      // Use fallback user creation for testing
+      newUser = createFallbackUser(uname, pword);
+    }
     
-    console.log("New secure user created successfully:", newUser.id);
-    res.sendFile(__dirname + '/client/game.html');
+    console.log("New user created successfully:", newUser.id);
+    res.json({ success: true, message: "Registration successful", redirect: "/client/game.html" });
     
   } catch (err) {
-    console.error('Secure signup failed:', err.message);
-    res.sendFile(__dirname + '/client/index.html');
+    console.error('User creation failed:', err.message);
+    res.json({ success: false, message: err.message || "Registration failed" });
   }
 });
 
@@ -918,6 +974,9 @@ io.sockets.on('connection', function(socket){//called when player connects to se
   SOCKET_LIST[socket.id].emit('setID', socket.id);
 
   socket.on('disconnect', function(){//called when player leaves server
+    // Store player name before deletion for disconnect message
+    const disconnectedPlayerName = PLAYER_LIST[socket.id] ? PLAYER_LIST[socket.id].name : 'Unknown Player';
+    
     for(var i in BULLET_LIST){//delete all bullets belonging to player
       if (BULLET_LIST[i].parent === PLAYER_LIST[socket.id]){
         delete BULLET_LIST[i];
@@ -929,6 +988,12 @@ io.sockets.on('connection', function(socket){//called when player connects to se
     
     delete SOCKET_LIST[socket.id];//delete player from lists
     delete PLAYER_LIST[socket.id];
+    
+    // Notify all remaining players that this player has left
+    for (var i in SOCKET_LIST){
+      SOCKET_LIST[i].emit('addMsg', disconnectedPlayerName + ' has left the game.');
+    }
+    
     console.log("Player disconnection");
   });
 

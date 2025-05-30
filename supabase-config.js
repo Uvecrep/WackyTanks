@@ -13,7 +13,13 @@ module.exports = {
   password: process.env.DB_PASSWORD,
   ssl: {
     rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === 'true'
-  }
+  },
+  // Add connection timeout and retry settings
+  connectionTimeoutMillis: 10000, // 10 seconds
+  idleTimeoutMillis: 30000, // 30 seconds
+  query_timeout: 20000, // 20 seconds for queries
+  // Force IPv4 if IPv6 is causing issues
+  family: 4
 };
 
 // Validate that required environment variables are set

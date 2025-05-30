@@ -107,6 +107,86 @@
         closeSecurityModal();
       }
     });
+
+    // Handle login form submission
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+
+      if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(loginForm);
+          const name = formData.get('name');
+          const password = formData.get('password');
+          
+          console.log('Login attempt for:', name);
+          
+          fetch('/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              'name': name,
+              'password': password
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              console.log('Login successful, redirecting to game');
+              window.location.href = data.redirect;
+            } else {
+              console.log('Login failed:', data.message);
+              document.getElementById('unsuccessful').textContent = data.message || 'Login failed. Please check your credentials.';
+            }
+          })
+          .catch(error => {
+            console.error('Login error:', error);
+            document.getElementById('unsuccessful').textContent = 'Login error. Please try again.';
+          });
+        });
+      }
+
+      if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(signupForm);
+          const nameSignUp = formData.get('nameSignUp');
+          const passwordSignUp = formData.get('passwordSignUp');
+          
+          console.log('Signup attempt for:', nameSignUp);
+          
+          fetch('/signUp', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              'nameSignUp': nameSignUp,
+              'passwordSignUp': passwordSignUp
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              console.log('Signup successful, redirecting to game');
+              window.location.href = data.redirect;
+            } else {
+              console.log('Signup failed:', data.message);
+              alert(data.message || 'Signup failed. Please try a different username or password.');
+            }
+          })
+          .catch(error => {
+            console.error('Signup error:', error);
+            alert('Signup error. Please try again.');
+          });
+        });
+      }
+    });
   </script>
 
   <div class="row">
@@ -142,7 +222,7 @@
         <!-- Register Button Inputs -->
         <div id="collapseRegister" class="collapse" aria-labelledby="collapseRegister" data-parent="#accordionExample">
           <div class="card-body">
-            <form action="/signup" method="post">
+            <form id="signupForm" action="/signUp" method="post">
               
               <!-- name -->
               <label for="UserNameSignUp">User Name</label>
@@ -158,7 +238,7 @@
               <br>
               <br>
 
-              <button id="SignUp">Register!</button>
+              <button type="submit" id="SignUp">Register!</button>
 
             </form>
           </div>
@@ -167,7 +247,7 @@
         <!-- Login Button Inputs -->
         <div id="collapseLogin" class="collapse" aria-labelledby="collapseLogin" data-parent="#accordionExample">
           <div class="card-body">
-            <form action="/" method="post">
+            <form id="loginForm" action="/" method="post">
             
             <!-- name -->
             <label for="UserName">User Name</label>
@@ -186,7 +266,7 @@
 
             <br>
 
-            <button id="SaveLogin">Reporting for Duty!</button>
+            <button type="submit" id="SaveLogin">Reporting for Duty!</button>
 
             </form>
           </div>
